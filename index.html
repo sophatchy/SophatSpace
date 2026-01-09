@@ -8,8 +8,8 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons (Fixed: Pointing to the UMD build for browser compatibility) -->
+    <script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.min.js"></script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
@@ -33,6 +33,26 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms, transform 200ms;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans">
@@ -42,7 +62,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <!-- Logo -->
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
                     <div class="bg-blue-600 text-white p-2 rounded-lg">
                         <i data-lucide="shield" class="w-6 h-6"></i>
                     </div>
@@ -102,7 +122,7 @@
                 <p class="text-lg text-blue-100 mb-8 leading-relaxed max-w-xl" data-i18n="heroDesc">
                     ប្រភពចំណេះដឹងដែលអាចទុកចិត្តបាន ដើម្បីជួយអ្នកឱ្យយល់ដឹងពីបច្ចេកវិទ្យា ចៀសវាងការបោកប្រាស់ និងរក្សាសុវត្ថិភាពគណនីរបស់អ្នក។
                 </p>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-1 flex items-center gap-2">
+                <button onclick="scrollToArticles()" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-1 flex items-center gap-2">
                     <span data-i18n="cta">ចាប់ផ្តើមរៀន</span> <i data-lucide="chevron-right" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -113,7 +133,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Card 1: Scams -->
-            <div id="scams" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-500 hover:shadow-xl transition">
+            <div id="scams" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-500 hover:shadow-xl transition cursor-pointer" onclick="openArticle(1)">
                 <div class="bg-red-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-red-500">
                     <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                 </div>
@@ -122,7 +142,7 @@
             </div>
 
             <!-- Card 2: Security -->
-            <div id="security" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition">
+            <div id="security" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition cursor-pointer" onclick="openArticle(2)">
                 <div class="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-blue-500">
                     <i data-lucide="lock" class="w-6 h-6"></i>
                 </div>
@@ -131,7 +151,7 @@
             </div>
 
             <!-- Card 3: Hygiene -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 hover:shadow-xl transition">
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 hover:shadow-xl transition cursor-pointer" onclick="openArticle(3)">
                 <div class="bg-green-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-green-500">
                     <i data-lucide="smartphone" class="w-6 h-6"></i>
                 </div>
@@ -142,7 +162,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="main-content">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             
             <!-- Left Column: Articles -->
@@ -150,43 +170,13 @@
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
                         <span class="w-2 h-8 bg-blue-600 rounded-full"></span>
-                        <span data-i18n="latestArticles">អត្ថបទថ្មីៗ</span>
+                        <span data-i18n="latestArticles">គន្លឹះ</span>
                     </h3>
                 </div>
 
                 <!-- Dynamic Articles Container -->
                 <div id="articles-container" class="space-y-6">
                     <!-- Populated by JS -->
-                </div>
-
-                <!-- Visual Explainers Section -->
-                <div class="mt-12">
-                    <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mb-6">
-                        <span class="w-2 h-8 bg-indigo-600 rounded-full"></span>
-                        <span data-i18n="visuals">វីដេអូពន្យល់</span>
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Video Placeholder 1 -->
-                        <div class="group relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg cursor-pointer">
-                            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
-                                <i data-lucide="play-circle" class="text-white w-16 h-16 opacity-80 group-hover:scale-110 transition duration-300"></i>
-                            </div>
-                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                                <p class="text-white font-medium" id="video-1-title">វីដេអូ៖ របៀបបង្កើត Password ខ្លាំង</p>
-                            </div>
-                        </div>
-
-                         <!-- Video Placeholder 2 -->
-                         <div class="group relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg cursor-pointer">
-                            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
-                                <i data-lucide="play-circle" class="text-white w-16 h-16 opacity-80 group-hover:scale-110 transition duration-300"></i>
-                            </div>
-                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                                <p class="text-white font-medium" id="video-2-title">វីដេអូ៖ កុំចុច Link ផ្តេសផ្តាស!</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -229,6 +219,49 @@
         </div>
     </div>
 
+    <!-- Article Detail Modal -->
+    <div id="article-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Background backdrop -->
+        <div class="fixed inset-0 bg-slate-900 bg-opacity-75 transition-opacity" onclick="closeModal()"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+                    
+                    <!-- Close Button -->
+                    <div class="absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" onclick="closeModal()" class="rounded-md bg-white text-slate-400 hover:text-slate-500 focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mt-3 text-left w-full">
+                                <h3 class="text-xl font-bold leading-6 text-slate-900 mb-4 flex items-center gap-2" id="modal-title">
+                                    <!-- Title goes here -->
+                                </h3>
+                                <div class="mt-2 text-slate-600 text-base leading-relaxed space-y-4" id="modal-content">
+                                    <!-- Content goes here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer Actions -->
+                    <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" onclick="closeModal()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto">
+                            បិទ / Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-12 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -265,8 +298,7 @@
                 securityDesc: "គន្លឹះសំខាន់ៗដើម្បីការពារគណនី Facebook, Telegram និងធនាគារ។",
                 hygieneTitle: "ទម្លាប់ល្អក្នុងការប្រើប្រាស់",
                 hygieneDesc: "របៀបប្រើប្រាស់បច្ចេកវិទ្យាប្រកបដោយសុខភាពល្អនិងប្រសិទ្ធភាព។",
-                latestArticles: "អត្ថបទថ្មីៗ",
-                visuals: "វីដេអូពន្យល់",
+                latestArticles: "គន្លឹះ",
                 downloads: "បញ្ជីត្រួតពិនិត្យ (Checklists)",
                 footer: "© ២០២៤ សុផាត ឌីជីថល។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
                 future: "សេវាកម្មពេលអនាគត៖ សិក្ខាសាលា និង គ្លីនិកឌីជីថល។"
@@ -289,8 +321,7 @@
                 securityDesc: "Essential tips to protect your Facebook, Telegram, and Bank accounts.",
                 hygieneTitle: "Digital Hygiene",
                 hygieneDesc: "How to use technology cleanly, healthily, and efficiently.",
-                latestArticles: "Latest Articles",
-                visuals: "Visual Explainers",
+                latestArticles: "Tips",
                 downloads: "Downloadable Checklists",
                 footer: "© 2024 Sophat Digital Space. All rights reserved.",
                 future: "Coming soon: Workshops and Digital Clinic Roadshows."
@@ -304,6 +335,22 @@
                 titleEn: 'How to Spot Phishing Messages',
                 descKh: 'កុំចុចលើតំណភ្ជាប់ (Link) ដែលគួរឱ្យសង្ស័យ។ នេះជាវិធីសម្គាល់...',
                 descEn: 'Never click on suspicious links. Here is how to identify them...',
+                contentKh: `
+                    <p><strong>១. ពិនិត្យប្រភពផ្ញើ៖</strong> តើអ្នកស្គាល់អ្នកផ្ញើនេះទេ? ពិនិត្យឈ្មោះ និងអ៊ីមែលឱ្យច្បាស់។ ឧទាហរណ៍៖ "support@faceb00k.com" (មានលេខ 0) គឺជាក្លែងក្លាយ។</p>
+                    <p><strong>២. កុំចុចលើ Link ភ្លាមៗ៖</strong> ប្រសិនបើសារនោះប្រាប់ថា "គណនីរបស់អ្នកនឹងត្រូវបិទ" ឬ "អ្នកឈ្នះរង្វាន់" នេះគឺជាល្បិច។ កុំចុច Link ដាច់ខាត។</p>
+                    <p><strong>៣. ការបង្កើតភាពបន្ទាន់៖</strong> ជនបោកប្រាស់តែងតែជំរុញឱ្យអ្នកភ័យស្លន់ស្លោ និងធ្វើសកម្មភាពភ្លាមៗ។ សូមស្ងប់អារម្មណ៍ ហើយទាក់ទងទៅស្ថាប័នផ្លូវការដោយផ្ទាល់។</p>
+                    <div class="bg-red-50 p-4 rounded-lg mt-4 border border-red-200 text-red-800">
+                        <strong>ចងចាំ៖</strong> ធនាគារ និងក្រុមហ៊ុនធំៗ មិនដែលសុំលេខសម្ងាត់ (Password) ឬលេខ OTP របស់អ្នកតាមសារនោះទេ។
+                    </div>
+                `,
+                contentEn: `
+                    <p><strong>1. Check the Sender:</strong> Do you know this person? Check the email address carefully. For example: "support@faceb00k.com" (with a zero) is fake.</p>
+                    <p><strong>2. Don't Click Links Immediately:</strong> If the message says "Your account will be banned" or "You won a prize", it is a trick. Do not click.</p>
+                    <p><strong>3. Creating Urgency:</strong> Scammers always try to make you panic and act fast. Stay calm and contact the official institution directly.</p>
+                    <div class="bg-red-50 p-4 rounded-lg mt-4 border border-red-200 text-red-800">
+                        <strong>Remember:</strong> Banks and large companies never ask for your Password or OTP via message.
+                    </div>
+                `,
                 iconName: 'alert-triangle',
                 colorClass: 'text-orange-500'
             },
@@ -313,6 +360,24 @@
                 titleEn: 'Why You Must Enable 2FA Now',
                 descKh: 'ការផ្ទៀងផ្ទាត់ពីរជំហាន គឺជាគន្លឹះសំខាន់បំផុតការពារគណនីរបស់អ្នក។',
                 descEn: 'Two-Factor Authentication is the most important key to account safety.',
+                contentKh: `
+                    <p><strong>Two-Factor Authentication (2FA)</strong> គឺជាស្រទាប់ការពារទីពីរ។ បើទោះជា Hacker ស្គាល់ Password របស់អ្នក ក៏ពួកគេមិនអាចចូលបានដែរ បើគ្មានកូដទីពីរ។</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>SMS OTP:</strong> ផ្ញើកូដតាមសារទូរស័ព្ទ (ល្អបង្គួរ)។</li>
+                        <li><strong>Authenticator App:</strong> ប្រើកម្មវិធីដូចជា Google Authenticator (ល្អបំផុត និងសុវត្ថិភាពជាង)។</li>
+                    </ul>
+                    <p class="mt-3"><strong>របៀបបើកក្នុង Facebook:</strong> ចូលទៅ Settings > Security and Login > Use two-factor authentication.</p>
+                    <p class="mt-3"><strong>របៀបបើកក្នុង Telegram:</strong> ចូលទៅ Settings > Privacy and Security > Two-Step Verification.</p>
+                `,
+                contentEn: `
+                    <p><strong>Two-Factor Authentication (2FA)</strong> is a second layer of defense. Even if a hacker knows your password, they cannot enter without the second code.</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>SMS OTP:</strong> Code sent via SMS (Good).</li>
+                        <li><strong>Authenticator App:</strong> Using apps like Google Authenticator (Best and more secure).</li>
+                    </ul>
+                    <p class="mt-3"><strong>How to enable on Facebook:</strong> Go to Settings > Security and Login > Use two-factor authentication.</p>
+                    <p class="mt-3"><strong>How to enable on Telegram:</strong> Go to Settings > Privacy and Security > Two-Step Verification.</p>
+                `,
                 iconName: 'lock',
                 colorClass: 'text-blue-500'
             },
@@ -322,6 +387,24 @@
                 titleEn: 'Cleaning Old Data on Your Phone',
                 descKh: 'លុបកម្មវិធីមិនប្រើ និងរូបភាពចាស់ៗ ដើម្បីល្បឿននិងសុវត្ថិភាព។',
                 descEn: 'Delete unused apps and old photos for speed and security.',
+                contentKh: `
+                    <p>ទូរស័ព្ទដែលមានទិន្នន័យច្រើនពេក ធ្វើឱ្យម៉ាស៊ីនដើរយឺត និងងាយរងគ្រោះថ្នាក់។</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>លុបកម្មវិធីមិនប្រើ៖</strong> App ចាស់ៗដែលអ្នកមិនប្រើ អាចមានចន្លោះប្រហោងសុវត្ថិភាព។ លុបវាចេញ។</li>
+                        <li><strong>សម្អាត Cache៖</strong> ចូលទៅ Settings > Storage ហើយសម្អាត Cache ដើម្បីបង្កើនល្បឿន។</li>
+                        <li><strong>ពិនិត្យសិទ្ធិ (Permissions)៖</strong> តើកម្មវិធីពិល (Flashlight) ត្រូវការទីតាំង (Location) ដែរឬទេ? បើមិនចាំបាច់ សូមបិទសិទ្ធិនោះ។</li>
+                        <li><strong>អាប់ដេត Software៖</strong> តែងតែអាប់ដេត iOS ឬ Android របស់អ្នកទៅ version ចុងក្រោយ។</li>
+                    </ul>
+                `,
+                contentEn: `
+                    <p>A phone with too much data runs slow and is more vulnerable.</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>Delete Unused Apps:</strong> Old apps you don't use may have security holes. Remove them.</li>
+                        <li><strong>Clear Cache:</strong> Go to Settings > Storage and clear cache to speed up device.</li>
+                        <li><strong>Check Permissions:</strong> Does a Flashlight app need your Location? If not, disable that permission.</li>
+                        <li><strong>Update Software:</strong> Always update your iOS or Android to the latest version.</li>
+                    </ul>
+                `,
                 iconName: 'smartphone',
                 colorClass: 'text-green-500'
             }
@@ -357,15 +440,45 @@
         function toggleMenu() {
             isMenuOpen = !isMenuOpen;
             const menu = document.getElementById('mobile-menu');
-            const menuIcon = document.getElementById('menu-icon');
             
             if (isMenuOpen) {
                 menu.classList.remove('hidden');
-                // We'll let Lucide handle the icon, but conceptually simpler to just toggle visibility
-                // Ideally, we'd swap the icon to 'x' here, but keeping it simple with just visibility toggle is fine for this scope.
             } else {
                 menu.classList.add('hidden');
             }
+        }
+        
+        function scrollToArticles() {
+            document.getElementById('main-content').scrollIntoView({behavior: 'smooth'});
+        }
+
+        // Modal Logic
+        function openArticle(id) {
+            const article = articles.find(a => a.id === id);
+            if (!article) return;
+
+            const modal = document.getElementById('article-modal');
+            const titleEl = document.getElementById('modal-title');
+            const contentEl = document.getElementById('modal-content');
+
+            // Set Content
+            titleEl.innerHTML = `
+                <i data-lucide="${article.iconName}" class="${article.colorClass} w-6 h-6"></i>
+                ${currentLang === 'kh' ? article.titleKh : article.titleEn}
+            `;
+            contentEl.innerHTML = currentLang === 'kh' ? article.contentKh : article.contentEn;
+
+            // Show Modal
+            modal.classList.remove('hidden');
+            modal.querySelector('div.bg-white').classList.add('modal-enter-active');
+            
+            // Re-render icons inside modal
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('article-modal');
+            modal.classList.add('hidden');
         }
 
         // Render Functions
@@ -379,14 +492,14 @@
                 if (text) el.textContent = text;
             });
 
-            // 2. Update specific elements that need more logic or don't fit the generic loop
+            // 2. Update specific elements
             document.getElementById('lang-text-desktop').textContent = currentLang === 'kh' ? 'EN' : 'ខ្មែរ';
             document.getElementById('lang-text-mobile').textContent = currentLang === 'kh' ? 'EN' : 'KH';
 
             // 3. Render Articles
             const articlesContainer = document.getElementById('articles-container');
             articlesContainer.innerHTML = articles.map(article => `
-                <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition flex gap-4 items-start cursor-pointer group">
+                <div onclick="openArticle(${article.id})" class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition flex gap-4 items-start cursor-pointer group">
                     <div class="mt-1 bg-slate-50 p-3 rounded-full group-hover:bg-blue-50 transition">
                         <i data-lucide="${article.iconName}" class="${article.colorClass} w-6 h-6"></i>
                     </div>
@@ -394,11 +507,11 @@
                         <h4 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition">
                             ${currentLang === 'kh' ? article.titleKh : article.titleEn}
                         </h4>
-                        <p class="text-slate-600 text-sm leading-relaxed">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-3">
                             ${currentLang === 'kh' ? article.descKh : article.descEn}
                         </p>
-                        <span class="text-blue-600 text-sm font-semibold mt-3 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Read More <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                        <span class="text-blue-600 text-sm font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                            ${currentLang === 'kh' ? 'អានបន្ថែម' : 'Read More'} <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                         </span>
                     </div>
                 </div>
@@ -422,17 +535,16 @@
             `;
 
             // 5. Update specific IDs
-            document.getElementById('video-1-title').textContent = currentLang === 'kh' ? "វីដេអូ៖ របៀបបង្កើត Password ខ្លាំង" : "Video: Creating Strong Passwords";
-            document.getElementById('video-2-title').textContent = currentLang === 'kh' ? "វីដេអូ៖ កុំចុច Link ផ្តេសផ្តាស!" : "Video: Don't Click That Link!";
-            
             document.getElementById('download-btn-text').textContent = currentLang === 'kh' ? "ទាញយក PDF" : "Download PDF";
             document.getElementById('about-title').textContent = currentLang === 'kh' ? "អំពី សុផាត" : "About Sophat";
             document.getElementById('about-desc').textContent = currentLang === 'kh' 
                 ? "ជាកន្លែងចែករំលែកចំណេះដឹងពិតប្រាកដ ដើម្បីសហគមន៍ឌីជីថលកម្ពុជាដែលមានសុវត្ថិភាព។"
                 : "A dedicated space for authentic knowledge sharing for a safer Cambodian digital community.";
 
-            // 6. Refresh Icons
-            lucide.createIcons();
+            // 6. Refresh Icons (with check for existence)
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
     </script>
 </body>
