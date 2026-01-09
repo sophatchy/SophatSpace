@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sophat Digital Space - Security Planner</title>
+    <title>សុផាត ឌីជីថល - ឆែកសុខភាពឌីជីថល</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -50,13 +50,12 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
         /* Checkbox Animation */
-        .check-anim { transition: all 0.2s ease-in-out; }
-        .item-row.checked { opacity: 0.6; background-color: #f8fafc; }
+        .item-row.checked { opacity: 0.7; background-color: #f1f5f9; border-color: #e2e8f0; }
         .item-row.checked h4 { text-decoration: line-through; color: #64748b; }
         
         /* Accordion Transitions */
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, opacity 0.4s ease; opacity: 0; }
-        .accordion-content.open { max-height: 2000px; opacity: 1; } /* Large max-height for content */
+        .accordion-content.open { max-height: 3000px; opacity: 1; } 
         .accordion-icon { transition: transform 0.3s ease; }
         .accordion-icon.rotate { transform: rotate(180deg); }
 
@@ -68,7 +67,10 @@
 
         /* Detail/Risk Box */
         .info-panel { max-height: 0; overflow: hidden; transition: all 0.3s ease; background-color: #fff1f2; border-left: 3px solid #ef4444; }
-        .info-panel.show { max-height: 300px; margin-top: 12px; padding: 12px; }
+        .info-panel.show { max-height: 500px; margin-top: 12px; padding: 12px; }
+
+        /* Score Circle Animation */
+        .score-circle { transition: all 1s ease-out; stroke-dasharray: 251; stroke-dashoffset: 251; }
     </style>
 </head>
 <body class="text-slate-800">
@@ -79,18 +81,12 @@
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.reload()">
                     <div class="bg-brand-600 text-white p-2 rounded-lg shadow-md group-hover:scale-105 transition">
-                        <i data-lucide="stethoscope" class="w-6 h-6"></i>
+                        <i data-lucide="activity" class="w-6 h-6"></i>
                     </div>
                     <div class="flex flex-col">
                         <h1 class="text-lg font-bold text-slate-900 leading-none">សុផាត ឌីជីថល</h1>
-                        <span class="text-[10px] font-bold text-brand-600 uppercase tracking-wide">Digital Clinic</span>
+                        <span class="text-[10px] font-bold text-brand-600 uppercase tracking-wide">Digital Health Check</span>
                     </div>
-                </div>
-                <div>
-                    <button onclick="toggleLang()" class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-full text-sm font-bold text-slate-600 transition">
-                        <i data-lucide="globe" class="w-4 h-4"></i>
-                        <span id="lang-text-desktop">EN</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -100,8 +96,10 @@
     <div class="bg-slate-900 pb-16 pt-10 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-8">
-                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2" data-i18n="heroTitle">តើអ្នកចង់ការពារអ្វី?</h2>
-                <p class="text-slate-400 text-sm" data-i18n="heroDesc">ជ្រើសរើសផែនការដែលសាកសមបំផុតសម្រាប់អ្នក</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">ត្រួតពិនិត្យសុខភាពឌីជីថលរបស់អ្នក</h2>
+                <p class="text-slate-400 text-sm max-w-2xl mx-auto">
+                    ជ្រើសរើសផ្នែកដែលអ្នកចង់ការពារ ដើម្បីទទួលបានពិន្ទុ និងការណែនាំលម្អិត។
+                </p>
             </div>
 
             <!-- Filter Cards -->
@@ -110,7 +108,7 @@
                 <div onclick="setFilter('social')" id="filter-social" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition active">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
-                            <i data-lucide="user-check" class="w-5 h-5"></i>
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
                         </div>
                         <h3 class="text-white font-bold text-sm">បណ្តាញសង្គម</h3>
                     </div>
@@ -119,27 +117,27 @@
                 <div onclick="setFilter('finance')" id="filter-finance" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
-                            <i data-lucide="wallet" class="w-5 h-5"></i>
+                            <i data-lucide="credit-card" class="w-5 h-5"></i>
                         </div>
                         <h3 class="text-white font-bold text-sm">ហិរញ្ញវត្ថុ</h3>
                     </div>
                 </div>
-                <!-- Business -->
-                <div onclick="setFilter('business')" id="filter-business" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
+                <!-- Devices -->
+                <div onclick="setFilter('devices')" id="filter-devices" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
-                            <i data-lucide="building-2" class="w-5 h-5"></i>
+                            <i data-lucide="smartphone" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-white font-bold text-sm">អាជីវកម្ម</h3>
+                        <h3 class="text-white font-bold text-sm">ឧបករណ៍</h3>
                     </div>
                 </div>
-                <!-- SOS -->
-                <div onclick="setFilter('sos')" id="filter-sos" class="planner-card bg-red-900/20 border-red-900/50 p-4 rounded-xl cursor-pointer hover:bg-red-900/30 transition">
+                <!-- Data -->
+                <div onclick="setFilter('data')" id="filter-data" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
                     <div class="flex flex-col items-center text-center">
-                        <div class="icon-bg w-10 h-10 rounded-full bg-red-900/50 text-red-400 flex items-center justify-center mb-2 transition shadow-lg shadow-red-500/20">
-                            <i data-lucide="siren" class="w-5 h-5"></i>
+                        <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
+                            <i data-lucide="database" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-red-200 font-bold text-sm">បន្ទាន់! (SOS)</h3>
+                        <h3 class="text-white font-bold text-sm">ទិន្នន័យ & ឯកជនភាព</h3>
                     </div>
                 </div>
             </div>
@@ -150,56 +148,50 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-20">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- Left: Checklists (Accodion Style) -->
+            <!-- Left: Checklists -->
             <div class="lg:col-span-8 space-y-4" id="checklist-container">
                 <!-- Injected via JS -->
             </div>
 
-            <!-- Right: Status Widget -->
+            <!-- Right: Status Widget (Sticky) -->
             <div class="lg:col-span-4 space-y-4">
-                <div class="bg-white rounded-xl shadow-soft p-5 sticky top-24 border border-slate-100">
-                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <i data-lucide="activity" class="w-5 h-5 text-brand-600"></i>
-                        <span data-i18n="progressTitle">ស្ថានភាពសុវត្ថិភាព</span>
-                    </h3>
+                <div class="bg-white rounded-xl shadow-soft p-6 sticky top-24 border border-slate-100">
                     
-                    <!-- Progress Bar -->
-                    <div class="relative pt-1">
-                        <div class="flex mb-2 items-center justify-between">
-                            <div>
-                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-brand-600 bg-brand-50" id="progress-text">
-                                    In Progress
-                                </span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-lg font-bold inline-block text-brand-600" id="progress-percent">
-                                    0%
-                                </span>
-                            </div>
-                        </div>
-                        <div class="overflow-hidden h-3 mb-4 text-xs flex rounded-full bg-slate-100">
-                            <div id="progress-bar" style="width:0%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-500 transition-all duration-500"></div>
+                    <div class="text-center mb-6">
+                        <h3 class="font-bold text-slate-800 text-lg mb-1">ពិន្ទុសុវត្ថិភាពរបស់អ្នក</h3>
+                        <p class="text-slate-400 text-xs">បំពេញបញ្ជីដើម្បីដំឡើងពិន្ទុ</p>
+                    </div>
+
+                    <!-- Score Circle -->
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="64" cy="64" r="40" stroke="#f1f5f9" stroke-width="8" fill="none" />
+                            <circle id="score-circle" cx="64" cy="64" r="40" stroke="#0ea5e9" stroke-width="8" fill="none" class="score-circle" />
+                        </svg>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <span id="score-number" class="text-3xl font-extrabold text-brand-600">0</span>
+                            <span class="block text-[10px] text-slate-400 font-bold">លើ 100</span>
                         </div>
                     </div>
 
                     <!-- Risk Indicator -->
-                    <div id="risk-box" class="bg-slate-50 rounded-lg p-4 mb-4 border border-slate-200 transition-colors duration-300">
-                        <span class="text-xs font-bold uppercase text-slate-500 block mb-1">Risk Level</span>
-                        <div class="flex items-center gap-2">
-                            <i id="risk-icon" data-lucide="shield-alert" class="w-6 h-6 text-slate-400"></i>
-                            <span id="risk-text" class="text-xl font-extrabold text-slate-700">UNKNOWN</span>
+                    <div id="risk-box" class="bg-slate-50 rounded-lg p-4 mb-4 border border-slate-200 transition-colors duration-300 text-center">
+                        <span class="text-xs font-bold uppercase text-slate-500 block mb-2">កម្រិតហានិភ័យ</span>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-200">
+                            <i id="risk-icon" data-lucide="shield-alert" class="w-5 h-5 text-slate-400"></i>
+                            <span id="risk-text" class="text-sm font-extrabold text-slate-700">កំពុងគណនា...</span>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="space-y-2">
-                        <button onclick="analyzeSafety()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2">
-                            <i data-lucide="clipboard-check" class="w-5 h-5"></i>
-                            <span data-i18n="btnAnalyze">ពិនិត្យ & ណែនាំ</span>
+                    <div class="space-y-3">
+                        <button onclick="analyzeSafety()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                            <i data-lucide="stethoscope" class="w-5 h-5"></i>
+                            <span>វិភាគ & ទទួលការណែនាំ</span>
                         </button>
-                        <button onclick="downloadPDF()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 px-4 rounded-lg border border-slate-200 transition flex items-center justify-center gap-2">
-                            <i data-lucide="file-down" class="w-5 h-5"></i>
-                            <span data-i18n="btnDownload">Download Report</span>
+                        <button onclick="downloadPDF()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 px-4 rounded-xl border border-slate-200 transition flex items-center justify-center gap-2">
+                            <i data-lucide="download" class="w-5 h-5"></i>
+                            <span>ទាញយករបាយការណ៍ (PDF)</span>
                         </button>
                     </div>
                 </div>
@@ -210,19 +202,25 @@
 
     <!-- Recommendation Modal -->
     <div id="rec-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeRecModal()"></div>
+        <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity" onclick="closeRecModal()"></div>
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4">
                 <div class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-auto overflow-hidden">
-                    <div id="modal-header" class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-slate-800" data-i18n="recLabel">ការណែនាំ (Recommendations)</h3>
-                        <button onclick="closeRecModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+                    
+                    <div id="modal-header-bg" class="px-6 py-6 bg-slate-100 border-b border-slate-200 text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm mb-3">
+                            <i id="modal-icon" data-lucide="activity" class="w-6 h-6 text-brand-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-1" id="modal-title">លទ្ធផលនៃការពិនិត្យ</h3>
+                        <p class="text-slate-500 text-sm" id="modal-subtitle">សូមពិនិត្យមើលចំណុចដែលអ្នកខ្វះខាត</p>
                     </div>
-                    <div id="modal-body" class="p-6 max-h-[70vh] overflow-y-auto space-y-4">
+
+                    <div id="modal-body" class="p-6 max-h-[60vh] overflow-y-auto space-y-4 bg-slate-50/50 custom-scrollbar">
                         <!-- Content Injected -->
                     </div>
-                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 text-right">
-                        <button onclick="closeRecModal()" class="bg-slate-800 text-white px-5 py-2 rounded-lg font-bold hover:bg-slate-900">Close</button>
+
+                    <div class="px-6 py-4 bg-white border-t border-slate-100 flex justify-end">
+                        <button onclick="closeRecModal()" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition">បិទ</button>
                     </div>
                 </div>
             </div>
@@ -232,103 +230,132 @@
     <!-- Hidden PDF Template -->
     <div id="pdf-wrapper" style="position: fixed; left: -9999px; top: 0;">
         <div id="pdf-template">
-            <div class="border-b-2 border-brand-600 pb-4 mb-6">
-                <h1 class="text-2xl font-bold text-brand-900">Digital Clinic Security Report</h1>
-                <p class="text-slate-500 text-sm mt-1" id="pdf-date">Generated on: ...</p>
-            </div>
-            <div class="bg-slate-50 p-4 rounded border border-slate-200 mb-6 flex justify-between items-center">
+            <div class="border-b-2 border-brand-600 pb-4 mb-6 flex justify-between items-end">
                 <div>
-                    <div class="text-sm text-slate-500 uppercase">Risk Level</div>
-                    <div class="text-xl font-bold" id="pdf-risk-level">HIGH</div>
+                    <h1 class="text-2xl font-bold text-brand-900">របាយការណ៍សុខភាពឌីជីថល</h1>
+                    <p class="text-slate-500 text-sm mt-1">Sophat Digital Space</p>
                 </div>
-                <div>
-                    <div class="text-sm text-slate-500 uppercase">Plan Type</div>
-                    <div class="text-xl font-bold" id="pdf-plan-type">Social Media</div>
+                <div class="text-right">
+                    <p class="text-sm font-bold text-slate-700" id="pdf-date">...</p>
                 </div>
             </div>
-            <div id="pdf-content-container" class="space-y-4"></div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-slate-50 p-4 rounded border border-slate-200">
+                    <div class="text-xs text-slate-500 uppercase font-bold">ពិន្ទុសរុប</div>
+                    <div class="text-3xl font-extrabold text-brand-600" id="pdf-score">0/100</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded border border-slate-200">
+                    <div class="text-xs text-slate-500 uppercase font-bold">កម្រិតហានិភ័យ</div>
+                    <div class="text-xl font-bold" id="pdf-risk-level">...</div>
+                </div>
+            </div>
+
+            <div class="mb-4 text-sm font-bold text-slate-700 border-b pb-2">បញ្ជីដែលត្រូវកែលម្អបន្ទាន់៖</div>
+            <div id="pdf-content-container" class="space-y-3 text-sm"></div>
+            
+            <div class="mt-12 pt-4 border-t border-slate-200 text-center text-xs text-slate-400">
+                <p>© 2024 Sophat Digital Space. Stay Safe.</p>
+            </div>
         </div>
     </div>
 
     <!-- Script -->
     <script>
-        const translations = {
-            kh: {
-                heroTitle: "តើអ្នកចង់ការពារអ្វី?",
-                heroDesc: "ជ្រើសរើសដើម្បីទទួលបានក្បួនការពារដែលសាកសមបំផុត។",
-                progressTitle: "ស្ថានភាពសុវត្ថិភាព",
-                btnAnalyze: "ពិនិត្យ & ណែនាំ",
-                btnDownload: "ទាញយករបាយការណ៍",
-                riskTitle: "កម្រិតហានិភ័យ",
-                recLabel: "ការណែនាំ (Recommendations)",
-                riskHigh: "ខ្ពស់ (HIGH)",
-                riskMed: "មធ្យម (MEDIUM)",
-                riskLow: "ល្អ (SECURE)",
-                toggleInfo: "មើលព័ត៌មានលម្អិត"
-            },
-            en: {
-                heroTitle: "What do you want to protect?",
-                heroDesc: "Select an option for a personalized plan.",
-                progressTitle: "Security Status",
-                btnAnalyze: "Analyze & Advise",
-                btnDownload: "Download Report",
-                riskTitle: "Risk Level",
-                recLabel: "Recommendations",
-                riskHigh: "HIGH RISK",
-                riskMed: "MEDIUM RISK",
-                riskLow: "SECURE",
-                toggleInfo: "View Details"
-            }
-        };
-
-        const defaultRisk = { kh: "ទិន្នន័យអាចបាត់បង់ ឬត្រូវគេលួចចូលប្រើ។", en: "Data loss or unauthorized access." };
-        const defaultRec = { kh: "សូមអនុវត្តតាមចំណុចនេះជាបន្ទាន់។", en: "Please implement this measure immediately." };
-
         const sections = [
+            // --- Social Media Section ---
             {
-                id: "sec_devices",
-                titleKh: "សុវត្ថិភាពឧបករណ៍ (Devices)",
-                titleEn: "Device Security",
-                tags: ["business", "social", "finance"],
+                id: "sec_fb",
+                title: "ហ្វេសប៊ុក (Facebook Safety)",
+                tags: ["social"],
                 items: [
-                    { id: "d1", kh: "ដាក់ Password / Lock Screen លើឧបករណ៍ទាំងអស់", en: "Set Password/Lock Screen", urgent: true, riskKh: "អ្នកដទៃអាចបើកចូលមើលឯកសារបាន។", recKh: "កំណត់លេខកូដសម្ងាត់យ៉ាងតិច ៦ ខ្ទង់។" },
-                    { id: "d2", kh: "Update OS/App ឱ្យទាន់សម័យ (Latest Version)", en: "Update OS/Apps", riskKh: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោង។", recKh: "បើក Automatic Updates។" },
-                    { id: "d3", kh: "បិទ Screen ស្វ័យប្រវត្តិ (1-2 នាទី)", en: "Auto Lock Screen", urgent: true, riskKh: "គេអាចលួចប្រើពេលអ្នកដើរចេញ។", recKh: "ចូល Settings > Display > Timeout" }
+                    { id: "fb1", text: "ដាក់ Password ខ្លាំង (អក្សរ លេខ សញ្ញា) និងមិនដូចគណនីផ្សេង", urgent: true, risk: "Hacker ងាយទាយលេខសម្ងាត់របស់អ្នកត្រូវ។", rec: "ប្តូរ Password ឥឡូវនេះ ដោយប្រើឃ្លាវែងៗ និងពិបាកទាយ។" },
+                    { id: "fb2", text: "បើកមុខងារផ្ទៀងផ្ទាត់ពីរជាន់ (2FA) ប្រើ App (Google Auth)", urgent: true, risk: "បើគេដឹង Password គេចូលបានភ្លាម។", rec: "ចូល Settings > Security > Two-Factor Auth > បើកជាបន្ទាន់។" },
+                    { id: "fb3", text: "ពិនិត្យមើល Active Sessions (ឧបករណ៍ដែលកំពុងចូលប្រើ)", risk: "អាចមានឧបករណ៍របស់ Hacker កំពុងលួចមើល។", rec: "ចូល Settings > Security > Where you're logged in > Log out ឧបករណ៍មិនស្គាល់។" },
+                    { id: "fb4", text: "បើក Login Alerts (ជូនដំណឹងពេលមានគេចូល)", risk: "មិនដឹងខ្លួនពេលមានគេលួចចូល។", rec: "ចូល Settings > Security > Login Alerts > បើកទាំង Email និង Noti។" },
+                    { id: "fb5", text: "លាក់លេខទូរស័ព្ទ និង Email ពីសាធារណៈ (Only Me)", risk: "Hacker អាចយកព័ត៌មាននេះទៅបោកប្រាស់បន្ត។", rec: "ចូល Privacy Settings > កំណត់ជា Only Me។" }
                 ]
             },
             {
-                id: "sec_phishing",
-                titleKh: "ប្រយ័ត្នសារបោកប្រាស់ (Phishing)",
-                titleEn: "Phishing Awareness",
-                tags: ["social", "finance", "business", "sos"],
+                id: "sec_tg",
+                title: "តេឡេក្រាម (Telegram Security)",
+                tags: ["social"],
                 items: [
-                    { id: "p1", kh: "មិនចុច Link ប្លែកៗក្នុងសារ (SMS/Chat)", en: "Don't click strange links", urgent: true, riskKh: "Link នោះអាចលួច Password ឬបង្កប់មេរោគ។", recKh: "កុំចុចដាច់ខាត ទោះបីគេថាបន្ទាន់ក៏ដោយ។" },
-                    { id: "p2", kh: "ពិនិត្យឈ្មោះអ្នកផ្ញើ និង Domain (faceb00k?)", en: "Check Sender Name", urgent: true, riskKh: "ចាញ់បោក Hacker ក្លែងបន្លំ។", recKh: "មើលអក្ខរាវិរុទ្ធឱ្យច្បាស់។" }
+                    { id: "tg1", text: "ដាក់ Two-Step Verification (Cloud Password)", urgent: true, risk: "គេអាចលួចគណនីបានងាយៗតាមរយៈ SMS ។", rec: "ចូល Settings > Privacy > Two-Step Verification > កំណត់លេខកូដ។" },
+                    { id: "tg2", text: "កំណត់ Privacy លេខទូរស័ព្ទ (Nobody/My Contacts)", risk: "ជនបោកប្រាស់អាចឆាតមកបោកលុយ។", rec: "ចូល Settings > Privacy > Phone Number > ដាក់ Nobody។" },
+                    { id: "tg3", text: "ពិនិត្យ Active Sessions (Devices)", urgent: true, risk: "អាចមានកុំព្យូទ័រអ្នកដទៃកំពុងភ្ជាប់។", rec: "ចូល Settings > Devices > Terminate All Other Sessions។" },
+                    { id: "tg4", text: "បិទមិនឱ្យគេ Add ចូល Group (Groups & Channels)", risk: "ត្រូវគេអូសចូលក្រុមបោកប្រាស់/ល្បែង។", rec: "ចូល Settings > Privacy > Groups & Channels > ដាក់ My Contacts។" }
                 ]
             },
             {
-                id: "sec_otp",
-                titleKh: "ច្បាប់មាស OTP (Golden Rule)",
-                titleEn: "OTP Golden Rule",
-                tags: ["finance", "social", "business", "sos"],
+                id: "sec_tiktok",
+                title: "តិកតុក (TikTok & Others)",
+                tags: ["social"],
                 items: [
-                    { id: "o1", kh: "ហាមប្រាប់លេខ OTP ដល់អ្នកដទៃដាច់ខាត", en: "NEVER share OTP", urgent: true, riskKh: "OTP គឺដូចកូនសោរចូលផ្ទះ។ គេបាន គេនឹងចូលលួច។", recKh: "រក្សាទុកជាសម្ងាត់។ បុគ្គលិកធនាគារមិនដែលសុំទេ។" },
-                    { id: "o2", kh: "បិទការសន្ទនាភ្លាម បើគេសុំ OTP", en: "Hang up if asked for OTP", urgent: true, riskKh: "ការបន្តនិយាយអាចធ្វើឲ្យអ្នកជឿតាមការល្បួង។", recKh: "Block លេខនោះចោល។" }
+                    { id: "tt1", text: "បើក 2-Step Verification (Email + Phone)", urgent: true, risk: "បាត់បង់គណនីដែលមាន Follower ច្រើន។", rec: "ចូល Settings > Security > 2-Step Verification។" },
+                    { id: "tt2", text: "គ្រប់គ្រងឧបករណ៍ (Manage Devices)", risk: "មានគេលួចលេងគណនីរបស់អ្នក។", rec: "ចូល Settings > Security > Manage Devices > លុបឧបករណ៍ចម្លែក។" }
+                ]
+            },
+
+            // --- Finance Section ---
+            {
+                id: "sec_bank_basic",
+                title: "សុវត្ថិភាពធនាគារមូលដ្ឋាន (Banking Basic)",
+                tags: ["finance"],
+                items: [
+                    { id: "bk1", text: "ហាមប្រាប់លេខកូដ OTP/PIN ដល់អ្នកដទៃដាច់ខាត", urgent: true, risk: "បាត់បង់ប្រាក់ពីគណនីភ្លាមៗ។", rec: "រក្សាទុកជាសម្ងាត់។ បុគ្គលិកធនាគារមិនដែលសុំកូដនេះទេ។" },
+                    { id: "bk2", text: "មិនចុច Link ដែលផ្ញើតាម SMS/Chat ថាឱ្យ Update គណនី", urgent: true, risk: "ជាល្បិច Phishing ដើម្បីលួចយកគណនី។", rec: "កុំចុច! ទាក់ទងទៅធនាគារតាមលេខ Hotline ផ្ទាល់។" },
+                    { id: "bk3", text: "ប្រើប្រាស់តែកម្មវិធីធនាគារផ្លូវការ (Official App)", risk: "App ក្លែងក្លាយអាចលួចទិន្នន័យ។", rec: "Download តែពី App Store ឬ Play Store ប៉ុណ្ណោះ។" }
                 ]
             },
             {
-                id: "sec_2fa",
-                titleKh: "ការការពារពីរជាន់ (2FA)",
-                titleEn: "Two-Factor Auth (2FA)",
-                tags: ["social", "finance", "business"],
+                id: "sec_bank_adv",
+                title: "ការការពារកម្រិតខ្ពស់ (Advanced Banking)",
+                tags: ["finance"],
                 items: [
-                    { id: "2f1", kh: "បើក 2FA លើ Facebook/Gmail (ប្រើ App)", en: "Enable 2FA (App)", urgent: true, riskKh: "បើគ្មាន 2FA គ្រាន់តែដឹង Password គេចូលបានហើយ។", recKh: "ប្រើ Google Authenticator។" },
-                    { id: "2f2", kh: "ត្រួតពិនិត្យ Active Sessions (Log out unknown)", en: "Check Active Sessions", urgent: true, riskKh: "អាចមានឧបករណ៍ Hacker កំពុងលួចមើល។", recKh: "ចូល Settings > Security > Log out all devices។" }
+                    { id: "bk4", text: "បើកការជូនដំណឹងរាល់ប្រតិបត្តិការ (Transaction Alert)", risk: "មិនដឹងភ្លាមៗពេលមានគេលួចដកលុយ។", rec: "បើក Notification ក្នុង App ធនាគារ។" },
+                    { id: "bk5", text: "កំណត់ដែនកំណត់ទឹកប្រាក់ផ្ទេរប្រចាំថ្ងៃ (Daily Limit)", risk: "អាចបាត់បង់ប្រាក់ច្រើនក្នុងពេលតែមួយ។", rec: "កំណត់ Limit ឱ្យទាបសមរម្យសម្រាប់ការប្រើប្រាស់។" },
+                    { id: "bk6", text: "ស្គាល់លេខ Hotline ធនាគារ និងរបៀបបង្កកគណនី (Freeze)", urgent: true, risk: "យឺតយ៉ាវក្នុងការទប់ស្កាត់ពេលមានបញ្ហា។", rec: "កត់លេខ Hotline ទុក ហើយរៀនប្រើមុខងារ Freeze Account។" }
+                ]
+            },
+
+            // --- Devices Section ---
+            {
+                id: "sec_phone",
+                title: "សុវត្ថិភាពទូរស័ព្ទ (Smartphone)",
+                tags: ["devices"],
+                items: [
+                    { id: "ph1", text: "ដាក់លេខកូដសម្ងាត់អេក្រង់ (Passcode/FaceID)", urgent: true, risk: "អ្នកដទៃអាចចូលមើលរូបភាពនិងទិន្នន័យផ្ទាល់ខ្លួន។", rec: "កំណត់ Passcode យ៉ាងតិច ៦ ខ្ទង់។" },
+                    { id: "ph2", text: "ធ្វើបច្ចុប្បន្នភាពកម្មវិធី (Update iOS/Android)", urgent: true, risk: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោងសុវត្ថិភាព។", rec: "ចូល Settings > General > Software Update។" },
+                    { id: "ph3", text: "កំណត់ឱ្យបិទអេក្រង់ស្វ័យប្រវត្តិ (៣០វិនាទី - ១នាទី)", risk: "គេអាចលួចប្រើពេលអ្នកទុកទូរស័ព្ទចោល។", rec: "កំណត់ Auto-Lock ត្រឹម ៣០ វិនាទី។" },
+                    { id: "ph4", text: "លុបកម្មវិធីណាដែលមិនប្រើប្រាស់ចោល", risk: "កម្មវិធីចាស់ៗអាចមានមេរោគ ឬតាមដានអ្នក។", rec: "ពិនិត្យនិងលុប App ដែលមិនចាំបាច់។" }
+                ]
+            },
+            {
+                id: "sec_laptop",
+                title: "កុំព្យូទ័រ (Laptop/PC)",
+                tags: ["devices"],
+                items: [
+                    { id: "pc1", text: "បើកកម្មវិធីកម្ចាត់មេរោគ (Antivirus / Windows Defender)", risk: "មេរោគអាចបំផ្លាញ ឬលួចឯកសារ។", rec: "បើក Real-time protection ក្នុង Windows Security។" },
+                    { id: "pc2", text: "មិនប្រើប្រាស់កម្មវិធី Crack ឬ Pirate", urgent: true, risk: "Software Crack ភាគច្រើនមានបង្កប់មេរោគ។", rec: "ប្រើប្រាស់ Software ស្របច្បាប់ ឬកម្មវិធីឥតគិតថ្លៃជំនួស។" },
+                    { id: "pc3", text: "បិទកាមេរ៉ា (Webcam cover) ពេលមិនប្រើ", risk: "Hacker អាចលួចមើលតាមកាមេរ៉ា។", rec: "ប្រើស្គុតបិទ ឬប្រដាប់បិទកាមេរ៉ា។" }
+                ]
+            },
+
+            // --- Data & Privacy Section ---
+            {
+                id: "sec_data",
+                title: "ទិន្នន័យ និង ឯកជនភាព (Data Privacy)",
+                tags: ["data"],
+                items: [
+                    { id: "dt1", text: "មិនផ្ញើរូបភាពអត្តសញ្ញាណប័ណ្ណ/កាតធនាគារ តាមឆាត", urgent: true, risk: "បែកធ្លាយទិន្នន័យសំខាន់ៗបើគណនីត្រូវគេ Hack។", rec: "លុបរូបភាពទាំងនោះចេញពីឆាតភ្លាមៗបន្ទាប់ពីប្រើរួច។" },
+                    { id: "dt2", text: "Backup ឯកសារសំខាន់ៗ (Cloud/Hard Disk)", risk: "បាត់បង់ឯកសាររហូត បើឧបករណ៍ខូចឬបាត់។", rec: "ប្រើ Google Drive ឬ iCloud ដើម្បីរក្សាទុក។" },
+                    { id: "dt3", text: "ពិនិត្យសិទ្ធិរបស់ App (Permissions - Camera, Mic, Location)", risk: "App ខ្លះលួចតាមដានទីតាំង ឬស្តាប់សំឡេង។", rec: "បិទ Permission ណាដែលមិនចាំបាច់ក្នុង Settings។" },
+                    { id: "dt4", text: "ប្រយ័ត្ន Wi-Fi សាធារណៈ (Free Wi-Fi)", risk: "Hacker អាចលួចទិន្នន័យតាម Wi-Fi ហាងកាហ្វេ។", rec: "កុំធ្វើប្រតិបត្តិការធនាគារតាម Free Wi-Fi ឬប្រើ VPN។" }
                 ]
             }
         ];
 
-        let currentLang = 'kh';
         let checkedItems = new Set();
         let activeFilter = 'social';
 
@@ -342,19 +369,6 @@
             document.getElementById(`filter-${filter}`).classList.add('active');
             renderList();
             updateStats();
-        }
-
-        function toggleLang() {
-            currentLang = currentLang === 'kh' ? 'en' : 'kh';
-            document.getElementById('lang-text-desktop').innerText = currentLang === 'kh' ? 'EN' : 'KH';
-            renderList();
-            updateStats();
-            // Update static texts
-            const t = translations[currentLang];
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(t[key]) el.innerText = t[key];
-            });
         }
 
         function toggleAccordion(id) {
@@ -381,17 +395,19 @@
         function toggleCheck(id) {
             const row = document.getElementById(`row-${id}`);
             const btn = document.getElementById(`btn-${id}`);
-            const icon = btn.querySelector('i');
+            const icon = btn.querySelector('svg') || btn.querySelector('i');
+
+            if (!row || !btn || !icon) return;
 
             if (checkedItems.has(id)) {
                 checkedItems.delete(id);
                 row.classList.remove('checked');
-                btn.className = "w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center transition-colors bg-white";
+                btn.className = "w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center transition-colors bg-white hover:border-brand-400";
                 icon.classList.add('opacity-0');
             } else {
                 checkedItems.add(id);
                 row.classList.add('checked');
-                btn.className = "w-6 h-6 rounded border-2 border-brand-500 bg-brand-500 flex items-center justify-center transition-colors text-white";
+                btn.className = "w-6 h-6 rounded-full border-2 border-brand-500 bg-brand-500 flex items-center justify-center transition-colors text-white";
                 icon.classList.remove('opacity-0');
             }
             updateStats();
@@ -401,53 +417,76 @@
             return sections.filter(s => s.tags.includes(activeFilter));
         }
 
+        function calculateRiskScore() {
+            let totalScore = 0;
+            let maxScore = 0;
+            const activeSections = getFilteredSections();
+
+            activeSections.forEach(section => {
+                section.items.forEach(item => {
+                    const weight = item.urgent ? 3 : 1; // Urgent items worth 3 points
+                    maxScore += weight;
+                    if (checkedItems.has(item.id)) {
+                        totalScore += weight;
+                    }
+                });
+            });
+
+            return maxScore === 0 ? 0 : Math.round((totalScore / maxScore) * 100);
+        }
+
+        function getRiskLevel(score) {
+            if (score >= 80) return { text: "ល្អប្រសើរ", color: "text-green-600", bg: "bg-green-50", icon: "shield-check" };
+            if (score >= 50) return { text: "មធ្យម", color: "text-yellow-600", bg: "bg-yellow-50", icon: "alert-circle" };
+            return { text: "ហានិភ័យខ្ពស់", color: "text-red-600", bg: "bg-red-50", icon: "alert-triangle" };
+        }
+
         function renderList() {
             const container = document.getElementById('checklist-container');
             const activeSections = getFilteredSections();
             
             if (activeSections.length === 0) {
-                container.innerHTML = `<div class="text-center p-8 text-slate-400">No items found.</div>`;
+                container.innerHTML = `<div class="text-center p-8 text-slate-400">គ្មានទិន្នន័យសម្រាប់ផ្នែកនេះ។</div>`;
                 return;
             }
 
-            container.innerHTML = activeSections.map(section => {
-                const title = currentLang === 'kh' ? section.titleKh : section.titleEn;
+            container.innerHTML = activeSections.map((section, index) => {
                 const itemsHtml = section.items.map(item => {
                     const isChecked = checkedItems.has(item.id);
-                    const risk = currentLang === 'kh' ? (item.riskKh || defaultRisk.kh) : defaultRisk.en;
-                    const rec = currentLang === 'kh' ? (item.recKh || defaultRec.kh) : defaultRec.en;
-                    const itemTitle = currentLang === 'kh' ? item.kh : item.en;
-                    const t = translations[currentLang];
-
-                    // Checkbox Style
+                    // Checkbox style
                     const btnClass = isChecked 
-                        ? "w-6 h-6 rounded border-2 border-brand-500 bg-brand-500 flex items-center justify-center transition-colors text-white" 
-                        : "w-6 h-6 rounded border-2 border-slate-300 flex items-center justify-center transition-colors bg-white hover:border-brand-400";
+                        ? "w-6 h-6 rounded-full border-2 border-brand-500 bg-brand-500 flex items-center justify-center transition-colors text-white" 
+                        : "w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center transition-colors bg-white hover:border-brand-400";
                     const iconClass = isChecked ? "" : "opacity-0";
                     const rowClass = isChecked ? "checked" : "";
+                    
+                    // Risk Label (Hidden if checked for cleaner look, or subtle)
+                    const urgentBadge = item.urgent ? `<span class="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded ml-2 font-bold">សំខាន់</span>` : "";
 
                     return `
-                        <div id="row-${item.id}" class="item-row ${rowClass} bg-white border border-slate-100 rounded-xl p-4 transition-all">
-                            <div class="flex items-start gap-3">
-                                <button id="btn-${item.id}" onclick="toggleCheck('${item.id}')" class="${btnClass}">
-                                    <i data-lucide="check" class="w-4 h-4 ${iconClass} transition-opacity"></i>
+                        <div id="row-${item.id}" class="item-row ${rowClass} bg-white border-b border-slate-50 last:border-b-0 p-4 transition-all hover:bg-slate-50">
+                            <div class="flex items-start gap-4">
+                                <button id="btn-${item.id}" onclick="toggleCheck('${item.id}')" class="${btnClass} shrink-0 mt-0.5">
+                                    <i data-lucide="check" class="w-3.5 h-3.5 ${iconClass} transition-opacity"></i>
                                 </button>
                                 
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-start cursor-pointer" onclick="toggleInfo('${item.id}')">
-                                        <h4 class="font-medium text-slate-800 text-sm leading-snug pt-0.5">${itemTitle}</h4>
-                                        <i data-lucide="help-circle" class="w-4 h-4 text-slate-400 hover:text-brand-500 transition ml-2 shrink-0"></i>
+                                <div class="flex-1 cursor-pointer" onclick="toggleInfo('${item.id}')">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="font-medium text-slate-800 text-sm leading-snug flex items-center flex-wrap">
+                                            ${item.text} ${urgentBadge}
+                                        </h4>
+                                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 ml-2"></i>
                                     </div>
                                     
-                                    <!-- Info Panel (Risk/Rec) -->
+                                    <!-- Info Panel -->
                                     <div id="info-${item.id}" class="info-panel mt-0 rounded-lg text-sm">
-                                        <div class="text-red-700 mb-1">
-                                            <strong class="text-xs uppercase tracking-wide">⚠️ ${t.riskLabel}</strong> <br/>
-                                            ${risk}
+                                        <div class="mb-2">
+                                            <strong class="text-xs uppercase tracking-wide text-red-600 block mb-1">⚠️ ហានិភ័យ (Risk)</strong>
+                                            <span class="text-slate-600">${item.risk}</span>
                                         </div>
-                                        <div class="text-brand-700">
-                                            <strong class="text-xs uppercase tracking-wide">💡 ${t.recLabel}</strong> <br/>
-                                            ${rec}
+                                        <div>
+                                            <strong class="text-xs uppercase tracking-wide text-brand-600 block mb-1">💡 ការណែនាំ (Action)</strong>
+                                            <span class="text-slate-600">${item.rec}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -456,13 +495,17 @@
                     `;
                 }).join('');
 
+                // Only open the first section by default
+                const isOpen = index === 0 ? 'open' : '';
+                const isRotated = index === 0 ? 'rotate' : '';
+
                 return `
-                    <div class="border border-slate-200 bg-slate-50 rounded-2xl overflow-hidden shadow-sm">
-                        <button onclick="toggleAccordion('${section.id}')" class="w-full flex items-center justify-between p-4 bg-white hover:bg-slate-50 transition border-b border-slate-100">
-                            <span class="font-bold text-slate-800 text-sm md:text-base">${title}</span>
-                            <i id="icon-${section.id}" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 accordion-icon open"></i>
+                    <div class="border border-slate-200 bg-white rounded-xl overflow-hidden shadow-sm">
+                        <button onclick="toggleAccordion('${section.id}')" class="w-full flex items-center justify-between p-4 bg-slate-50/50 hover:bg-slate-100 transition border-b border-slate-100">
+                            <span class="font-bold text-slate-800 text-base">${section.title}</span>
+                            <i id="icon-${section.id}" data-lucide="chevron-down" class="w-5 h-5 text-slate-400 accordion-icon ${isRotated}"></i>
                         </button>
-                        <div id="content-${section.id}" class="accordion-content open px-4 py-4 space-y-3">
+                        <div id="content-${section.id}" class="accordion-content ${isOpen}">
                             ${itemsHtml}
                         </div>
                     </div>
@@ -473,88 +516,102 @@
         }
 
         function updateStats() {
-            let total = 0;
-            let checked = 0;
-            let urgentTotal = 0;
-            let urgentChecked = 0;
+            const score = calculateRiskScore();
+            const level = getRiskLevel(score);
 
-            getFilteredSections().forEach(s => {
-                s.items.forEach(i => {
-                    total++;
-                    if (i.urgent) urgentTotal++;
-                    if (checkedItems.has(i.id)) {
-                        checked++;
-                        if (i.urgent) urgentChecked++;
-                    }
-                });
-            });
+            // Update Score Number
+            document.getElementById('score-number').innerText = score;
+            
+            // Update Circle Progress
+            const circle = document.getElementById('score-circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (score / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            
+            // Color Coding Circle
+            if(score >= 80) circle.style.stroke = "#16a34a"; // Green
+            else if(score >= 50) circle.style.stroke = "#ca8a04"; // Yellow
+            else circle.style.stroke = "#dc2626"; // Red
 
-            const percent = total === 0 ? 0 : Math.round((checked / total) * 100);
-            document.getElementById('progress-bar').style.width = `${percent}%`;
-            document.getElementById('progress-percent').innerText = `${percent}%`;
-
-            // Risk Logic
+            // Update Risk Box
             const riskBox = document.getElementById('risk-box');
+            riskBox.className = `rounded-lg p-4 mb-4 border transition-colors duration-300 text-center ${level.bg} border-slate-200`;
+            
+            document.getElementById('risk-text').innerHTML = level.text;
+            document.getElementById('risk-text').className = `text-lg font-extrabold ${level.color}`;
+            
             const riskIcon = document.getElementById('risk-icon');
-            const riskText = document.getElementById('risk-text');
-            const t = translations[currentLang];
-
-            // If any urgent items missed -> HIGH RISK
-            // If < 80% total -> MEDIUM
-            // Else -> LOW
-            if (urgentChecked < urgentTotal) {
-                riskBox.className = "bg-red-50 rounded-lg p-4 mb-4 border border-red-200";
-                riskIcon.className = "w-6 h-6 text-red-600";
-                riskText.className = "text-xl font-extrabold text-red-700";
-                riskText.innerText = t.riskHigh;
-            } else if (percent < 80) {
-                riskBox.className = "bg-yellow-50 rounded-lg p-4 mb-4 border border-yellow-200";
-                riskIcon.className = "w-6 h-6 text-yellow-600";
-                riskText.className = "text-xl font-extrabold text-yellow-700";
-                riskText.innerText = t.riskMed;
-            } else {
-                riskBox.className = "bg-green-50 rounded-lg p-4 mb-4 border border-green-200";
-                riskIcon.className = "w-6 h-6 text-green-600";
-                riskText.className = "text-xl font-extrabold text-green-700";
-                riskText.innerText = t.riskLow;
-            }
+            riskIcon.className = `w-5 h-5 ${level.color}`;
+            // Ideally swap icon based on level, but keeping simple for now
         }
 
         function analyzeSafety() {
-            // Generate content for modal
-            const t = translations[currentLang];
-            let html = '';
-            let hasIssues = false;
+            const score = calculateRiskScore();
+            const activeSections = getFilteredSections();
+            const modalBody = document.getElementById('modal-body');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSubtitle = document.getElementById('modal-subtitle');
+            const modalIcon = document.getElementById('modal-icon');
 
-            getFilteredSections().forEach(s => {
-                s.items.forEach(i => {
-                    if (i.urgent && !checkedItems.has(i.id)) {
-                        hasIssues = true;
-                        const rec = currentLang === 'kh' ? i.recKh : defaultRec.en;
-                        const title = currentLang === 'kh' ? i.kh : i.en;
-                        html += `
-                            <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500 mb-2">
-                                <h4 class="font-bold text-red-900 text-sm">❌ ${title}</h4>
-                                <p class="text-xs text-red-700 mt-1">${rec}</p>
-                            </div>
-                        `;
+            // Header Logic
+            if (score >= 80) {
+                modalTitle.innerText = "អបអរសាទរ! អ្នកមានសុវត្ថិភាពល្អ";
+                modalTitle.className = "text-xl font-bold text-green-700 mb-1";
+                modalIcon.className = "w-6 h-6 text-green-600";
+                modalSubtitle.innerText = "សូមបន្តរក្សាទម្លាប់ល្អនេះ។";
+            } else if (score >= 50) {
+                modalTitle.innerText = "នៅមានចន្លោះប្រហោងខ្លះៗ";
+                modalTitle.className = "text-xl font-bold text-yellow-700 mb-1";
+                modalIcon.className = "w-6 h-6 text-yellow-600";
+                modalSubtitle.innerText = "សូមកែតម្រូវចំណុចខាងក្រោមដើម្បីសុវត្ថិភាពពេញលេញ។";
+            } else {
+                modalTitle.innerText = "ហានិភ័យខ្ពស់! ត្រូវកែតម្រូវបន្ទាន់";
+                modalTitle.className = "text-xl font-bold text-red-700 mb-1";
+                modalIcon.className = "w-6 h-6 text-red-600";
+                modalSubtitle.innerText = "គណនី និងឧបករណ៍របស់អ្នកងាយរងគ្រោះណាស់។";
+            }
+
+            // Body Content (Missed Urgent Items First)
+            let html = '';
+            let missedItems = [];
+
+            activeSections.forEach(section => {
+                section.items.forEach(item => {
+                    if (!checkedItems.has(item.id)) {
+                        missedItems.push(item);
                     }
                 });
             });
 
-            if (!hasIssues) {
-                html = `
-                    <div class="text-center py-8">
-                        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="check-circle" class="w-8 h-8"></i>
+            if (missedItems.length === 0) {
+                html = `<div class="text-center py-10 text-green-600"><i data-lucide="check-circle" class="w-16 h-16 mx-auto mb-4"></i><p>គ្មានការណែនាំបន្ថែមទេ។ អ្នកធ្វើបានល្អណាស់!</p></div>`;
+            } else {
+                // Sort urgent first
+                missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+
+                html = missedItems.map(item => {
+                    const borderClass = item.urgent ? "border-l-4 border-red-500 bg-red-50" : "border-l-4 border-yellow-400 bg-yellow-50";
+                    const titleColor = item.urgent ? "text-red-800" : "text-slate-800";
+                    
+                    return `
+                        <div class="${borderClass} p-4 rounded-r-lg shadow-sm mb-3">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="${item.urgent ? 'alert-triangle' : 'info'}" class="w-5 h-5 ${item.urgent ? 'text-red-500' : 'text-yellow-600'} shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold ${titleColor} text-sm mb-1">${item.text}</h5>
+                                    <p class="text-xs text-slate-600 mb-2">${item.risk}</p>
+                                    <div class="text-xs bg-white/60 p-2 rounded text-slate-800 font-medium">
+                                        👉 ${item.rec}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <h3 class="font-bold text-green-800 text-lg">Great Job!</h3>
-                        <p class="text-slate-600 text-sm">You have secured all critical items for this plan.</p>
-                    </div>
-                `;
+                    `;
+                }).join('');
             }
 
-            document.getElementById('modal-body').innerHTML = html;
+            modalBody.innerHTML = html;
             document.getElementById('rec-modal').classList.remove('hidden');
             lucide.createIcons();
         }
@@ -566,35 +623,78 @@
         function downloadPDF() {
             const template = document.getElementById('pdf-template');
             const container = document.getElementById('pdf-content-container');
-            const dateStr = new Date().toLocaleDateString();
-            const percent = document.getElementById('progress-percent').innerText;
-            const risk = document.getElementById('risk-text').innerText;
-            const planType = activeFilter.toUpperCase();
-
-            document.getElementById('pdf-date').innerText = `Generated on: ${dateStr}`;
-            document.getElementById('pdf-risk-level').innerText = risk;
-            document.getElementById('pdf-plan-type').innerText = planType;
+            const dateStr = new Date().toLocaleDateString('km-KH');
+            const score = calculateRiskScore();
+            const level = getRiskLevel(score);
+            
+            document.getElementById('pdf-date').innerText = `កាលបរិច្ឆេទ: ${dateStr}`;
+            document.getElementById('pdf-score').innerText = `${score}/100`;
+            document.getElementById('pdf-risk-level').innerText = level.text;
+            // Directly set style for PDF reliability
+            const levelColor = score >= 80 ? '#16a34a' : (score >= 50 ? '#ca8a04' : '#dc2626');
+            document.getElementById('pdf-risk-level').style.color = levelColor;
 
             let html = '';
-            getFilteredSections().forEach(section => {
-                const title = currentLang === 'kh' ? section.titleKh : section.titleEn;
-                let itemsHtml = '';
+            const activeSections = getFilteredSections();
+            
+            let completedItems = [];
+            let missedItems = [];
+
+            activeSections.forEach(section => {
                 section.items.forEach(item => {
-                    const isChecked = checkedItems.has(item.id);
-                    const checkClass = isChecked ? 'checked' : '';
-                    const text = currentLang === 'kh' ? item.kh : item.en;
-                    itemsHtml += `
-                        <div class="pdf-checkbox-item">
-                            <div class="pdf-box ${checkClass}">${isChecked ? '✓' : ''}</div>
-                            <span>${text}</span>
-                        </div>
-                    `;
+                    if (checkedItems.has(item.id)) {
+                        completedItems.push(item);
+                    } else {
+                        missedItems.push(item);
+                    }
                 });
-                html += `<div style="break-inside: avoid; margin-bottom: 20px;"><div class="pdf-section-header">${title}</div>${itemsHtml}</div>`;
             });
 
+            // Sort missed items: Urgent first
+            missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+
+            // --- SECTION 1: ACTION REQUIRED ---
+            if (missedItems.length > 0) {
+                html += `<div class="mb-4 pb-2 border-b-2 border-red-100 font-bold text-red-700 text-sm uppercase">⚠️ ចំណុចត្រូវកែលម្អ (Action Required)</div>`;
+                html += missedItems.map(item => `
+                    <div class="mb-4 pb-3 border-b border-slate-100 last:border-0">
+                        <div class="font-bold text-slate-800 text-sm flex items-start gap-2">
+                            ${item.urgent ? '<span style="color:#dc2626; font-weight:bold; flex-shrink:0;">[បន្ទាន់]</span>' : '<span style="color:#ca8a04; font-weight:bold; flex-shrink:0;">[ណែនាំ]</span>'} 
+                            <span>${item.text}</span>
+                        </div>
+                        <div class="text-xs text-slate-500 mt-1 pl-1 border-l-2 border-red-200 ml-1">
+                            <div class="mb-1">ហានិភ័យ: ${item.risk}</div>
+                            <div style="color:#0369a1; font-weight:bold;">👉 ការណែនាំ: ${item.rec}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                html += `<div class="p-4 text-center text-green-700 font-bold border border-green-200 bg-green-50 rounded mb-6">អបអរសាទរ! អ្នកមិនមានចំណុចខ្វះខាតនៅក្នុងផ្នែកនេះទេ។</div>`;
+            }
+
+            // --- SECTION 2: COMPLETED ITEMS ---
+            if (completedItems.length > 0) {
+                html += `<div class="mt-6 mb-4 pb-2 border-b-2 border-green-100 font-bold text-green-700 text-sm uppercase">✅ ចំណុចបានការពាររួច (Completed)</div>`;
+                html += `<div class="grid grid-cols-1 gap-2">`;
+                html += completedItems.map(item => `
+                    <div class="flex items-start gap-2 text-xs text-slate-600">
+                        <span style="color:#16a34a; font-weight:bold;">✓</span> 
+                        <span style="text-decoration: line-through; opacity: 0.7;">${item.text}</span>
+                    </div>
+                `).join('');
+                html += `</div>`;
+            }
+
             container.innerHTML = html;
-            html2pdf().from(template).save('Sophat_Security_Report.pdf');
+            
+            const opt = {
+                margin: 10,
+                filename: 'Digital_Health_Full_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(template).set(opt).save();
         }
     </script>
 </body>
