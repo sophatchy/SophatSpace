@@ -55,7 +55,7 @@
         
         /* Accordion Transitions */
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, opacity 0.4s ease; opacity: 0; }
-        .accordion-content.open { max-height: 3000px; opacity: 1; } 
+        .accordion-content.open { max-height: 5000px; opacity: 1; } 
         .accordion-icon { transition: transform 0.3s ease; }
         .accordion-icon.rotate { transform: rotate(180deg); }
 
@@ -97,83 +97,15 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-8">
                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">ត្រួតពិនិត្យសុខភាពឌីជីថលរបស់អ្នក</h2>
-                
-                <!-- NEW: Hero Carousel -->
-                <div class="max-w-3xl mx-auto mb-8 relative group rounded-2xl overflow-hidden shadow-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm">
-                    
-                    <!-- Carousel Track -->
-                    <div id="carousel-track" class="flex transition-transform duration-700 ease-in-out h-48 md:h-56">
-                        
-                        <!-- Slide 1: 2FA -->
-                        <div class="w-full flex-shrink-0 flex items-center p-6 md:p-10 gap-6">
-                            <div class="hidden md:flex bg-green-500/10 p-4 rounded-full text-green-400 shrink-0">
-                                <i data-lucide="shield-check" class="w-12 h-12"></i>
-                            </div>
-                            <div class="text-left">
-                                <span class="text-green-400 font-bold tracking-wider text-xs uppercase mb-2 block">គន្លឹះសុវត្ថិភាពទី ១</span>
-                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">បើកការផ្ទៀងផ្ទាត់ពីរជាន់ (2FA)</h3>
-                                <p class="text-slate-300 text-sm leading-relaxed">
-                                    លេខសម្ងាត់តែមួយមិនគ្រប់គ្រាន់ទេ។ ការពារគណនីរបស់អ្នកជាមួយស្រទាប់ទីពីរ ដើម្បីទប់ស្កាត់ Hacker ទោះបីគេស្គាល់ Password អ្នកក៏ដោយ។
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Slide 2: Phishing -->
-                        <div class="w-full flex-shrink-0 flex items-center p-6 md:p-10 gap-6">
-                            <div class="hidden md:flex bg-red-500/10 p-4 rounded-full text-red-400 shrink-0">
-                                <i data-lucide="alert-triangle" class="w-12 h-12"></i>
-                            </div>
-                            <div class="text-left">
-                                <span class="text-red-400 font-bold tracking-wider text-xs uppercase mb-2 block">គន្លឹះសុវត្ថិភាពទី ២</span>
-                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">ប្រយ័ត្នសារបោកបញ្ឆោត (Phishing)</h3>
-                                <p class="text-slate-300 text-sm leading-relaxed">
-                                    កុំចុច Link ដែលគួរឱ្យសង្ស័យ ឬផ្ដល់លេខកូដ OTP ឱ្យនរណាម្នាក់។ ធនាគារមិនដែលសុំលេខសម្ងាត់តាមទូរស័ព្ទទេ។
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Slide 3: Updates -->
-                        <div class="w-full flex-shrink-0 flex items-center p-6 md:p-10 gap-6">
-                            <div class="hidden md:flex bg-blue-500/10 p-4 rounded-full text-blue-400 shrink-0">
-                                <i data-lucide="refresh-cw" class="w-12 h-12"></i>
-                            </div>
-                            <div class="text-left">
-                                <span class="text-blue-400 font-bold tracking-wider text-xs uppercase mb-2 block">គន្លឹះសុវត្ថិភាពទី ៣</span>
-                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">អាប់ដេតកម្មវិធីជាប្រចាំ</h3>
-                                <p class="text-slate-300 text-sm leading-relaxed">
-                                    កម្មវិធីចាស់ៗមានចន្លោះប្រហោង។ សូមអាប់ដេត iOS, Android និងកម្មវិធីធនាគាររបស់អ្នកឱ្យទាន់សម័យជានិច្ច។
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Carousel Controls -->
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-                        <button onclick="goToSlide(0)" class="carousel-dot w-2 h-2 rounded-full bg-white/30 hover:bg-white transition-all duration-300 active"></button>
-                        <button onclick="goToSlide(1)" class="carousel-dot w-2 h-2 rounded-full bg-white/30 hover:bg-white transition-all duration-300"></button>
-                        <button onclick="goToSlide(2)" class="carousel-dot w-2 h-2 rounded-full bg-white/30 hover:bg-white transition-all duration-300"></button>
-                    </div>
-                    
-                    <!-- Navigation Arrows -->
-                    <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition hidden md:block">
-                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
-                    </button>
-                    <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition hidden md:block">
-                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
-                    </button>
-
-                </div>
-
                 <p class="text-slate-300 text-sm md:text-base max-w-3xl mx-auto leading-relaxed bg-white/10 p-4 rounded-xl border border-white/10 shadow-sm backdrop-blur-sm">
                     ⚠️ សូម Tick <i data-lucide="check-circle" class="w-4 h-4 inline text-green-400"></i> ត្រង់កន្លែងណាដែលអ្នកបានអនុវត្តរួចរាល់ហើយ និង <span class="text-red-300 font-bold">កុំចុច</span> ត្រង់ចំណុចដែលមិនទាន់អនុវត្ត ដើម្បីចង់ដឹងថាអ្នកកំពុងមានហានិភ័យ ឬមានសុវត្ថិភាពកម្រិតណា។
                 </p>
             </div>
 
-            <!-- Filter Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+            <!-- Filter Cards (Updated to 5 items to include Business) -->
+            <div class="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
                 <!-- Social -->
-                <div onclick="setFilter('social')" id="filter-social" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition active">
+                <div onclick="setFilter('social')" id="filter-social" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition active w-36 md:w-40 flex-shrink-0">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
                             <i data-lucide="facebook" class="w-5 h-5"></i>
@@ -182,7 +114,7 @@
                     </div>
                 </div>
                 <!-- Finance -->
-                <div onclick="setFilter('finance')" id="filter-finance" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
+                <div onclick="setFilter('finance')" id="filter-finance" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition w-36 md:w-40 flex-shrink-0">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
                             <i data-lucide="credit-card" class="w-5 h-5"></i>
@@ -191,7 +123,7 @@
                     </div>
                 </div>
                 <!-- Devices -->
-                <div onclick="setFilter('devices')" id="filter-devices" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
+                <div onclick="setFilter('devices')" id="filter-devices" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition w-36 md:w-40 flex-shrink-0">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
                             <i data-lucide="smartphone" class="w-5 h-5"></i>
@@ -199,13 +131,22 @@
                         <h3 class="text-white font-bold text-sm">ឧបករណ៍</h3>
                     </div>
                 </div>
+                <!-- Business (New) -->
+                <div onclick="setFilter('business')" id="filter-business" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition w-36 md:w-40 flex-shrink-0">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
+                            <i data-lucide="briefcase" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-sm">អាជីវកម្ម</h3>
+                    </div>
+                </div>
                 <!-- Data -->
-                <div onclick="setFilter('data')" id="filter-data" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition">
+                <div onclick="setFilter('data')" id="filter-data" class="planner-card bg-slate-800/50 p-4 rounded-xl cursor-pointer hover:bg-slate-800 transition w-36 md:w-40 flex-shrink-0">
                     <div class="flex flex-col items-center text-center">
                         <div class="icon-bg w-10 h-10 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mb-2 transition">
                             <i data-lucide="database" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="text-white font-bold text-sm">ទិន្នន័យ & ឯកជនភាព</h3>
+                        <h3 class="text-white font-bold text-sm">ទិន្នន័យ</h3>
                     </div>
                 </div>
             </div>
@@ -343,11 +284,16 @@
                 title: "ហ្វេសប៊ុក (Facebook Safety)",
                 tags: ["social"],
                 items: [
-                    { id: "fb1", text: "ដាក់ Password ខ្លាំង (អក្សរ លេខ សញ្ញា) និងមិនដូចគណនីផ្សេង", urgent: true, risk: "Hacker ងាយទាយលេខសម្ងាត់របស់អ្នកត្រូវ។", rec: "ប្តូរ Password ឥឡូវនេះ ដោយប្រើឃ្លាវែងៗ និងពិបាកទាយ។" },
-                    { id: "fb2", text: "បើកមុខងារផ្ទៀងផ្ទាត់ពីរជាន់ (2FA) ប្រើ App (Google Auth)", urgent: true, risk: "បើគេដឹង Password គេចូលបានភ្លាម។", rec: "ចូល Settings > Security > Two-Factor Auth > បើកជាបន្ទាន់។" },
-                    { id: "fb3", text: "ពិនិត្យមើល Active Sessions (ឧបករណ៍ដែលកំពុងចូលប្រើ)", risk: "អាចមានឧបករណ៍របស់ Hacker កំពុងលួចមើល។", rec: "ចូល Settings > Security > Where you're logged in > Log out ឧបករណ៍មិនស្គាល់។" },
-                    { id: "fb4", text: "បើក Login Alerts (ជូនដំណឹងពេលមានគេចូល)", risk: "មិនដឹងខ្លួនពេលមានគេលួចចូល។", rec: "ចូល Settings > Security > Login Alerts > បើកទាំង Email និង Noti។" },
-                    { id: "fb5", text: "លាក់លេខទូរស័ព្ទ និង Email ពីសាធារណៈ (Only Me)", risk: "Hacker អាចយកព័ត៌មាននេះទៅបោកប្រាស់បន្ត។", rec: "ចូល Privacy Settings > កំណត់ជា Only Me។" }
+                    { id: "fb1", text: "Password ខ្លាំង (១២+ តួ) និងមិនដូចគណនីផ្សេង", urgent: true, risk: "Password ខ្សោយ ឬប្រើដូចគ្នា ធ្វើឱ្យ Hacker ងាយ 'ឆ្លងចូល' គ្រប់គណនី (Credential Stuffing)។", rec: "ប្រើអក្សរធំ/តូច+លេខ+សញ្ញា។ ហាមប្រើថ្ងៃកំណើត/លេខទូរស័ព្ទ។ ចូល Settings > Password and security > Change password។" },
+                    { id: "fb2", text: "បើក 2FA ដោយប្រើ Authenticator App (Google/Microsoft)", urgent: true, risk: "បើប្រើតែ SMS 2FA អាចរងគ្រោះដោយការលួចស៊ីម (SIM Swap)។ គ្មាន 2FA គឺ Hacker ត្រូវការតែ Password មួយគត់។", rec: "ចូល Password and security > Two-factor authentication > ជ្រើសរើស 'Authentication app'។ កុំភ្លេច Save 'Recovery Codes'។" },
+                    { id: "fb3", text: "ពិនិត្យ Active Sessions & Log out ឧបករណ៍មិនស្គាល់", urgent: true, risk: "Hacker អាចនៅជាប់ក្នុងគណនី (Logged in) ទោះបីជាអ្នកប្តូរ Password ហើយក៏ដោយ។", rec: "ចូល Password and security > Where you're logged in > Select devices to log out > ជ្រើសរើសឧបករណ៍ដែលមិនស្គាល់ ឬ Log out all។" },
+                    { id: "fb4", text: "បើក Login Alerts (ជូនដំណឹងពេលមានការចូល)", risk: "មិនដឹងខ្លួនពេលមាន Hacker លួចចូល ធ្វើឱ្យពួកគេមានពេលធ្វើសកម្មភាពបានយូរ។", rec: "ចូល Password and security > Login alerts > បើកទាំង In-app notifications និង Email។" },
+                    { id: "fb5", text: "កំណត់ Privacy លេខទូរស័ព្ទ និង Email ជា “Only Me”", risk: "Scammer ងាយប្រមូលព័ត៌មានដើម្បីបោកប្រាស់ និងធ្វើ Social Engineering។", rec: "ចូល Settings > Audience and visibility > How people find and contact you > កំណត់ Who can look you up... ជា 'Only me'។" },
+                    { id: "fb6", text: "ពិនិត្យ Connected Apps & Websites (លុបចោល)", risk: "App ចាស់ៗដែលឈប់ប្រើ អាចនៅមានសិទ្ធិចូលយកទិន្នន័យ ឬ Post ជំនួសអ្នក។", rec: "ចូល Settings > Your activity > Apps and websites > Remove កម្មវិធីដែលមិនស្គាល់។" },
+                    { id: "fb7", text: "កំណត់ Email/Phone សង្គ្រោះ & Save Backup Codes", urgent: true, risk: "គ្មានច្រកចូលវិញនៅពេលភ្លេច Password ឬបាត់ទូរស័ព្ទ។", rec: "ធានាថា Recovery Email នៅប្រើការបាន។ រក្សាទុក Backup Codes នៅកន្លែងសុវត្ថិភាពក្រៅទូរស័ព្ទ។" },
+                    { id: "fb8", text: "Page Admin Safety (សម្រាប់អ្នកមាន Page)", urgent: true, risk: "Hacker អាចលួច Page បានតាមរយៈ Admin ដែលគ្មានសុវត្ថិភាព។", rec: "Admin ទាំងអស់ត្រូវតែមាន 2FA។ ពិនិត្យ Page Access ជារៀងរាល់ខែ។" },
+                    { id: "fb9", text: "Ad Account Safety (ពិនិត្យការទូទាត់)", risk: "Hacker អាចយកកាតរបស់អ្នកទៅ Boost Post ឱ្យគេផ្សេង។", rec: "លុបកាតធនាគារចាស់ៗចេញ។ បើក Payment Alerts។" },
+                    { id: "fb10", text: "ការពារ Phishing (សារបោកប្រាស់ក្នុង Inbox)", urgent: true, risk: "ចុច Link 'Copyright Warning' ឬ 'Verification' នឹងបាត់បង់គណនីភ្លាមៗ។", rec: "កុំចុច Link! Facebook មិនដែលសុំ Password តាម Message ទេ។" }
                 ]
             },
             {
@@ -358,16 +304,33 @@
                     { id: "tg1", text: "ដាក់ Two-Step Verification (Cloud Password)", urgent: true, risk: "គេអាចលួចគណនីបានងាយៗតាមរយៈ SMS ។", rec: "ចូល Settings > Privacy > Two-Step Verification > កំណត់លេខកូដ។" },
                     { id: "tg2", text: "កំណត់ Privacy លេខទូរស័ព្ទ (Nobody/My Contacts)", risk: "ជនបោកប្រាស់អាចឆាតមកបោកលុយ។", rec: "ចូល Settings > Privacy > Phone Number > ដាក់ Nobody។" },
                     { id: "tg3", text: "ពិនិត្យ Active Sessions (Devices)", urgent: true, risk: "អាចមានកុំព្យូទ័រអ្នកដទៃកំពុងភ្ជាប់។", rec: "ចូល Settings > Devices > Terminate All Other Sessions។" },
-                    { id: "tg4", text: "បិទមិនឱ្យគេ Add ចូល Group (Groups & Channels)", risk: "ត្រូវគេអូសចូលក្រុមបោកប្រាស់/ល្បែង។", rec: "ចូល Settings > Privacy > Groups & Channels > ដាក់ My Contacts។" }
+                    { id: "tg4", text: "បិទមិនឱ្យគេ Add ចូល Group (Groups & Channels)", risk: "ត្រូវគេអូសចូលក្រុមបោកប្រាស់/ល្បែង។", rec: "ចូល Settings > Privacy > Groups & Channels > ដាក់ My Contacts។" },
+                    { id: "tg5", text: "ដាក់កូដសម្ងាត់លើកម្មវិធី (Passcode Lock)", risk: "អ្នកផ្សេងអាចបើកមើលឆាតពេលអ្នកឱ្យទូរស័ព្ទគេខ្ចី។", rec: "ចូល Settings > Privacy > Passcode Lock > បើកដំណើរការ។" },
+                    { id: "tg6", text: "បិទមុខងារ People Nearby", risk: "ជនបោកប្រាស់អាចឃើញទីតាំងនិងឆាតមកយាយី។", rec: "កុំបើកមុខងារ People Nearby ផ្តេសផ្តាស។" }
                 ]
             },
             {
                 id: "sec_tiktok",
-                title: "តិកតុក (TikTok & Others)",
+                title: "តិកតុក និងបណ្តាញផ្សេងៗ (TikTok & Others)",
                 tags: ["social"],
                 items: [
                     { id: "tt1", text: "បើក 2-Step Verification (Email + Phone)", urgent: true, risk: "បាត់បង់គណនីដែលមាន Follower ច្រើន។", rec: "ចូល Settings > Security > 2-Step Verification។" },
-                    { id: "tt2", text: "គ្រប់គ្រងឧបករណ៍ (Manage Devices)", risk: "មានគេលួចលេងគណនីរបស់អ្នក។", rec: "ចូល Settings > Security > Manage Devices > លុបឧបករណ៍ចម្លែក។" }
+                    { id: "tt2", text: "គ្រប់គ្រងឧបករណ៍ (Manage Devices)", risk: "មានគេលួចលេងគណនីរបស់អ្នក។", rec: "ចូល Settings > Security > Manage Devices > លុបឧបករណ៍ចម្លែក។" },
+                    { id: "tt3", text: "កំណត់គណនីជាឯកជន (Private Account) បើចាំបាច់", risk: "ការពារវីដេអូពីការយកទៅប្រើខុសគោលបំណង។", rec: "ចូល Settings > Privacy > Private Account (សម្រាប់គណនីផ្ទាល់ខ្លួន)។" },
+                    { id: "tt4", text: "ត្រួតពិនិត្យការអនុញ្ញាត (App Permissions)", risk: "App អាចចូលយក Contact ឬ Facebook Friends ដោយមិនដឹងខ្លួន។", rec: "ចូល Settings > Privacy > Sync Contacts and Facebook Friends > បិទបើមិនចាំបាច់។" },
+                    { id: "tt5", text: "កុំចុច Link ក្នុង Bio អ្នកមិនស្គាល់", urgent: true, risk: "អាចជា Link បោកប្រាស់ ឬល្បែងស៊ីសង។", rec: "ប្រុងប្រយ័ត្នមុននឹងចុច Link ណាមួយដែលនាំចេញទៅក្រៅ TikTok។" }
+                ]
+            },
+            {
+                id: "sec_email",
+                title: "សុវត្ថិភាព Email (Gmail/Outlook)",
+                tags: ["social", "business"],
+                items: [
+                    { id: "em1", text: "ពិនិត្យ Forwarding Rules (Email បញ្ជូនបន្ត)", urgent: true, risk: "Hacker អាចលួចអាន Email របស់អ្នកដោយស្វ័យប្រវត្តិ។", rec: "ចូល Settings > Forwarding and POP/IMAP > លុបអាសយដ្ឋានមិនស្គាល់។" },
+                    { id: "em2", text: "ពិនិត្យ Filters (ការលាក់ Email)", risk: "Hacker អាចលាក់ Email ជូនដំណឹងពីធនាគារ។", rec: "ចូល Settings > Filters > លុប Filter ដែលគួរឱ្យសង្ស័យ។" },
+                    { id: "em3", text: "កំណត់ Recovery Email ដែលអាចប្រើការបាន", urgent: true, risk: "មិនអាចសង្គ្រោះ Email ពេលភ្លេចលេខសម្ងាត់។", rec: "Update Recovery Email និងលេខទូរស័ព្ទឱ្យទាន់សម័យ។" },
+                    { id: "em4", text: "ពិនិត្យកម្មវិធីដែលភ្ជាប់គណនី (Third-party apps)", risk: "App ខ្លះអាចអាន Email របស់អ្នក។", rec: "ចូល Google Account > Security > Third-party apps with account access > Remove access។" },
+                    { id: "em5", text: "Sign out ពីឧបករណ៍ផ្សេងៗ (Remote Sign-out)", risk: "ភ្លេច Logout ពីកុំព្យូទ័រសាធារណៈ។", rec: "អូសទៅក្រោមបំផុតនៃ Inbox > ចុច Details > Sign out all other web sessions។" }
                 ]
             },
 
@@ -379,7 +342,9 @@
                 items: [
                     { id: "bk1", text: "ហាមប្រាប់លេខកូដ OTP/PIN ដល់អ្នកដទៃដាច់ខាត", urgent: true, risk: "បាត់បង់ប្រាក់ពីគណនីភ្លាមៗ។", rec: "រក្សាទុកជាសម្ងាត់។ បុគ្គលិកធនាគារមិនដែលសុំកូដនេះទេ។" },
                     { id: "bk2", text: "មិនចុច Link ដែលផ្ញើតាម SMS/Chat ថាឱ្យ Update គណនី", urgent: true, risk: "ជាល្បិច Phishing ដើម្បីលួចយកគណនី។", rec: "កុំចុច! ទាក់ទងទៅធនាគារតាមលេខ Hotline ផ្ទាល់។" },
-                    { id: "bk3", text: "ប្រើប្រាស់តែកម្មវិធីធនាគារផ្លូវការ (Official App)", risk: "App ក្លែងក្លាយអាចលួចទិន្នន័យ។", rec: "Download តែពី App Store ឬ Play Store ប៉ុណ្ណោះ។" }
+                    { id: "bk3", text: "ប្រើប្រាស់តែកម្មវិធីធនាគារផ្លូវការ (Official App)", risk: "App ក្លែងក្លាយអាចលួចទិន្នន័យ។", rec: "Download តែពី App Store ឬ Play Store ប៉ុណ្ណោះ។" },
+                    { id: "bk3b", text: "មិនប្រើ Wi-Fi សាធារណៈពេលផ្ទេរប្រាក់", risk: "Hacker អាចលួចមើលទិន្នន័យតាម Wi-Fi។", rec: "ប្រើ 4G/LTE/5G ផ្ទាល់ខ្លួនពេលធ្វើប្រតិបត្តិការហិរញ្ញវត្ថុ។" },
+                    { id: "bk3c", text: "Log out ភ្លាមៗបន្ទាប់ពីប្រើរួច", risk: "អ្នកផ្សេងអាចយកទូរស័ព្ទទៅប្រើបន្ត។", rec: "ទម្លាប់ចុច Log out ជានិច្ចក្រោយពេលផ្ទេរលុយចប់។" }
                 ]
             },
             {
@@ -389,7 +354,9 @@
                 items: [
                     { id: "bk4", text: "បើកការជូនដំណឹងរាល់ប្រតិបត្តិការ (Transaction Alert)", risk: "មិនដឹងភ្លាមៗពេលមានគេលួចដកលុយ។", rec: "បើក Notification ក្នុង App ធនាគារ។" },
                     { id: "bk5", text: "កំណត់ដែនកំណត់ទឹកប្រាក់ផ្ទេរប្រចាំថ្ងៃ (Daily Limit)", risk: "អាចបាត់បង់ប្រាក់ច្រើនក្នុងពេលតែមួយ។", rec: "កំណត់ Limit ឱ្យទាបសមរម្យសម្រាប់ការប្រើប្រាស់។" },
-                    { id: "bk6", text: "ស្គាល់លេខ Hotline ធនាគារ និងរបៀបបង្កកគណនី (Freeze)", urgent: true, risk: "យឺតយ៉ាវក្នុងការទប់ស្កាត់ពេលមានបញ្ហា។", rec: "កត់លេខ Hotline ទុក ហើយរៀនប្រើមុខងារ Freeze Account។" }
+                    { id: "bk6", text: "ស្គាល់លេខ Hotline ធនាគារ និងរបៀបបង្កកគណនី (Freeze)", urgent: true, risk: "យឺតយ៉ាវក្នុងការទប់ស្កាត់ពេលមានបញ្ហា។", rec: "កត់លេខ Hotline ទុក ហើយរៀនប្រើមុខងារ Freeze Account។" },
+                    { id: "bk7", text: "ប្រើកាតនិម្មិត (Virtual Card) សម្រាប់ទិញអីវ៉ាន់អនឡាញ", risk: "បែកធ្លាយលេខកាតធនាគារដើម (Master Card/Visa)។", rec: "បង្កើត Virtual Card ហើយដាក់លុយតែល្មមចាយ។" },
+                    { id: "bk8", text: "ពិនិត្យរបាយការណ៍គណនី (Statement) ជាប្រចាំ", risk: "មានការកាត់លុយតិចតួចដែលអ្នកមិនចាប់អារម្មណ៍។", rec: "ពិនិត្យរៀងរាល់ខែ ដើម្បីរកមើលប្រតិបត្តិការមិនប្រក្រតី។" }
                 ]
             },
 
@@ -402,7 +369,8 @@
                     { id: "ph1", text: "ដាក់លេខកូដសម្ងាត់អេក្រង់ (Passcode/FaceID)", urgent: true, risk: "អ្នកដទៃអាចចូលមើលរូបភាពនិងទិន្នន័យផ្ទាល់ខ្លួន។", rec: "កំណត់ Passcode យ៉ាងតិច ៦ ខ្ទង់។" },
                     { id: "ph2", text: "ធ្វើបច្ចុប្បន្នភាពកម្មវិធី (Update iOS/Android)", urgent: true, risk: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោងសុវត្ថិភាព។", rec: "ចូល Settings > General > Software Update។" },
                     { id: "ph3", text: "កំណត់ឱ្យបិទអេក្រង់ស្វ័យប្រវត្តិ (៣០វិនាទី - ១នាទី)", risk: "គេអាចលួចប្រើពេលអ្នកទុកទូរស័ព្ទចោល។", rec: "កំណត់ Auto-Lock ត្រឹម ៣០ វិនាទី។" },
-                    { id: "ph4", text: "លុបកម្មវិធីណាដែលមិនប្រើប្រាស់ចោល", risk: "កម្មវិធីចាស់ៗអាចមានមេរោគ ឬតាមដានអ្នក។", rec: "ពិនិត្យនិងលុប App ដែលមិនចាំបាច់។" }
+                    { id: "ph4", text: "លុបកម្មវិធីណាដែលមិនប្រើប្រាស់ចោល", risk: "កម្មវិធីចាស់ៗអាចមានមេរោគ ឬតាមដានអ្នក។", rec: "ពិនិត្យនិងលុប App ដែលមិនចាំបាច់។" },
+                    { id: "ph5", text: "បើកមុខងារស្វែងរកទូរស័ព្ទ (Find My Device)", urgent: true, risk: "មិនអាចលុបទិន្នន័យពីចម្ងាយពេលបាត់ទូរស័ព្ទ។", rec: "ចូល Settings > Find My (iPhone) ឬ Google Find My Device (Android)។" }
                 ]
             },
             {
@@ -412,7 +380,9 @@
                 items: [
                     { id: "pc1", text: "បើកកម្មវិធីកម្ចាត់មេរោគ (Antivirus / Windows Defender)", risk: "មេរោគអាចបំផ្លាញ ឬលួចឯកសារ។", rec: "បើក Real-time protection ក្នុង Windows Security។" },
                     { id: "pc2", text: "មិនប្រើប្រាស់កម្មវិធី Crack ឬ Pirate", urgent: true, risk: "Software Crack ភាគច្រើនមានបង្កប់មេរោគ។", rec: "ប្រើប្រាស់ Software ស្របច្បាប់ ឬកម្មវិធីឥតគិតថ្លៃជំនួស។" },
-                    { id: "pc3", text: "បិទកាមេរ៉ា (Webcam cover) ពេលមិនប្រើ", risk: "Hacker អាចលួចមើលតាមកាមេរ៉ា។", rec: "ប្រើស្គុតបិទ ឬប្រដាប់បិទកាមេរ៉ា។" }
+                    { id: "pc3", text: "បិទកាមេរ៉ា (Webcam cover) ពេលមិនប្រើ", risk: "Hacker អាចលួចមើលតាមកាមេរ៉ា។", rec: "ប្រើស្គុតបិទ ឬប្រដាប់បិទកាមេរ៉ា។" },
+                    { id: "pc4", text: "អ៊ិនគ្រីប Hard Drive (BitLocker/FileVault)", risk: "គេអាចដោះ Hard Disk យកទិន្នន័យបានទោះកុំព្យូទ័រខូច។", rec: "បើក BitLocker (Windows) ឬ FileVault (Mac)។" },
+                    { id: "pc5", text: "Backup ទិន្នន័យដាច់ដោយឡែក (Offline Backup)", urgent: true, risk: "Ransomware អាចចាក់សោរទិន្នន័យទាំងអស់។", rec: "ចម្លងដាក់ Hard Disk ក្រៅ ហើយដកចេញពេលមិនប្រើ។" }
                 ]
             },
 
@@ -425,7 +395,46 @@
                     { id: "dt1", text: "មិនផ្ញើរូបភាពអត្តសញ្ញាណប័ណ្ណ/កាតធនាគារ តាមឆាត", urgent: true, risk: "បែកធ្លាយទិន្នន័យសំខាន់ៗបើគណនីត្រូវគេ Hack។", rec: "លុបរូបភាពទាំងនោះចេញពីឆាតភ្លាមៗបន្ទាប់ពីប្រើរួច។" },
                     { id: "dt2", text: "Backup ឯកសារសំខាន់ៗ (Cloud/Hard Disk)", risk: "បាត់បង់ឯកសាររហូត បើឧបករណ៍ខូចឬបាត់។", rec: "ប្រើ Google Drive ឬ iCloud ដើម្បីរក្សាទុក។" },
                     { id: "dt3", text: "ពិនិត្យសិទ្ធិរបស់ App (Permissions - Camera, Mic, Location)", risk: "App ខ្លះលួចតាមដានទីតាំង ឬស្តាប់សំឡេង។", rec: "បិទ Permission ណាដែលមិនចាំបាច់ក្នុង Settings។" },
-                    { id: "dt4", text: "ប្រយ័ត្ន Wi-Fi សាធារណៈ (Free Wi-Fi)", risk: "Hacker អាចលួចទិន្នន័យតាម Wi-Fi ហាងកាហ្វេ។", rec: "កុំធ្វើប្រតិបត្តិការធនាគារតាម Free Wi-Fi ឬប្រើ VPN។" }
+                    { id: "dt4", text: "ប្រយ័ត្ន Wi-Fi សាធារណៈ (Free Wi-Fi)", risk: "Hacker អាចលួចទិន្នន័យតាម Wi-Fi ហាងកាហ្វេ។", rec: "កុំធ្វើប្រតិបត្តិការធនាគារតាម Free Wi-Fi ឬប្រើ VPN។" },
+                    { id: "dt5", text: "កុំបង្ហោះឯកសារផ្ទាល់ខ្លួនលើបណ្តាញសង្គម", risk: "Scammer យកព័ត៌មានទៅក្លែងបន្លំ។", rec: "ហាមបង្ហោះ លិខិតឆ្លងដែន សំបុត្រយន្តហោះ ឬកាតធនាគារ។" }
+                ]
+            },
+
+            // --- Business Section ---
+            {
+                id: "sec_biz_network",
+                title: "បណ្តាញ និងការតភ្ជាប់ (Network & Wi-Fi)",
+                tags: ["business"],
+                items: [
+                    { id: "bz1", text: "ប្រើលេខសម្ងាត់ Wi-Fi ខ្លាំង និងប្តូរជាប្រចាំ", urgent: true, risk: "អ្នកជិតខាង ឬ Hacker អាចចូលប្រើបណ្តាញក្រុមហ៊ុន។", rec: "កំណត់លេខសម្ងាត់ Wi-Fi ឱ្យវែង និងពិបាកទាយ។" },
+                    { id: "bz2", text: "ញែកបណ្តាញសម្រាប់ភ្ញៀវ (Guest Network)", risk: "ភ្ញៀវអាចមានឧបករណ៍ដែលមានមេរោគ។", rec: "បង្កើត Guest Wi-Fi សម្រាប់ភ្ញៀវ ដោយមិនឱ្យចូលបណ្តាញមេ។" },
+                    { id: "bz3", text: "បិទ Router Admin Access ពីខាងក្រៅ", risk: "Hacker អាចចូលគ្រប់គ្រង Router ពីចម្ងាយ។", rec: "បិទមុខងារ Remote Management ក្នុង Router Settings។" },
+                    { id: "bz3a", text: "ធ្វើបច្ចុប្បន្នភាព Firmware Router", risk: "Router ចាស់ងាយរងការវាយប្រហារ។", rec: "Check Update ក្នុង Router Settings។" },
+                    { id: "bz3b", text: "ប្រើប្រាស់ Firewall", risk: "គ្មានរបាំងការពារការវាយប្រហារពីអ៊ីនធឺណិត។", rec: "បើក Firewall លើ Router និងកុំព្យូទ័រ។" }
+                ]
+            },
+            {
+                id: "sec_biz_staff",
+                title: "ការយល់ដឹងរបស់បុគ្គលិក (Staff Awareness)",
+                tags: ["business"],
+                items: [
+                    { id: "bz4", text: "បណ្តុះបណ្តាលបុគ្គលិកអំពី Phishing និង Scams", urgent: true, risk: "បុគ្គលិកគឺជាចំណុចខ្សោយបំផុត (Human Firewall)។", rec: "ធ្វើការប្រជុំខ្លីៗអំពីសុវត្ថិភាពរៀងរាល់ខែ។" },
+                    { id: "bz5", text: "កំណត់គោលការណ៍រាយការណ៍បញ្ហា (Reporting Policy)", risk: "បុគ្គលិកលាក់បាំងបញ្ហាព្រោះខ្លាច។", rec: "បង្កើតវប្បធម៌មិនស្តីបន្ទោស (No Blame Culture) ពេលរាយការណ៍។" },
+                    { id: "bz6", text: "មានអ្នកទទួលខុសត្រូវផ្នែក IT (IT Contact)", risk: "មិនដឹងត្រូវទាក់ទងអ្នកណាពេលមានបញ្ហាបន្ទាន់។", rec: "កំណត់លេខទូរស័ព្ទ IT ឬអ្នកជំនាញសម្រាប់ករណីបន្ទាន់។" },
+                    { id: "bz6a", text: "កំណត់សិទ្ធិចូលប្រើប្រាស់ (Access Control)", risk: "បុគ្គលិកចូលមើលទិន្នន័យដែលមិនចាំបាច់។", rec: "ផ្តល់សិទ្ធិត្រឹមតែអ្វីដែលចាំបាច់សម្រាប់ការងារប៉ុណ្ណោះ។" },
+                    { id: "bz6b", text: "គោលការណ៍ដាក់ Password របស់ក្រុមហ៊ុន", risk: "Password ងាយស្រួលធ្វើឱ្យក្រុមហ៊ុនរងគ្រោះ។", rec: "តម្រូវឱ្យបុគ្គលិកប្រើ Password វែង និងប្តូររៀងរាល់ ៦ ខែ។" }
+                ]
+            },
+            {
+                id: "sec_biz_incident",
+                title: "ការឆ្លើយតបពេលមានបញ្ហា (Incident Response)",
+                tags: ["business"],
+                items: [
+                    { id: "bz7", text: "ដឹងពីរបៀបបិទ/Lock ប្រព័ន្ធភ្លាមៗ", urgent: true, risk: "ការខូចខាតរាលដាលកាន់តែធំបើមិនទប់ស្កាត់ទាន់ពេល។", rec: "មានផែនការច្បាស់លាស់សម្រាប់បិទ Server ឬផ្តាច់ Internet។" },
+                    { id: "bz8", text: "រក្សាទុកភស្តុតាង (Save Evidence)", risk: "ពិបាកក្នុងការស៊ើបអង្កេត ឬប្តឹងសមត្ថកិច្ច។", rec: "ថត Screenshot, រក្សា Log files មុនពេលលុប ឬ Format។" },
+                    { id: "bz9", text: "មានបញ្ជីទំនាក់ទំនងបន្ទាន់ (Contact List)", risk: "ខាតពេលក្នុងការស្វែងរកលេខទូរស័ព្ទប៉ូលីស ឬធនាគារ។", rec: "បិទបញ្ជីលេខទូរស័ព្ទសំខាន់ៗនៅកន្លែងងាយឃើញ។" },
+                    { id: "bz10", text: "ប្តូរ Password Admin ទាំងអស់ក្រោយមានបញ្ហា", urgent: true, risk: "Hacker អាចនៅមានសិទ្ធិចូលប្រើ។", rec: "Reset គណនីសំខាន់ៗទាំងអស់ភ្លាមៗ។" },
+                    { id: "bz11", text: "ត្រួតពិនិត្យ Log ដើម្បីរកមូលហេតុ", risk: "មិនដឹងថាបញ្ហាមកពីណា និងការពារថ្ងៃក្រោយ។", rec: "ពិនិត្យមើល Access Logs របស់ Server/Router។" }
                 ]
             }
         ];
@@ -433,57 +442,10 @@
         let checkedItems = new Set();
         let activeFilter = 'social';
 
-        // Carousel Variables
-        let currentSlide = 0;
-        const totalSlides = 3;
-        let slideInterval;
-
         document.addEventListener('DOMContentLoaded', () => {
             setFilter('social');
-            startCarousel();
         });
 
-        // --- Carousel Logic ---
-        function showSlide(index) {
-            const track = document.getElementById('carousel-track');
-            const dots = document.querySelectorAll('.carousel-dot');
-            
-            if (index >= totalSlides) index = 0;
-            if (index < 0) index = totalSlides - 1;
-            
-            currentSlide = index;
-            track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            dots.forEach((dot, i) => {
-                if (i === currentSlide) {
-                    dot.classList.add('bg-white', 'w-6');
-                    dot.classList.remove('bg-white/30');
-                } else {
-                    dot.classList.remove('bg-white', 'w-6');
-                    dot.classList.add('bg-white/30');
-                }
-            });
-        }
-
-        function nextSlide() { showSlide(currentSlide + 1); resetTimer(); }
-        function prevSlide() { showSlide(currentSlide - 1); resetTimer(); }
-        function goToSlide(index) { showSlide(index); resetTimer(); }
-        function startCarousel() { slideInterval = setInterval(() => { showSlide(currentSlide + 1); }, 5000); }
-        function resetTimer() { clearInterval(slideInterval); startCarousel(); }
-
-        const carouselEl = document.querySelector('#carousel-track')?.parentElement;
-        if(carouselEl) {
-            carouselEl.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            carouselEl.addEventListener('mouseleave', startCarousel);
-            let touchStartX = 0;
-            carouselEl.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-            carouselEl.addEventListener('touchend', e => {
-                if (e.changedTouches[0].screenX < touchStartX - 50) nextSlide();
-                if (e.changedTouches[0].screenX > touchStartX + 50) prevSlide();
-            });
-        }
-
-        // --- Core Functions ---
         function setFilter(filter) {
             activeFilter = filter;
             document.querySelectorAll('.planner-card').forEach(el => el.classList.remove('active'));
@@ -574,11 +536,13 @@
             container.innerHTML = activeSections.map((section, index) => {
                 const itemsHtml = section.items.map(item => {
                     const isChecked = checkedItems.has(item.id);
+                    // Checkbox style
                     const btnClass = isChecked 
                         ? "w-6 h-6 rounded-full border-2 border-brand-500 bg-brand-500 flex items-center justify-center transition-colors text-white" 
                         : "w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center transition-colors bg-white hover:border-brand-400";
                     const iconClass = isChecked ? "" : "opacity-0";
                     const rowClass = isChecked ? "checked" : "";
+                    
                     const urgentBadge = item.urgent ? `<span class="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded ml-2 font-bold">សំខាន់</span>` : "";
 
                     return `
@@ -595,6 +559,8 @@
                                         </h4>
                                         <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 ml-2"></i>
                                     </div>
+                                    
+                                    <!-- Info Panel -->
                                     <div id="info-${item.id}" class="info-panel mt-0 rounded-lg text-sm">
                                         <div class="mb-2">
                                             <strong class="text-xs uppercase tracking-wide text-red-600 block mb-1">⚠️ ហានិភ័យ (Risk)</strong>
@@ -611,6 +577,7 @@
                     `;
                 }).join('');
 
+                // Only open the first section by default
                 const isOpen = index === 0 ? 'open' : '';
                 const isRotated = index === 0 ? 'rotate' : '';
 
@@ -641,15 +608,17 @@
             const offset = circumference - (score / 100) * circumference;
             circle.style.strokeDashoffset = offset;
             
-            if(score >= 80) circle.style.stroke = "#16a34a";
-            else if(score >= 50) circle.style.stroke = "#ca8a04";
-            else circle.style.stroke = "#dc2626";
+            // Color Coding Circle
+            if(score >= 80) circle.style.stroke = "#16a34a"; // Green
+            else if(score >= 50) circle.style.stroke = "#ca8a04"; // Yellow
+            else circle.style.stroke = "#dc2626"; // Red
 
+            // Update Risk Box
             const riskBox = document.getElementById('risk-box');
             riskBox.className = `rounded-lg p-4 mb-4 border transition-colors duration-300 text-center ${level.bg} border-slate-200`;
             
             document.getElementById('risk-text').innerHTML = level.text;
-            document.getElementById('risk-text').className = `text-sm font-extrabold ${level.color}`;
+            document.getElementById('risk-text').className = `text-lg font-extrabold ${level.color}`;
             
             const riskIcon = document.getElementById('risk-icon');
             riskIcon.className = `w-5 h-5 ${level.color}`;
@@ -683,17 +652,22 @@
             let missedItems = [];
             activeSections.forEach(section => {
                 section.items.forEach(item => {
-                    if (!checkedItems.has(item.id)) missedItems.push(item);
+                    if (!checkedItems.has(item.id)) {
+                        missedItems.push(item);
+                    }
                 });
             });
 
             if (missedItems.length === 0) {
                 modalBody.innerHTML = `<div class="text-center py-10 text-green-600"><i data-lucide="check-circle" class="w-16 h-16 mx-auto mb-4"></i><p>គ្មានការណែនាំបន្ថែមទេ។ អ្នកធ្វើបានល្អណាស់!</p></div>`;
             } else {
+                // Sort urgent first
                 missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+
                 modalBody.innerHTML = missedItems.map(item => {
                     const borderClass = item.urgent ? "border-l-4 border-red-500 bg-red-50" : "border-l-4 border-yellow-400 bg-yellow-50";
                     const titleColor = item.urgent ? "text-red-800" : "text-slate-800";
+                    
                     return `
                         <div class="${borderClass} p-4 rounded-r-lg shadow-sm mb-3">
                             <div class="flex items-start gap-3">
@@ -701,7 +675,9 @@
                                 <div>
                                     <h5 class="font-bold ${titleColor} text-sm mb-1">${item.text}</h5>
                                     <p class="text-xs text-slate-600 mb-2">${item.risk}</p>
-                                    <div class="text-xs bg-white/60 p-2 rounded text-slate-800 font-medium">👉 ${item.rec}</div>
+                                    <div class="text-xs bg-white/60 p-2 rounded text-slate-800 font-medium">
+                                        👉 ${item.rec}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -752,7 +728,7 @@
             missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
 
             let html = '';
-            // 1. Action Required
+            // --- SECTION 1: ACTION REQUIRED ---
             if (missedItems.length > 0) {
                 html += `<div class="mb-4 pb-2 border-b-2 border-red-100 font-bold text-red-700 text-sm uppercase">⚠️ ចំណុចត្រូវកែលម្អ (Action Required)</div>`;
                 html += missedItems.map(item => `
@@ -771,7 +747,7 @@
                 html += `<div class="p-4 text-center text-green-700 font-bold border border-green-200 bg-green-50 rounded mb-6">អបអរសាទរ! អ្នកមិនមានចំណុចខ្វះខាតនៅក្នុងផ្នែកនេះទេ។</div>`;
             }
 
-            // 2. Completed Items
+            // --- SECTION 2: COMPLETED ITEMS ---
             if (completedItems.length > 0) {
                 html += `<div class="mt-6 mb-4 pb-2 border-b-2 border-green-100 font-bold text-green-700 text-sm uppercase">✅ ចំណុចបានការពាររួច (Completed)</div>`;
                 html += `<div class="grid grid-cols-1 gap-2">`;
