@@ -730,6 +730,7 @@
             document.getElementById('pdf-score').innerText = `${score}/100`;
             document.getElementById('pdf-risk-level').innerText = level.text;
             
+            // Directly set style for PDF reliability
             const levelColor = score >= 80 ? '#16a34a' : (score >= 50 ? '#ca8a04' : '#dc2626');
             document.getElementById('pdf-risk-level').style.color = levelColor;
 
@@ -739,11 +740,15 @@
 
             activeSections.forEach(section => {
                 section.items.forEach(item => {
-                    if (checkedItems.has(item.id)) completedItems.push(item);
-                    else missedItems.push(item);
+                    if (checkedItems.has(item.id)) {
+                        completedItems.push(item);
+                    } else {
+                        missedItems.push(item);
+                    }
                 });
             });
 
+            // Sort missed items: Urgent first
             missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
 
             let html = '';
@@ -781,11 +786,17 @@
 
             container.innerHTML = html;
             
+            // Fixed PDF Options for Mobile
             const opt = {
                 margin: 10,
                 filename: 'Digital_Health_Full_Report.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true,
+                    scrollY: 0,        // Forces top of document
+                    windowWidth: 800   // Simulates desktop width on mobile to prevent layout crushing
+                },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
             html2pdf().from(template).set(opt).save();
