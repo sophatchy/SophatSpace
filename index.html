@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Shield, 
   Lock, 
@@ -116,7 +116,6 @@ const checklistItems = [
 export default function SophatDigitalSpace() {
   const [lang, setLang] = useState('kh'); // Default to Khmer
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('all');
 
   const t = translations[lang];
 
