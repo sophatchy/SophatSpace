@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>សុផាត ឌីជីថល - ឆែកសុខភាពឌីជីថល</title>
     
-    <!-- Open Graph -->
-    <meta property="og:title" content="សុផាត ឌីជីថល - iOS Style Check">
-    <meta property="og:description" content="Check your digital health with our AI-powered tool.">
-    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Tailwind Config for iOS Design -->
+    <!-- Config: iOS Design System -->
     <script>
         tailwind.config = {
             theme: {
@@ -21,30 +17,44 @@
                         sans: ['"Kantumruy Pro"', '-apple-system', 'BlinkMacSystemFont', '"San Francisco"', '"Helvetica Neue"', 'sans-serif'],
                     },
                     colors: {
+                        // iOS System Colors
                         ios: {
-                            bg: '#F5F5F7', // System Gray 6
+                            bg: '#F2F2F7', // System Gray 6
                             card: '#FFFFFF',
                             blue: '#007AFF', // System Blue
                             green: '#34C759', // System Green
                             red: '#FF3B30', // System Red
                             orange: '#FF9500', // System Orange
+                            indigo: '#5856D6', // System Indigo
                             gray: '#8E8E93', // System Gray
                             separator: '#C6C6C8',
                             label: '#000000',
-                            secondaryLabel: '#3C3C4399', // 60% opacity
+                            secondaryLabel: '#3C3C4399',
                         }
-                    },
-                    boxShadow: {
-                        'ios-card': '0 4px 24px rgba(0, 0, 0, 0.04)',
-                        'ios-float': '0 8px 32px rgba(0, 0, 0, 0.08)',
-                        'ios-inner': 'inset 0 1px 4px rgba(0, 0, 0, 0.05)',
                     },
                     borderRadius: {
                         'ios': '20px',
                         'ios-lg': '32px',
+                        'pill': '9999px',
+                    },
+                    boxShadow: {
+                        'ios-card': '0 4px 12px rgba(0, 0, 0, 0.03)',
+                        'ios-float': '0 8px 32px rgba(0, 0, 0, 0.08)',
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
                     },
                     animation: {
-                        'scale-in': 'scaleIn 0.2s cubic-bezier(0.1, 0.7, 1.0, 0.1) forwards',
+                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        scaleUp: {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
                     }
                 }
             }
@@ -58,203 +68,202 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..900&display=swap" rel="stylesheet">
     
     <!-- Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
         body { 
-            background-color: #F5F5F7; 
-            -webkit-font-smoothing: antialiased; 
-            color: #1c1c1e;
+            background-color: #F2F2F7;
+            color: #1C1C1E;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Hide scrollbar for clean look */
+        /* Glassmorphism Classes */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Hide scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* iOS Switch Toggle Animation */
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #34C759;
-        }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #34C759;
-        }
-        
         /* Smooth Accordion */
         .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .accordion-content.open { grid-template-rows: 1fr; }
         .accordion-inner { overflow: hidden; }
 
-        /* Score Ring Animation */
-        .ring-circle { transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 1, 0.5, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
+        /* Ring Animation */
+        .ring-circle { transition: stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
 
-        /* Glassmorphism */
-        .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        .glass-heavy { background: rgba(245, 245, 247, 0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); }
-
-        /* Item Row Interactions */
-        .item-row:active { background-color: #E5E5EA; transform: scale(0.99); }
-        .item-row { transition: background-color 0.2s, transform 0.1s; }
-        
         /* PDF Layout */
         #pdf-wrapper { position: absolute; top: -9999px; left: -9999px; width: 794px; }
+        
+        /* Custom Interactions */
+        .tap-effect:active { transform: scale(0.96); opacity: 0.8; }
+        .tap-effect { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s; }
     </style>
 </head>
 <body class="selection:bg-ios-blue selection:text-white pb-32">
 
     <!-- App UI Wrapper -->
     <div id="app-ui">
-        <!-- Navbar (Glass) -->
-        <nav class="sticky top-0 z-50 glass border-b border-black/5">
-            <div class="max-w-5xl mx-auto px-4 sm:px-6">
-                <div class="flex justify-between h-14 items-center">
-                    <div class="flex items-center gap-2 cursor-pointer transition active:opacity-50" onclick="window.location.reload()">
-                        <div class="w-8 h-8 bg-ios-blue rounded-lg flex items-center justify-center text-white shadow-lg shadow-ios-blue/30">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i>
-                        </div>
-                        <span class="font-bold text-lg tracking-tight">សុផាត ឌីជីថល</span>
+        
+        <!-- Floating "Island" Navbar (iOS Style) -->
+        <div class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+            <nav class="glass-nav rounded-full px-5 py-2.5 flex items-center gap-4 shadow-ios-float animate-fade-in">
+                <div class="flex items-center gap-3 cursor-pointer tap-effect" onclick="window.location.reload()">
+                    <div class="w-9 h-9 bg-ios-blue rounded-full flex items-center justify-center text-white shadow-md shadow-ios-blue/30">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
                     </div>
-                    <div class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-500">
-                        <i data-lucide="user" class="w-4 h-4"></i>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-sm tracking-tight text-black leading-none">សុផាត ឌីជីថល</span>
+                        <span class="text-[10px] font-bold text-ios-blue uppercase tracking-wide mt-0.5">Security</span>
                     </div>
                 </div>
-            </div>
-        </nav>
+                <div class="w-px h-5 bg-ios-separator mx-1"></div>
+                <button class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition tap-effect">
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                </button>
+            </nav>
+        </div>
 
         <!-- Main Content -->
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-28">
 
-            <!-- Header Title -->
-            <div class="mb-6">
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-black mb-1">សុខភាពឌីជីថល</h1>
-                <p class="text-ios-secondaryLabel font-medium">ត្រួតពិនិត្យប្រចាំថ្ងៃ • <span id="current-date">ថ្ងៃនេះ</span></p>
-            </div>
-
-            <!-- Widget Carousel (Horizontal Scroll) -->
-            <div class="relative w-full overflow-hidden rounded-ios-lg mb-8 shadow-ios-card bg-white">
-                <div id="carousel-track" class="flex transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
-                    <!-- Card 1 -->
-                    <div class="min-w-full p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
-                        <div class="z-10 text-center md:text-left">
-                            <span class="text-blue-100 uppercase text-xs font-bold tracking-widest mb-2 block">គន្លឹះសុវត្ថិភាពទី ១</span>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-2">ការពារពីរជាន់ (2FA)</h2>
-                            <p class="text-blue-50 text-sm md:text-base leading-relaxed opacity-90 max-w-lg">
-                                លេខសម្ងាត់តែមួយមិនគ្រប់គ្រាន់ទេ។ បើក 2FA លើ Facebook និង Telegram ឥឡូវនេះ ដើម្បីទប់ស្កាត់ Hacker។
-                            </p>
-                        </div>
-                        <div class="z-10 bg-white/20 p-4 rounded-2xl backdrop-blur-md shadow-lg border border-white/10 shrink-0">
-                            <i data-lucide="lock" class="w-10 h-10 text-white"></i>
-                        </div>
-                    </div>
-                    <!-- Card 2 -->
-                    <div class="min-w-full p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 bg-gradient-to-br from-orange-400 to-pink-500 text-white relative overflow-hidden">
-                        <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -ml-10 -mb-10"></div>
-                        <div class="z-10 text-center md:text-left">
-                            <span class="text-orange-100 uppercase text-xs font-bold tracking-widest mb-2 block">គន្លឹះសុវត្ថិភាពទី ២</span>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-2">ប្រយ័ត្ន Phishing</h2>
-                            <p class="text-orange-50 text-sm md:text-base leading-relaxed opacity-90 max-w-lg">
-                                ហាមចុច Link ពីប្រភពមិនស្គាល់ ឬផ្តល់លេខកូដ OTP ឱ្យនរណាម្នាក់។ ធនាគារមិនដែលសុំលេខសម្ងាត់តាមទូរស័ព្ទទេ។
-                            </p>
-                        </div>
-                        <div class="z-10 bg-white/20 p-4 rounded-2xl backdrop-blur-md shadow-lg border border-white/10 shrink-0">
-                            <i data-lucide="alert-triangle" class="w-10 h-10 text-white"></i>
-                        </div>
-                    </div>
-                    <!-- Card 3 -->
-                    <div class="min-w-full p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 bg-gradient-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden">
-                        <div class="z-10 text-center md:text-left">
-                            <span class="text-indigo-100 uppercase text-xs font-bold tracking-widest mb-2 block">Powered by Gemini</span>
-                            <h2 class="text-2xl md:text-3xl font-bold mb-2">វិភាគដោយ AI</h2>
-                            <p class="text-indigo-50 text-sm md:text-base leading-relaxed opacity-90 max-w-lg">
-                                ប្រើប្រាស់បច្ចេកវិទ្យា AI ដើម្បីវិភាគហានិភ័យរបស់អ្នក និងផ្តល់ដំបូន្មានផ្ទាល់ខ្លួនសម្រាប់អ្នក។
-                            </p>
-                        </div>
-                        <div class="z-10 bg-white/20 p-4 rounded-2xl backdrop-blur-md shadow-lg border border-white/10 shrink-0">
-                            <i data-lucide="sparkles" class="w-10 h-10 text-white"></i>
-                        </div>
+            <!-- Header Section -->
+            <div class="mb-8 animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-black tracking-tight mb-1">សុខភាពឌីជីថល</h1>
+                        <p class="text-ios-secondaryLabel font-medium text-sm">ត្រួតពិនិត្យប្រចាំថ្ងៃ • <span id="current-date" class="text-ios-blue font-bold">ថ្ងៃនេះ</span></p>
                     </div>
                 </div>
-                <!-- Pagination Dots (iOS Style) -->
-                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-white/90 shadow-sm carousel-dot cursor-pointer" onclick="goToSlide(0)"></div>
-                    <div class="w-2 h-2 rounded-full bg-white/40 shadow-sm carousel-dot cursor-pointer" onclick="goToSlide(1)"></div>
-                    <div class="w-2 h-2 rounded-full bg-white/40 shadow-sm carousel-dot cursor-pointer" onclick="goToSlide(2)"></div>
-                </div>
-            </div>
 
-            <!-- Layout Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                <!-- Sidebar / Score Panel (Sticky) -->
-                <div class="lg:col-span-4 lg:order-2">
-                    <div class="sticky top-24">
-                        <!-- Score Card (Health App Style) -->
-                        <div class="bg-white rounded-ios-lg p-6 shadow-ios-card mb-6 relative overflow-hidden">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-lg text-black">ពិន្ទុសរុប</h3>
-                                <button onclick="window.location.reload()" class="text-ios-blue text-xs font-semibold bg-blue-50 px-2 py-1 rounded-full">Reset</button>
+                <!-- Widget Carousel (iOS Stack Layout) -->
+                <div class="relative w-full overflow-hidden rounded-ios-lg shadow-ios-card bg-white">
+                    <div id="carousel-track" class="flex transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                        <!-- Card 1 -->
+                        <div class="min-w-full p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-blue-500 to-blue-600 text-white relative">
+                            <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-[60px] -mr-20 -mt-20"></div>
+                            <div class="z-10 text-center md:text-left flex-1">
+                                <span class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-3 block opacity-80">គន្លឹះសុវត្ថិភាពទី ១</span>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-3">ការពារពីរជាន់ (2FA)</h2>
+                                <p class="text-blue-50 text-base leading-relaxed opacity-90 max-w-lg font-medium">
+                                    លេខសម្ងាត់តែមួយមិនគ្រប់គ្រាន់ទេ។ បើក 2FA លើ Facebook និង Telegram ដើម្បីការពារគណនីរបស់អ្នក។
+                                </p>
                             </div>
-                            
-                            <div class="flex flex-col items-center justify-center my-4 relative">
+                            <div class="z-10 w-20 h-20 bg-white/20 rounded-[24px] backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="lock" class="w-9 h-9 text-white"></i>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="min-w-full p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-orange-400 to-pink-500 text-white relative">
+                            <div class="z-10 text-center md:text-left flex-1">
+                                <span class="text-orange-100 text-xs font-bold uppercase tracking-widest mb-3 block opacity-80">គន្លឹះសុវត្ថិភាពទី ២</span>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-3">ប្រយ័ត្ន Phishing</h2>
+                                <p class="text-orange-50 text-base leading-relaxed opacity-90 max-w-lg font-medium">
+                                    ធនាគារមិនដែលសុំលេខសម្ងាត់តាមទូរស័ព្ទទេ។ កុំចុច Link ដែលមិនស្គាល់ប្រភពច្បាស់លាស់។
+                                </p>
+                            </div>
+                            <div class="z-10 w-20 h-20 bg-white/20 rounded-[24px] backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="shield-alert" class="w-9 h-9 text-white"></i>
+                            </div>
+                        </div>
+                         <!-- Card 3 -->
+                        <div class="min-w-full p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white relative">
+                            <div class="z-10 text-center md:text-left flex-1">
+                                <span class="text-indigo-100 text-xs font-bold uppercase tracking-widest mb-3 block opacity-80">AI Powered</span>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-3">ជំនួយការឆ្លាតវៃ</h2>
+                                <p class="text-indigo-50 text-base leading-relaxed opacity-90 max-w-lg font-medium">
+                                    ប្រព័ន្ធ AI នឹងវិភាគហានិភ័យរបស់អ្នក និងផ្តល់ដំបូន្មានសុវត្ថិភាពផ្ទាល់ខ្លួនភ្លាមៗ។
+                                </p>
+                            </div>
+                            <div class="z-10 w-20 h-20 bg-white/20 rounded-[24px] backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="sparkles" class="w-9 h-9 text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Indicators -->
+                    <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-2">
+                        <button onclick="goToSlide(0)" class="w-2 h-2 rounded-full bg-white transition-all carousel-dot shadow-sm hover:scale-125"></button>
+                        <button onclick="goToSlide(1)" class="w-2 h-2 rounded-full bg-white/50 transition-all hover:bg-white carousel-dot shadow-sm hover:scale-125"></button>
+                        <button onclick="goToSlide(2)" class="w-2 h-2 rounded-full bg-white/50 transition-all hover:bg-white carousel-dot shadow-sm hover:scale-125"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in" style="animation-delay: 0.2s;">
+                
+                <!-- Right Panel: Score & Actions (Sticky) -->
+                <div class="lg:col-span-4 lg:order-2">
+                    <div class="sticky top-28 space-y-6">
+                        <!-- Score Widget (Apple Health Style) -->
+                        <div class="bg-white p-6 rounded-ios-lg shadow-ios-card relative overflow-hidden">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-lg text-black">ពិន្ទុសរុប</h3>
+                                <button onclick="window.location.reload()" class="px-3 py-1 bg-ios-bg text-ios-blue text-xs font-bold rounded-full hover:bg-slate-200 transition">Reset</button>
+                            </div>
+
+                            <div class="flex flex-col items-center mb-6 relative">
                                 <!-- Ring SVG -->
-                                <svg class="w-48 h-48 drop-shadow-lg">
-                                    <!-- Background Circle -->
-                                    <circle cx="96" cy="96" r="80" stroke="#F2F2F7" stroke-width="16" fill="none" stroke-linecap="round" />
-                                    <!-- Progress Circle -->
-                                    <circle id="score-circle" cx="96" cy="96" r="80" stroke="#007AFF" stroke-width="16" fill="none" stroke-dasharray="502" stroke-dashoffset="502" stroke-linecap="round" class="ring-circle" />
+                                <svg class="w-56 h-56 drop-shadow-md">
+                                    <circle cx="112" cy="112" r="90" stroke="#F2F2F7" stroke-width="18" fill="none" stroke-linecap="round" />
+                                    <circle id="score-circle" cx="112" cy="112" r="90" stroke="#007AFF" stroke-width="18" fill="none" stroke-dasharray="565" stroke-dashoffset="565" stroke-linecap="round" class="ring-circle" />
                                 </svg>
-                                <!-- Text Inside -->
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span id="score-number" class="text-5xl font-black tracking-tight text-black">0</span>
-                                    <span class="text-xs font-bold text-ios-secondaryLabel uppercase mt-1">លើ 100</span>
+                                    <span id="score-number" class="text-6xl font-black tracking-tight text-black">0</span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">លើ 100</span>
                                 </div>
                             </div>
 
-                            <!-- User Name Input -->
-                            <div class="bg-ios-bg rounded-xl p-2 flex items-center mb-4 border border-transparent focus-within:border-ios-blue focus-within:bg-white transition-all">
-                                <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm">
+                            <!-- Name Field -->
+                            <div class="bg-ios-bg rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-400 shadow-sm">
                                     <i data-lucide="smile" class="w-5 h-5"></i>
                                 </div>
-                                <input type="text" id="user-name" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក..." oninput="updateNameGreeting()" class="bg-transparent border-none text-sm font-semibold text-black placeholder:text-slate-400 w-full px-3 focus:outline-none h-full">
+                                <input type="text" id="user-name" placeholder="ឈ្មោះរបស់អ្នក..." oninput="updateNameGreeting()" class="w-full bg-transparent border-none p-0 text-sm font-semibold text-black focus:outline-none placeholder:text-slate-400">
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="space-y-3">
-                                <button onclick="analyzeSafety()" class="w-full bg-black text-white font-bold py-4 rounded-full shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center justify-center gap-2">
-                                    <i data-lucide="sparkles" class="w-4 h-4 text-ios-blue"></i> វិភាគដោយ AI
+                            <div class="grid grid-cols-1 gap-3">
+                                <button onclick="analyzeSafety()" class="w-full py-3.5 bg-black text-white rounded-full font-bold shadow-lg shadow-black/10 tap-effect flex items-center justify-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4 text-ios-blue"></i>
+                                    <span>វិភាគដោយ AI</span>
                                 </button>
-                                <button id="downloadBtn" onclick="downloadPDF()" class="w-full bg-ios-bg text-black font-semibold py-4 rounded-full active:scale-95 transition-transform flex items-center justify-center gap-2">
-                                    <i data-lucide="download" class="w-4 h-4"></i> ទាញយក PDF
+                                <button id="downloadBtn" onclick="downloadPDF()" class="w-full py-3.5 bg-ios-bg text-black rounded-full font-bold tap-effect flex items-center justify-center gap-2 hover:bg-slate-200 transition">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    <span>ទាញយក PDF</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main List Content -->
+                <!-- Main Checklist Area -->
                 <div class="lg:col-span-8 lg:order-1">
                     
-                    <!-- Filter Pills (Segmented Control style) -->
-                    <div class="flex overflow-x-auto no-scrollbar gap-3 mb-6 snap-x py-2">
-                        <button onclick="setFilter('social')" id="filter-social" class="snap-start shrink-0 px-5 py-2.5 rounded-full text-sm font-bold bg-black text-white shadow-lg transition-all active:scale-95">បណ្តាញសង្គម</button>
-                        <button onclick="setFilter('finance')" id="filter-finance" class="snap-start shrink-0 px-5 py-2.5 rounded-full text-sm font-bold bg-white text-slate-500 shadow-sm border border-slate-100 transition-all active:scale-95">ហិរញ្ញវត្ថុ</button>
-                        <button onclick="setFilter('devices')" id="filter-devices" class="snap-start shrink-0 px-5 py-2.5 rounded-full text-sm font-bold bg-white text-slate-500 shadow-sm border border-slate-100 transition-all active:scale-95">ឧបករណ៍</button>
-                        <button onclick="setFilter('business')" id="filter-business" class="snap-start shrink-0 px-5 py-2.5 rounded-full text-sm font-bold bg-white text-slate-500 shadow-sm border border-slate-100 transition-all active:scale-95">អាជីវកម្ម</button>
-                        <button onclick="setFilter('data')" id="filter-data" class="snap-start shrink-0 px-5 py-2.5 rounded-full text-sm font-bold bg-white text-slate-500 shadow-sm border border-slate-100 transition-all active:scale-95">ទិន្នន័យ</button>
+                    <!-- Filter Tabs (Segmented Control Style) -->
+                    <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 snap-x py-1 px-1 bg-white/50 backdrop-blur-sm p-1 rounded-2xl w-fit">
+                        <button onclick="setFilter('social')" id="filter-social" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-black text-white shadow-md transition-all tap-effect">បណ្តាញសង្គម</button>
+                        <button onclick="setFilter('finance')" id="filter-finance" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">ហិរញ្ញវត្ថុ</button>
+                        <button onclick="setFilter('devices')" id="filter-devices" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">ឧបករណ៍</button>
+                        <button onclick="setFilter('business')" id="filter-business" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">អាជីវកម្ម</button>
+                        <button onclick="setFilter('data')" id="filter-data" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">ទិន្នន័យ</button>
                     </div>
 
-                    <!-- Checklist Container (Inset Grouped Style) -->
-                    <div id="checklist-container" class="space-y-6">
-                        <!-- Injected JS -->
+                    <!-- Checklist Items Container -->
+                    <div id="checklist-container" class="space-y-4">
+                        <!-- JS Injection -->
                     </div>
                     
-                    <!-- Helper Text -->
-                    <div class="text-center mt-8 text-xs text-ios-secondaryLabel font-medium">
-                        <p>ចុចលើចំណុចនីមួយៗដើម្បីដាក់ថា "បានធ្វើ"។ ចុចលើអក្សរដើម្បីមើលលម្អិត។</p>
+                    <div class="text-center mt-12 mb-8">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sophat Security Clinic 2026</p>
                     </div>
 
                 </div>
@@ -264,46 +273,43 @@
 
     <!-- Modals -->
     
-    <!-- AI Recommendation Modal (Bottom Sheet Style on Mobile) -->
+    <!-- AI Modal (iOS Sheet Style) -->
     <div id="rec-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/20 backdrop-blur-md transition-opacity" onclick="closeRecModal()"></div>
-        
-        <!-- Modal Content -->
-        <div class="fixed inset-0 flex items-end md:items-center justify-center p-0 md:p-4">
-            <div class="bg-white w-full md:max-w-2xl md:rounded-[32px] rounded-t-[32px] shadow-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onclick="closeRecModal()"></div>
+        <div class="fixed inset-0 flex items-end md:items-center justify-center p-0 md:p-6 pointer-events-none">
+            <div class="bg-ios-bg w-full md:max-w-2xl rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] pointer-events-auto transform transition-transform duration-300">
                 
-                <!-- Drag Handle (Mobile) -->
-                <div class="w-full flex justify-center pt-3 pb-1 md:hidden">
-                    <div class="w-12 h-1.5 bg-slate-200 rounded-full"></div>
+                <!-- Mobile Drag Handle -->
+                <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-ios-bg">
+                    <div class="w-12 h-1.5 bg-slate-300 rounded-full"></div>
                 </div>
 
                 <!-- Header -->
-                <div class="px-8 pt-6 pb-4 border-b border-slate-100 bg-white z-10">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-ios-blue/10 rounded-full flex items-center justify-center text-ios-blue">
-                                <i id="modal-icon" data-lucide="sparkles" class="w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-black" id="modal-title">ការណែនាំពី AI</h3>
-                                <p class="text-sm text-ios-secondaryLabel" id="modal-subtitle">កំពុងវិភាគ...</p>
-                            </div>
+                <div class="px-6 pt-5 pb-5 border-b border-slate-200 bg-ios-bg flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-ios-blue/10 rounded-full flex items-center justify-center text-ios-blue">
+                            <i id="modal-icon" data-lucide="sparkles" class="w-5 h-5"></i>
                         </div>
-                        <button onclick="closeRecModal()" class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        <div>
+                            <h3 class="text-lg font-bold text-black" id="modal-title">AI Insights</h3>
+                            <p class="text-xs text-slate-500 font-medium" id="modal-subtitle">Initializing...</p>
+                        </div>
                     </div>
+                    <button onclick="closeRecModal()" class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-300 transition tap-effect">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
                 </div>
 
                 <!-- Body -->
-                <div id="modal-body" class="p-8 overflow-y-auto no-scrollbar bg-[#F9F9FB] space-y-4">
+                <div id="modal-body" class="p-6 overflow-y-auto no-scrollbar bg-white space-y-4 text-slate-800 leading-relaxed font-sans min-h-[300px]">
                     <!-- Content -->
                 </div>
 
                 <!-- Footer -->
-                <div class="p-4 bg-white border-t border-slate-100 flex gap-3 pb-8 md:pb-4">
-                    <button onclick="closeRecModal()" class="flex-1 py-3.5 rounded-full font-bold text-slate-600 bg-slate-100 active:scale-95 transition">បិទ</button>
-                    <button onclick="downloadPDF()" class="flex-1 py-3.5 rounded-full font-bold text-white bg-ios-blue shadow-lg shadow-blue-500/30 active:scale-95 transition flex justify-center items-center gap-2">
-                        <i data-lucide="download" class="w-4 h-4"></i> Save PDF
+                <div class="p-4 bg-ios-bg border-t border-slate-200 flex gap-3">
+                    <button onclick="closeRecModal()" class="flex-1 py-3.5 rounded-full font-bold text-slate-600 bg-white shadow-sm border border-slate-200 tap-effect hover:bg-slate-50 transition">បិទ</button>
+                    <button onclick="downloadPDF()" class="flex-1 py-3.5 rounded-full font-bold text-white bg-ios-blue shadow-lg shadow-blue-500/20 tap-effect hover:bg-blue-600 transition flex justify-center items-center gap-2">
+                        <i data-lucide="download" class="w-5 h-5"></i> Save PDF
                     </button>
                 </div>
             </div>
@@ -315,29 +321,29 @@
         <div id="pdf-template" class="pdf-container font-sans bg-white p-12 text-slate-800">
             <div class="flex justify-between items-end border-b pb-6 mb-8 border-slate-200">
                 <div>
-                    <h1 class="text-3xl font-bold text-black tracking-tight mb-2">របាយការណ៍សុខភាពឌីជីថល</h1>
-                    <p class="text-slate-500">Sophat Digital Clinic • <span id="pdf-date"></span></p>
+                    <h1 class="text-3xl font-black text-black tracking-tight mb-2">របាយការណ៍សុខភាពឌីជីថល</h1>
+                    <p class="text-slate-500 font-medium">Sophat Digital Clinic • <span id="pdf-date"></span></p>
                 </div>
                 <div class="text-right">
-                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider">ឈ្មោះអ្នកប្រើប្រាស់</div>
-                    <div class="text-xl font-bold text-black mt-1" id="pdf-user-name">Guest</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">ឈ្មោះអ្នកប្រើប្រាស់</div>
+                    <div class="text-xl font-bold text-black" id="pdf-user-name">Guest</div>
                 </div>
             </div>
             
             <div class="grid grid-cols-2 gap-8 mb-10">
                 <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                    <div class="text-sm text-slate-500 font-bold uppercase mb-1">ពិន្ទុសរុប</div>
+                    <div class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">ពិន្ទុសរុប</div>
                     <div class="text-6xl font-black text-ios-blue" id="pdf-score">0</div>
                 </div>
                 <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                    <div class="text-sm text-slate-500 font-bold uppercase mb-1">កម្រិតហានិភ័យ</div>
-                    <div class="text-3xl font-bold text-black" id="pdf-risk-level">...</div>
+                    <div class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">កម្រិតហានិភ័យ</div>
+                    <div class="text-2xl font-bold text-black" id="pdf-risk-level">...</div>
                 </div>
             </div>
 
             <div id="pdf-content-container" class="space-y-6"></div>
 
-            <div class="mt-12 pt-8 border-t border-slate-100 text-center text-slate-400 text-sm">
+            <div class="mt-12 pt-8 border-t border-slate-100 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">
                 Generated by Sophat Digital AI • 2026
             </div>
         </div>
@@ -356,37 +362,37 @@
                 tags: ["social"],
                 items: [
                     { id: "fb1", text: "Password ខ្លាំង (១២+ តួ) និងមិនដូចគណនីផ្សេង", urgent: true, risk: "Password ខ្សោយ ឬប្រើដូចគ្នា ធ្វើឱ្យ Hacker ងាយ 'ឆ្លងចូល' គ្រប់គណនី (Credential Stuffing)។", rec: "ប្រើអក្សរធំ/តូច+លេខ+សញ្ញា។ ហាមប្រើថ្ងៃកំណើត/លេខទូរស័ព្ទ។" },
-                    { id: "fb2", text: "បើក 2FA ដោយប្រើ Authenticator App (Google/Microsoft)", urgent: true, risk: "បើប្រើតែ SMS 2FA អាចរងគ្រោះដោយការលួចស៊ីម (SIM Swap)។", rec: "ចូល Password and security > Two-factor authentication > ប្រើ Google Authenticator។" },
-                    { id: "fb3", text: "ពិនិត្យ Active Sessions & Log out ឧបករណ៍មិនស្គាល់", urgent: true, risk: "Hacker អាចនៅជាប់ក្នុងគណនី (Logged in) ទោះបីជាអ្នកប្តូរ Password ហើយក៏ដោយ។", rec: "ចូល Password and security > Where you're logged in > Log out all។" },
-                    { id: "fb4", text: "បើក Login Alerts (ជូនដំណឹងពេលមានការចូល)", risk: "មិនដឹងខ្លួនពេលមាន Hacker លួចចូល ធ្វើឱ្យពួកគេមានពេលធ្វើសកម្មភាពបានយូរ។", rec: "ចូល Password and security > Login alerts > បើកទាំង In-app notifications និង Email។" },
-                    { id: "fb5", text: "កំណត់ Privacy លេខទូរស័ព្ទ និង Email ជា “Only Me”", risk: "Scammer ងាយប្រមូលព័ត៌មានដើម្បីបោកប្រាស់ និងធ្វើ Social Engineering។", rec: "ចូល Settings > Audience and visibility > How people find and contact you។" },
-                    { id: "fb6", text: "ពិនិត្យ Connected Apps & Websites (លុបចោល)", risk: "App ចាស់ៗដែលឈប់ប្រើ អាចនៅមានសិទ្ធិចូលយកទិន្នន័យ ឬ Post ជំនួសអ្នក។", rec: "ចូល Settings > Your activity > Apps and websites > Remove កម្មវិធីដែលមិនស្គាល់។" }
+                    { id: "fb2", text: "បើក 2FA ដោយប្រើ Authenticator App", urgent: true, risk: "បើប្រើតែ SMS 2FA អាចរងគ្រោះដោយការលួចស៊ីម (SIM Swap)។", rec: "ចូល Password and security > Two-factor authentication > ប្រើ Google Authenticator។" },
+                    { id: "fb3", text: "ពិនិត្យ Active Sessions & Log out", urgent: true, risk: "Hacker អាចនៅជាប់ក្នុងគណនី (Logged in) ទោះបីជាអ្នកប្តូរ Password ហើយក៏ដោយ។", rec: "ចូល Password and security > Where you're logged in > Log out all។" },
+                    { id: "fb4", text: "បើក Login Alerts", risk: "មិនដឹងខ្លួនពេលមាន Hacker លួចចូល ធ្វើឱ្យពួកគេមានពេលធ្វើសកម្មភាពបានយូរ។", rec: "ចូល Password and security > Login alerts > បើកទាំង In-app notifications និង Email។" },
+                    { id: "fb5", text: "កំណត់ Privacy ជា “Only Me”", risk: "Scammer ងាយប្រមូលព័ត៌មានដើម្បីបោកប្រាស់ និងធ្វើ Social Engineering។", rec: "ចូល Settings > Audience and visibility > How people find and contact you។" },
+                    { id: "fb6", text: "ពិនិត្យ Connected Apps (លុបចោល)", risk: "App ចាស់ៗដែលឈប់ប្រើ អាចនៅមានសិទ្ធិចូលយកទិន្នន័យ ឬ Post ជំនួសអ្នក។", rec: "ចូល Settings > Your activity > Apps and websites > Remove កម្មវិធីដែលមិនស្គាល់។" }
                 ]
             },
             { id: "sec_tg", title: "តេឡេក្រាម (Telegram Security)", tags: ["social"], items: [
                 { id: "tg1", text: "ដាក់ Two-Step Verification (Cloud Password)", urgent: true, risk: "គេអាចលួចគណនីបានងាយៗតាមរយៈ SMS ។", rec: "ចូល Settings > Privacy > Two-Step Verification > កំណត់លេខកូដ។" },
-                { id: "tg2", text: "កំណត់ Privacy លេខទូរស័ព្ទ (Nobody/My Contacts)", risk: "ជនបោកប្រាស់អាចឆាតមកបោកលុយ។", rec: "ចូល Settings > Privacy > Phone Number > ដាក់ Nobody។" },
-                { id: "tg3", text: "ពិនិត្យ Active Sessions (Devices)", urgent: true, risk: "អាចមានកុំព្យូទ័រអ្នកដទៃកំពុងភ្ជាប់។", rec: "ចូល Settings > Devices > Terminate All Other Sessions។" },
-                { id: "tg4", text: "បិទមិនឱ្យគេ Add ចូល Group (Groups & Channels)", risk: "ត្រូវគេអូសចូលក្រុមបោកប្រាស់/ល្បែង។", rec: "ចូល Settings > Privacy > Groups & Channels > ដាក់ My Contacts។" },
-                { id: "tg5", text: "ដាក់កូដសម្ងាត់លើកម្មវិធី (Passcode Lock)", risk: "អ្នកផ្សេងអាចបើកមើលឆាតពេលអ្នកឱ្យទូរស័ព្ទគេខ្ចី។", rec: "ចូល Settings > Privacy > Passcode Lock > បើកដំណើរការ។" }
+                { id: "tg2", text: "កំណត់ Privacy លេខទូរស័ព្ទ", risk: "ជនបោកប្រាស់អាចឆាតមកបោកលុយ។", rec: "ចូល Settings > Privacy > Phone Number > ដាក់ Nobody។" },
+                { id: "tg3", text: "ពិនិត្យ Active Sessions", urgent: true, risk: "អាចមានកុំព្យូទ័រអ្នកដទៃកំពុងភ្ជាប់។", rec: "ចូល Settings > Devices > Terminate All Other Sessions។" },
+                { id: "tg4", text: "បិទមិនឱ្យគេ Add ចូល Group", risk: "ត្រូវគេអូសចូលក្រុមបោកប្រាស់/ល្បែង។", rec: "ចូល Settings > Privacy > Groups & Channels > ដាក់ My Contacts។" },
+                { id: "tg5", text: "ដាក់ Passcode Lock", risk: "អ្នកផ្សេងអាចបើកមើលឆាតពេលអ្នកឱ្យទូរស័ព្ទគេខ្ចី។", rec: "ចូល Settings > Privacy > Passcode Lock > បើកដំណើរការ។" }
             ]},
             { id: "sec_bank", title: "ធនាគារ (Banking Basic)", tags: ["finance"], items: [
-                { id: "bk1", text: "ហាមប្រាប់លេខកូដ OTP/PIN ដល់អ្នកដទៃដាច់ខាត", urgent: true, risk: "បាត់បង់ប្រាក់ពីគណនីភ្លាមៗ។", rec: "រក្សាទុកជាសម្ងាត់។ បុគ្គលិកធនាគារមិនដែលសុំកូដនេះទេ។" },
-                { id: "bk2", text: "មិនចុច Link ដែលផ្ញើតាម SMS/Chat", urgent: true, risk: "ជាល្បិច Phishing ដើម្បីលួចយកគណនី។", rec: "កុំចុច! ទាក់ទងទៅធនាគារតាមលេខ Hotline ផ្ទាល់។" },
-                { id: "bk3", text: "ប្រើប្រាស់តែកម្មវិធីធនាគារផ្លូវការ", risk: "App ក្លែងក្លាយអាចលួចទិន្នន័យ។", rec: "Download តែពី App Store ឬ Play Store ប៉ុណ្ណោះ។" }
+                { id: "bk1", text: "ហាមប្រាប់ OTP/PIN ដល់អ្នកដទៃ", urgent: true, risk: "បាត់បង់ប្រាក់ពីគណនីភ្លាមៗ។", rec: "រក្សាទុកជាសម្ងាត់។ បុគ្គលិកធនាគារមិនដែលសុំកូដនេះទេ។" },
+                { id: "bk2", text: "មិនចុច Link តាម SMS/Chat", urgent: true, risk: "ជាល្បិច Phishing ដើម្បីលួចយកគណនី។", rec: "កុំចុច! ទាក់ទងទៅធនាគារតាមលេខ Hotline ផ្ទាល់។" },
+                { id: "bk3", text: "ប្រើប្រាស់តែកម្មវិធីផ្លូវការ", risk: "App ក្លែងក្លាយអាចលួចទិន្នន័យ។", rec: "Download តែពី App Store ឬ Play Store ប៉ុណ្ណោះ។" }
             ]},
             { id: "sec_phone", title: "ឧបករណ៍ (Devices)", tags: ["devices"], items: [
-                { id: "ph1", text: "ដាក់លេខកូដសម្ងាត់អេក្រង់ (Passcode)", urgent: true, risk: "អ្នកដទៃអាចចូលមើលរូបភាពនិងទិន្នន័យ។", rec: "កំណត់ Passcode យ៉ាងតិច ៦ ខ្ទង់។" },
-                { id: "ph2", text: "ធ្វើបច្ចុប្បន្នភាពកម្មវិធី (Update OS)", urgent: true, risk: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោងសុវត្ថិភាព។", rec: "ចូល Settings > Software Update។" },
-                { id: "ph3", text: "បើកមុខងារស្វែងរកទូរស័ព្ទ (Find My)", urgent: true, risk: "មិនអាចលុបទិន្នន័យពីចម្ងាយពេលបាត់។", rec: "បើក Find My Device។" }
+                { id: "ph1", text: "ដាក់លេខកូដសម្ងាត់អេក្រង់", urgent: true, risk: "អ្នកដទៃអាចចូលមើលរូបភាពនិងទិន្នន័យ។", rec: "កំណត់ Passcode យ៉ាងតិច ៦ ខ្ទង់។" },
+                { id: "ph2", text: "Update OS ជាប្រចាំ", urgent: true, risk: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោងសុវត្ថិភាព។", rec: "ចូល Settings > Software Update។" },
+                { id: "ph3", text: "បើកមុខងារ Find My", urgent: true, risk: "មិនអាចលុបទិន្នន័យពីចម្ងាយពេលបាត់។", rec: "បើក Find My Device។" }
             ]},
             { id: "sec_data", title: "ទិន្នន័យ (Data)", tags: ["data", "business"], items: [
-                { id: "dt1", text: "មិនផ្ញើកាតធនាគារ/អត្តសញ្ញាណប័ណ្ណតាមឆាត", urgent: true, risk: "បែកធ្លាយទិន្នន័យសំខាន់ៗ។", rec: "ហាមផ្ញើរូបកាត។" },
+                { id: "dt1", text: "មិនផ្ញើកាត/ID តាមឆាត", urgent: true, risk: "បែកធ្លាយទិន្នន័យសំខាន់ៗ។", rec: "ហាមផ្ញើរូបកាត។" },
                 { id: "dt2", text: "Backup ឯកសារសំខាន់ៗ", risk: "បាត់បង់ឯកសាររហូត។", rec: "ប្រើ Google Drive ឬ iCloud។" }
             ]},
             { id: "sec_business", title: "អាជីវកម្ម (Business)", tags: ["business"], items: [
                 { id: "bz1", text: "ប្រើលេខសម្ងាត់ Wi-Fi ខ្លាំង", urgent: true, risk: "Hacker អាចចូលប្រើបណ្តាញក្រុមហ៊ុន។", rec: "កំណត់លេខសម្ងាត់វែង។" },
-                { id: "bz2", text: "បណ្តុះបណ្តាលបុគ្គលិកអំពី Phishing", urgent: true, risk: "បុគ្គលិកគឺជាចំណុចខ្សោយបំផុត។", rec: "ធ្វើការប្រជុំអំពីសុវត្ថិភាព។" }
+                { id: "bz2", text: "បណ្តុះបណ្តាលបុគ្គលិក", urgent: true, risk: "បុគ្គលិកគឺជាចំណុចខ្សោយបំផុត។", rec: "ធ្វើការប្រជុំអំពីសុវត្ថិភាព។" }
             ]}
         ];
 
@@ -412,11 +418,11 @@
             track.style.transform = `translateX(-${currentSlide * 100}%)`;
             dots.forEach((dot, i) => {
                 if (i === currentSlide) {
-                    dot.classList.remove('bg-white/40');
-                    dot.classList.add('bg-white/90', 'scale-125');
+                    dot.classList.remove('bg-white/50');
+                    dot.classList.add('bg-white', 'scale-125');
                 } else {
-                    dot.classList.add('bg-white/40');
-                    dot.classList.remove('bg-white/90', 'scale-125');
+                    dot.classList.add('bg-white/50');
+                    dot.classList.remove('bg-white', 'scale-125');
                 }
             });
         }
@@ -442,11 +448,11 @@
             const buttons = targetBtn.parentNode.children;
             for(let btn of buttons) {
                 if (btn.id === 'filter-' + filter) {
-                    btn.classList.remove('bg-white', 'text-slate-500', 'border', 'border-slate-100');
-                    btn.classList.add('bg-black', 'text-white', 'shadow-lg');
+                    btn.classList.remove('bg-transparent', 'text-slate-500', 'hover:bg-white', 'hover:shadow-sm');
+                    btn.classList.add('bg-black', 'text-white', 'shadow-md');
                 } else {
-                    btn.classList.add('bg-white', 'text-slate-500', 'border', 'border-slate-100');
-                    btn.classList.remove('bg-black', 'text-white', 'shadow-lg');
+                    btn.classList.add('bg-transparent', 'text-slate-500', 'hover:bg-white', 'hover:shadow-sm');
+                    btn.classList.remove('bg-black', 'text-white', 'shadow-md');
                 }
             }
             renderList();
@@ -498,46 +504,41 @@
             container.innerHTML = activeSections.map((section, index) => {
                 const itemsHtml = section.items.map((item, idx) => {
                     const isChecked = checkedItems.has(item.id);
-                    // Determine rounded corners for first/last items (iOS Grouped Style)
-                    const isFirst = idx === 0;
-                    const isLast = idx === section.items.length - 1;
                     
-                    const roundedClass = isFirst && isLast ? 'rounded-[20px]' : (isFirst ? 'rounded-t-[20px]' : (isLast ? 'rounded-b-[20px]' : ''));
-                    const borderClass = !isLast ? 'border-b border-slate-100' : '';
-
                     const iconCheck = isChecked 
                         ? `<div class="w-6 h-6 rounded-full bg-ios-blue flex items-center justify-center text-white transition-all scale-100"><i data-lucide="check" class="w-4 h-4 stroke-[3]"></i></div>`
-                        : `<div class="w-6 h-6 rounded-full border-2 border-slate-300 transition-all"></div>`;
+                        : `<div class="w-6 h-6 rounded-full border-2 border-slate-300 transition-all bg-white group-hover:border-slate-400"></div>`;
 
-                    const textStyle = isChecked ? "text-slate-400 line-through transition-all" : "text-slate-800 font-medium transition-all";
-                    const urgentDot = item.urgent && !isChecked ? `<div class="w-2 h-2 rounded-full bg-ios-red shrink-0 animate-pulse"></div>` : "";
+                    const textStyle = isChecked ? "text-slate-400 line-through transition-all" : "text-black font-semibold transition-all";
+                    const urgentDot = item.urgent && !isChecked ? `<span class="w-2 h-2 rounded-full bg-ios-red animate-pulse"></span>` : "";
+                    const cardBg = "bg-white border border-slate-100 shadow-ios-card";
 
                     return `
-                        <div class="item-row bg-white pl-4 pr-4 py-4 flex flex-col cursor-pointer ${roundedClass} ${borderClass}" onclick="toggleCheck('${item.id}')">
-                            <div class="flex items-center gap-4">
+                        <div class="group relative overflow-hidden p-4 mb-3 rounded-ios transition-all duration-300 cursor-pointer ${cardBg} active:scale-[0.99] active:bg-slate-50" onclick="toggleCheck('${item.id}')">
+                            <div class="flex items-center gap-4 relative z-10">
                                 <div class="shrink-0">${iconCheck}</div>
-                                <div class="flex-1 flex items-center justify-between">
-                                    <span class="${textStyle}">${item.text}</span>
-                                    <div class="flex items-center gap-2">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <span class="${textStyle} text-sm md:text-base">${item.text}</span>
                                         ${urgentDot}
-                                        <button onclick="event.stopPropagation(); toggleInfo('${item.id}')" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 text-ios-blue hover:bg-blue-50 transition">
-                                            <i data-lucide="info" class="w-4 h-4"></i>
-                                        </button>
                                     </div>
                                 </div>
+                                <button onclick="event.stopPropagation(); toggleInfo('${item.id}')" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 text-ios-blue hover:bg-blue-50 transition shrink-0">
+                                    <i data-lucide="info" class="w-5 h-5"></i>
+                                </button>
                             </div>
                             
                             <!-- Expandable Info -->
                             <div class="accordion-content">
                                 <div class="accordion-inner pt-0">
-                                    <div class="mt-3 ml-10 p-4 bg-[#F2F2F7] rounded-xl text-sm space-y-2">
-                                        <div class="flex gap-2 text-rose-600">
-                                            <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5"></i>
-                                            <p class="font-medium">${item.risk}</p>
+                                    <div class="mt-3 ml-10 p-3 bg-slate-50 rounded-xl text-sm grid gap-2">
+                                        <div class="flex gap-2 text-ios-red">
+                                            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                                            <p class="leading-snug font-medium">${item.risk}</p>
                                         </div>
                                         <div class="flex gap-2 text-ios-blue">
-                                            <i data-lucide="thumbs-up" class="w-4 h-4 shrink-0 mt-0.5"></i>
-                                            <p class="font-medium">${item.rec}</p>
+                                            <i data-lucide="lightbulb" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                                            <p class="leading-snug font-medium">${item.rec}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -547,9 +548,9 @@
                 }).join('');
 
                 return `
-                    <div class="animate-scale-in" style="animation-delay: ${index * 50}ms">
-                        <h3 class="text-xs font-semibold text-ios-secondaryLabel uppercase ml-4 mb-2 tracking-wider">${section.title}</h3>
-                        <div class="shadow-sm">
+                    <div class="animate-fade-in" style="animation-delay: ${index * 50}ms">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wide ml-4 mb-2">${section.title}</h3>
+                        <div>
                             ${itemsHtml}
                         </div>
                     </div>
@@ -564,8 +565,8 @@
             document.getElementById('score-number').innerText = score;
             
             const circle = document.getElementById('score-circle');
-            // Full circle is roughly 502px for r=80
-            const circumference = 502;
+            // Full circle is roughly 565px for r=90
+            const circumference = 565;
             const offset = circumference - (score / 100) * circumference;
             circle.style.strokeDashoffset = offset;
 
@@ -587,8 +588,8 @@
             modalTitle.innerText = "កំពុងដំណើរការ...";
             modalSubtitle.innerText = "កំពុងភ្ជាប់ទៅ Gemini AI...";
             modalBody.innerHTML = `
-                <div class="flex flex-col items-center py-10">
-                    <div class="w-12 h-12 border-4 border-slate-200 border-t-ios-blue rounded-full animate-spin mb-4"></div>
+                <div class="flex flex-col items-center py-12">
+                    <div class="w-12 h-12 border-4 border-slate-100 rounded-full border-t-ios-blue animate-spin mb-4"></div>
                     <p class="text-slate-400 font-medium">កំពុងវិភាគសុវត្ថិភាពរបស់អ្នក...</p>
                 </div>
             `;
@@ -635,14 +636,29 @@
                 if(score === 100) {
                      modalTitle.innerText = "អស្ចារ្យណាស់!";
                      modalSubtitle.innerText = "សុវត្ថិភាព 100%";
-                     modalBody.innerHTML = `<div class="text-center py-6 text-ios-green font-bold">អ្នកមានសុវត្ថិភាពពេញលេញ!</div>`;
+                     modalBody.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-500 shadow-sm border border-green-100">
+                                <i data-lucide="shield-check" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-black">អ្នកមានសុវត្ថិភាពពេញលេញ!</h3>
+                            <p class="text-slate-500 mt-2">សូមបន្តរក្សាទម្លាប់ល្អនេះ។</p>
+                        </div>
+                    `;
+                     lucide.createIcons();
                 } else {
                      // Fallback
                      modalTitle.innerText = "ចំណុចត្រូវកែលម្អ";
                      modalSubtitle.innerText = `នៅខ្វះ ${missedItems.length} ចំណុចទៀត`;
                      let html = `<ul class="space-y-3">`;
                      missedItems.slice(0, 3).forEach(m => {
-                         html += `<li class="flex gap-2 items-start"><i data-lucide="x-circle" class="w-5 h-5 text-ios-red shrink-0"></i> <span class="text-slate-700 font-medium">${m}</span></li>`;
+                         html += `
+                            <li class="flex gap-3 items-start bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <div class="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-500 shrink-0 mt-0.5">
+                                    <i data-lucide="x" class="w-3 h-3 stroke-[3]"></i>
+                                </div>
+                                <span class="text-slate-700 font-bold leading-relaxed pt-0.5 text-sm">${m}</span>
+                            </li>`;
                      });
                      html += `</ul>`;
                      modalBody.innerHTML = html;
@@ -658,7 +674,8 @@
         async function downloadPDF() {
             const btn = document.getElementById('downloadBtn');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = `កំពុងបង្កើត...`;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> កំពុងបង្កើត...`;
+            lucide.createIcons();
             
             // Fill Data
             const userName = document.getElementById('user-name').value || "ភ្ញៀវ";
@@ -677,9 +694,9 @@
             sections.forEach(s => s.items.forEach(i => { if(!checkedItems.has(i.id) && i.urgent) urgent.push(i); }));
             
             if(urgent.length > 0) {
-                html += `<h3 class="font-bold text-red-600 border-b border-red-200 pb-2 mb-4">សកម្មភាពបន្ទាន់ (Urgent)</h3>`;
+                html += `<h3 class="font-bold text-red-600 border-b border-red-200 pb-2 mb-4 text-sm uppercase tracking-wide">សកម្មភាពបន្ទាន់ (Urgent)</h3>`;
                 urgent.forEach(u => {
-                    html += `<div class="mb-4 bg-red-50 p-4 rounded-xl text-sm"><div class="font-bold text-slate-800">${u.text}</div><div class="text-slate-500 mt-1">${u.rec}</div></div>`;
+                    html += `<div class="mb-4 bg-red-50 p-4 rounded-xl text-sm border border-red-100"><div class="font-bold text-slate-800">${u.text}</div><div class="text-slate-500 mt-1">${u.rec}</div></div>`;
                 });
             }
             
@@ -688,10 +705,10 @@
             sections.forEach(s => s.items.forEach(i => { if(checkedItems.has(i.id)) completed.push(i); }));
             
             if(completed.length > 0) {
-                 html += `<h3 class="font-bold text-green-600 border-b border-green-200 pb-2 mb-4 mt-8">បានការពារ (Completed)</h3>`;
+                 html += `<h3 class="font-bold text-green-600 border-b border-green-200 pb-2 mb-4 mt-8 text-sm uppercase tracking-wide">បានការពារ (Completed)</h3>`;
                  html += `<div class="grid grid-cols-2 gap-2">`
                  completed.forEach(c => {
-                     html += `<div class="text-sm text-slate-500">✓ ${c.text}</div>`;
+                     html += `<div class="text-sm text-slate-500 flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> ${c.text}</div>`;
                  });
                  html += `</div>`
             }
@@ -724,6 +741,7 @@
             appUI.style.display = 'block';
             document.body.style.overflow = 'auto';
             btn.innerHTML = originalHTML;
+            lucide.createIcons();
         }
     </script>
 </body>
