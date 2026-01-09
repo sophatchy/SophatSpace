@@ -97,8 +97,76 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-8">
                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">ត្រួតពិនិត្យសុខភាពឌីជីថលរបស់អ្នក</h2>
-                <p class="text-slate-400 text-sm max-w-2xl mx-auto">
-                    ជ្រើសរើសផ្នែកដែលអ្នកចង់ការពារ ដើម្បីទទួលបានពិន្ទុ និងការណែនាំលម្អិត។
+                
+                <!-- NEW: Hero Carousel -->
+                <div class="max-w-3xl mx-auto mb-8 relative group rounded-2xl overflow-hidden shadow-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur-sm">
+                    
+                    <!-- Carousel Track -->
+                    <div id="carousel-track" class="flex transition-transform duration-700 ease-in-out h-48 md:h-56">
+                        
+                        <!-- Slide 1: 2FA -->
+                        <div class="w-full flex-shrink-0 flex items-center p-6 md:p-10 gap-6">
+                            <div class="hidden md:flex bg-green-500/10 p-4 rounded-full text-green-400 shrink-0">
+                                <i data-lucide="shield-check" class="w-12 h-12"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="text-green-400 font-bold tracking-wider text-xs uppercase mb-2 block">គន្លឹះសុវត្ថិភាពទី ១</span>
+                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">បើកការផ្ទៀងផ្ទាត់ពីរជាន់ (2FA)</h3>
+                                <p class="text-slate-300 text-sm leading-relaxed">
+                                    លេខសម្ងាត់តែមួយមិនគ្រប់គ្រាន់ទេ។ ការពារគណនីរបស់អ្នកជាមួយស្រទាប់ទីពីរ ដើម្បីទប់ស្កាត់ Hacker ទោះបីគេស្គាល់ Password អ្នកក៏ដោយ។
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Phishing -->
+                        <div class="w-full flex-shrink-0 flex items-center p-6 md:p-10 gap-6">
+                            <div class="hidden md:flex bg-red-500/10 p-4 rounded-full text-red-400 shrink-0">
+                                <i data-lucide="alert-triangle" class="w-12 h-12"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="text-red-400 font-bold tracking-wider text-xs uppercase mb-2 block">គន្លឹះសុវត្ថិភាពទី ២</span>
+                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">ប្រយ័ត្នសារបោកបញ្ឆោត (Phishing)</h3>
+                                <p class="text-slate-300 text-sm leading-relaxed">
+                                    កុំចុច Link ដែលគួរឱ្យសង្ស័យ ឬផ្ដល់លេខកូដ OTP ឱ្យនរណាម្នាក់។ ធនាគារមិនដែលសុំលេខសម្ងាត់តាមទូរស័ព្ទទេ។
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Updates -->
+                        <div class="w-full flex-shrink-0 flex items-center p-6 md:p-10 gap-6">
+                            <div class="hidden md:flex bg-blue-500/10 p-4 rounded-full text-blue-400 shrink-0">
+                                <i data-lucide="refresh-cw" class="w-12 h-12"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="text-blue-400 font-bold tracking-wider text-xs uppercase mb-2 block">គន្លឹះសុវត្ថិភាពទី ៣</span>
+                                <h3 class="text-xl md:text-2xl font-bold text-white mb-2">អាប់ដេតកម្មវិធីជាប្រចាំ</h3>
+                                <p class="text-slate-300 text-sm leading-relaxed">
+                                    កម្មវិធីចាស់ៗមានចន្លោះប្រហោង។ សូមអាប់ដេត iOS, Android និងកម្មវិធីធនាគាររបស់អ្នកឱ្យទាន់សម័យជានិច្ច។
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Carousel Controls -->
+                    <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+                        <button onclick="goToSlide(0)" class="carousel-dot w-2 h-2 rounded-full bg-white/30 hover:bg-white transition-all duration-300 active"></button>
+                        <button onclick="goToSlide(1)" class="carousel-dot w-2 h-2 rounded-full bg-white/30 hover:bg-white transition-all duration-300"></button>
+                        <button onclick="goToSlide(2)" class="carousel-dot w-2 h-2 rounded-full bg-white/30 hover:bg-white transition-all duration-300"></button>
+                    </div>
+                    
+                    <!-- Navigation Arrows -->
+                    <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition hidden md:block">
+                        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                    </button>
+                    <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition hidden md:block">
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </button>
+
+                </div>
+
+                <p class="text-slate-300 text-sm md:text-base max-w-3xl mx-auto leading-relaxed bg-white/10 p-4 rounded-xl border border-white/10 shadow-sm backdrop-blur-sm">
+                    ⚠️ សូម Tick <i data-lucide="check-circle" class="w-4 h-4 inline text-green-400"></i> ត្រង់កន្លែងណាដែលអ្នកបានអនុវត្តរួចរាល់ហើយ និង <span class="text-red-300 font-bold">កុំចុច</span> ត្រង់ចំណុចដែលមិនទាន់អនុវត្ត ដើម្បីចង់ដឹងថាអ្នកកំពុងមានហានិភ័យ ឬមានសុវត្ថិភាពកម្រិតណា។
                 </p>
             </div>
 
@@ -183,6 +251,12 @@
                         </div>
                     </div>
 
+                    <!-- Name Input -->
+                    <div class="mb-4">
+                        <label for="user-name" class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">ឈ្មោះរបស់អ្នក (Name)</label>
+                        <input type="text" id="user-name" placeholder="បញ្ចូលឈ្មោះ..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all placeholder:text-slate-400 font-medium text-slate-800">
+                    </div>
+
                     <!-- Actions -->
                     <div class="space-y-3">
                         <button onclick="analyzeSafety()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
@@ -236,7 +310,8 @@
                     <p class="text-slate-500 text-sm mt-1">Sophat Digital Space</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-sm font-bold text-slate-700" id="pdf-date">...</p>
+                    <p class="text-lg font-bold text-slate-900 mb-1" id="pdf-user-name">...</p>
+                    <p class="text-xs font-medium text-slate-500" id="pdf-date">...</p>
                 </div>
             </div>
             
@@ -251,8 +326,7 @@
                 </div>
             </div>
 
-            <div class="mb-4 text-sm font-bold text-slate-700 border-b pb-2">បញ្ជីដែលត្រូវកែលម្អបន្ទាន់៖</div>
-            <div id="pdf-content-container" class="space-y-3 text-sm"></div>
+            <div id="pdf-content-container" class="space-y-4"></div>
             
             <div class="mt-12 pt-4 border-t border-slate-200 text-center text-xs text-slate-400">
                 <p>© 2024 Sophat Digital Space. Stay Safe.</p>
@@ -359,10 +433,57 @@
         let checkedItems = new Set();
         let activeFilter = 'social';
 
+        // Carousel Variables
+        let currentSlide = 0;
+        const totalSlides = 3;
+        let slideInterval;
+
         document.addEventListener('DOMContentLoaded', () => {
             setFilter('social');
+            startCarousel();
         });
 
+        // --- Carousel Logic ---
+        function showSlide(index) {
+            const track = document.getElementById('carousel-track');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            if (index >= totalSlides) index = 0;
+            if (index < 0) index = totalSlides - 1;
+            
+            currentSlide = index;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, i) => {
+                if (i === currentSlide) {
+                    dot.classList.add('bg-white', 'w-6');
+                    dot.classList.remove('bg-white/30');
+                } else {
+                    dot.classList.remove('bg-white', 'w-6');
+                    dot.classList.add('bg-white/30');
+                }
+            });
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); resetTimer(); }
+        function prevSlide() { showSlide(currentSlide - 1); resetTimer(); }
+        function goToSlide(index) { showSlide(index); resetTimer(); }
+        function startCarousel() { slideInterval = setInterval(() => { showSlide(currentSlide + 1); }, 5000); }
+        function resetTimer() { clearInterval(slideInterval); startCarousel(); }
+
+        const carouselEl = document.querySelector('#carousel-track')?.parentElement;
+        if(carouselEl) {
+            carouselEl.addEventListener('mouseenter', () => clearInterval(slideInterval));
+            carouselEl.addEventListener('mouseleave', startCarousel);
+            let touchStartX = 0;
+            carouselEl.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+            carouselEl.addEventListener('touchend', e => {
+                if (e.changedTouches[0].screenX < touchStartX - 50) nextSlide();
+                if (e.changedTouches[0].screenX > touchStartX + 50) prevSlide();
+            });
+        }
+
+        // --- Core Functions ---
         function setFilter(filter) {
             activeFilter = filter;
             document.querySelectorAll('.planner-card').forEach(el => el.classList.remove('active'));
@@ -424,7 +545,7 @@
 
             activeSections.forEach(section => {
                 section.items.forEach(item => {
-                    const weight = item.urgent ? 3 : 1; // Urgent items worth 3 points
+                    const weight = item.urgent ? 3 : 1; 
                     maxScore += weight;
                     if (checkedItems.has(item.id)) {
                         totalScore += weight;
@@ -453,14 +574,11 @@
             container.innerHTML = activeSections.map((section, index) => {
                 const itemsHtml = section.items.map(item => {
                     const isChecked = checkedItems.has(item.id);
-                    // Checkbox style
                     const btnClass = isChecked 
                         ? "w-6 h-6 rounded-full border-2 border-brand-500 bg-brand-500 flex items-center justify-center transition-colors text-white" 
                         : "w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center transition-colors bg-white hover:border-brand-400";
                     const iconClass = isChecked ? "" : "opacity-0";
                     const rowClass = isChecked ? "checked" : "";
-                    
-                    // Risk Label (Hidden if checked for cleaner look, or subtle)
                     const urgentBadge = item.urgent ? `<span class="bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded ml-2 font-bold">សំខាន់</span>` : "";
 
                     return `
@@ -477,8 +595,6 @@
                                         </h4>
                                         <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 ml-2"></i>
                                     </div>
-                                    
-                                    <!-- Info Panel -->
                                     <div id="info-${item.id}" class="info-panel mt-0 rounded-lg text-sm">
                                         <div class="mb-2">
                                             <strong class="text-xs uppercase tracking-wide text-red-600 block mb-1">⚠️ ហានិភ័យ (Risk)</strong>
@@ -495,7 +611,6 @@
                     `;
                 }).join('');
 
-                // Only open the first section by default
                 const isOpen = index === 0 ? 'open' : '';
                 const isRotated = index === 0 ? 'rotate' : '';
 
@@ -519,31 +634,25 @@
             const score = calculateRiskScore();
             const level = getRiskLevel(score);
 
-            // Update Score Number
             document.getElementById('score-number').innerText = score;
             
-            // Update Circle Progress
             const circle = document.getElementById('score-circle');
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
+            const circumference = circle.r.baseVal.value * 2 * Math.PI;
             const offset = circumference - (score / 100) * circumference;
             circle.style.strokeDashoffset = offset;
             
-            // Color Coding Circle
-            if(score >= 80) circle.style.stroke = "#16a34a"; // Green
-            else if(score >= 50) circle.style.stroke = "#ca8a04"; // Yellow
-            else circle.style.stroke = "#dc2626"; // Red
+            if(score >= 80) circle.style.stroke = "#16a34a";
+            else if(score >= 50) circle.style.stroke = "#ca8a04";
+            else circle.style.stroke = "#dc2626";
 
-            // Update Risk Box
             const riskBox = document.getElementById('risk-box');
             riskBox.className = `rounded-lg p-4 mb-4 border transition-colors duration-300 text-center ${level.bg} border-slate-200`;
             
             document.getElementById('risk-text').innerHTML = level.text;
-            document.getElementById('risk-text').className = `text-lg font-extrabold ${level.color}`;
+            document.getElementById('risk-text').className = `text-sm font-extrabold ${level.color}`;
             
             const riskIcon = document.getElementById('risk-icon');
             riskIcon.className = `w-5 h-5 ${level.color}`;
-            // Ideally swap icon based on level, but keeping simple for now
         }
 
         function analyzeSafety() {
@@ -554,7 +663,6 @@
             const modalSubtitle = document.getElementById('modal-subtitle');
             const modalIcon = document.getElementById('modal-icon');
 
-            // Header Logic
             if (score >= 80) {
                 modalTitle.innerText = "អបអរសាទរ! អ្នកមានសុវត្ថិភាពល្អ";
                 modalTitle.className = "text-xl font-bold text-green-700 mb-1";
@@ -572,28 +680,20 @@
                 modalSubtitle.innerText = "គណនី និងឧបករណ៍របស់អ្នកងាយរងគ្រោះណាស់។";
             }
 
-            // Body Content (Missed Urgent Items First)
-            let html = '';
             let missedItems = [];
-
             activeSections.forEach(section => {
                 section.items.forEach(item => {
-                    if (!checkedItems.has(item.id)) {
-                        missedItems.push(item);
-                    }
+                    if (!checkedItems.has(item.id)) missedItems.push(item);
                 });
             });
 
             if (missedItems.length === 0) {
-                html = `<div class="text-center py-10 text-green-600"><i data-lucide="check-circle" class="w-16 h-16 mx-auto mb-4"></i><p>គ្មានការណែនាំបន្ថែមទេ។ អ្នកធ្វើបានល្អណាស់!</p></div>`;
+                modalBody.innerHTML = `<div class="text-center py-10 text-green-600"><i data-lucide="check-circle" class="w-16 h-16 mx-auto mb-4"></i><p>គ្មានការណែនាំបន្ថែមទេ។ អ្នកធ្វើបានល្អណាស់!</p></div>`;
             } else {
-                // Sort urgent first
                 missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
-
-                html = missedItems.map(item => {
+                modalBody.innerHTML = missedItems.map(item => {
                     const borderClass = item.urgent ? "border-l-4 border-red-500 bg-red-50" : "border-l-4 border-yellow-400 bg-yellow-50";
                     const titleColor = item.urgent ? "text-red-800" : "text-slate-800";
-                    
                     return `
                         <div class="${borderClass} p-4 rounded-r-lg shadow-sm mb-3">
                             <div class="flex items-start gap-3">
@@ -601,9 +701,7 @@
                                 <div>
                                     <h5 class="font-bold ${titleColor} text-sm mb-1">${item.text}</h5>
                                     <p class="text-xs text-slate-600 mb-2">${item.risk}</p>
-                                    <div class="text-xs bg-white/60 p-2 rounded text-slate-800 font-medium">
-                                        👉 ${item.rec}
-                                    </div>
+                                    <div class="text-xs bg-white/60 p-2 rounded text-slate-800 font-medium">👉 ${item.rec}</div>
                                 </div>
                             </div>
                         </div>
@@ -611,7 +709,6 @@
                 }).join('');
             }
 
-            modalBody.innerHTML = html;
             document.getElementById('rec-modal').classList.remove('hidden');
             lucide.createIcons();
         }
@@ -626,34 +723,31 @@
             const dateStr = new Date().toLocaleDateString('km-KH');
             const score = calculateRiskScore();
             const level = getRiskLevel(score);
+            const userName = document.getElementById('user-name').value.trim() || "អ្នកប្រើប្រាស់ (User)";
             
             document.getElementById('pdf-date').innerText = `កាលបរិច្ឆេទ: ${dateStr}`;
+            document.getElementById('pdf-user-name').innerText = userName;
             document.getElementById('pdf-score').innerText = `${score}/100`;
             document.getElementById('pdf-risk-level').innerText = level.text;
-            // Directly set style for PDF reliability
+            
             const levelColor = score >= 80 ? '#16a34a' : (score >= 50 ? '#ca8a04' : '#dc2626');
             document.getElementById('pdf-risk-level').style.color = levelColor;
 
-            let html = '';
             const activeSections = getFilteredSections();
-            
             let completedItems = [];
             let missedItems = [];
 
             activeSections.forEach(section => {
                 section.items.forEach(item => {
-                    if (checkedItems.has(item.id)) {
-                        completedItems.push(item);
-                    } else {
-                        missedItems.push(item);
-                    }
+                    if (checkedItems.has(item.id)) completedItems.push(item);
+                    else missedItems.push(item);
                 });
             });
 
-            // Sort missed items: Urgent first
             missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
 
-            // --- SECTION 1: ACTION REQUIRED ---
+            let html = '';
+            // 1. Action Required
             if (missedItems.length > 0) {
                 html += `<div class="mb-4 pb-2 border-b-2 border-red-100 font-bold text-red-700 text-sm uppercase">⚠️ ចំណុចត្រូវកែលម្អ (Action Required)</div>`;
                 html += missedItems.map(item => `
@@ -672,7 +766,7 @@
                 html += `<div class="p-4 text-center text-green-700 font-bold border border-green-200 bg-green-50 rounded mb-6">អបអរសាទរ! អ្នកមិនមានចំណុចខ្វះខាតនៅក្នុងផ្នែកនេះទេ។</div>`;
             }
 
-            // --- SECTION 2: COMPLETED ITEMS ---
+            // 2. Completed Items
             if (completedItems.length > 0) {
                 html += `<div class="mt-6 mb-4 pb-2 border-b-2 border-green-100 font-bold text-green-700 text-sm uppercase">✅ ចំណុចបានការពាររួច (Completed)</div>`;
                 html += `<div class="grid grid-cols-1 gap-2">`;
