@@ -1,376 +1,439 @@
-import React, { useState } from 'react';
-import { 
-  Shield, 
-  Lock, 
-  Smartphone, 
-  Download, 
-  Menu, 
-  X, 
-  Globe, 
-  ChevronRight, 
-  PlayCircle, 
-  AlertTriangle,
-  CheckCircle,
-  Users
-} from 'lucide-react';
-
-// Google Font Import Helper
-const FontLoader = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap');
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophat Digital Space</title>
     
-    body {
-      font-family: 'Kantumruy Pro', sans-serif;
-    }
-  `}</style>
-);
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
 
-const translations = {
-  kh: {
-    title: "សុផាត ឌីជីថល",
-    subtitle: "លំហសម្រាប់ការយល់ដឹង សុវត្ថិភាព និងចំណេះដឹងឌីជីថល",
-    heroTitle: "ការពារខ្លួនអ្នកនៅក្នុងពិភពឌីជីថល",
-    heroDesc: "ប្រភពចំណេះដឹងដែលអាចទុកចិត្តបាន ដើម្បីជួយអ្នកឱ្យយល់ដឹងពីបច្ចេកវិទ្យា ចៀសវាងការបោកប្រាស់ និងរក្សាសុវត្ថិភាពគណនីរបស់អ្នក។",
-    cta: "ចាប់ផ្តើមរៀន",
-    sections: {
-      scams: "ការបោកប្រាស់តាមអនឡាញ",
-      security: "សុវត្ថិភាពគណនី",
-      hygiene: "អនាម័យឌីជីថល",
-      resources: "ឯកសារជំនួយ"
-    },
-    scamTitle: "ប្រយ័ត្នចំពោះការបោកប្រាស់",
-    scamDesc: "រៀនពីរបៀបសម្គាល់និងការពារខ្លួនពីល្បិចកលជនខិលខូច។",
-    securityTitle: "ពង្រឹងសុវត្ថិភាពរបស់អ្នក",
-    securityDesc: "គន្លឹះសំខាន់ៗដើម្បីការពារគណនី Facebook, Telegram និងធនាគារ។",
-    hygieneTitle: "ទម្លាប់ល្អក្នុងការប្រើប្រាស់",
-    hygieneDesc: "របៀបប្រើប្រាស់បច្ចេកវិទ្យាប្រកបដោយសុខភាពល្អនិងប្រសិទ្ធភាព។",
-    latestArticles: "អត្ថបទថ្មីៗ",
-    visuals: "វីដេអូពន្យល់",
-    downloads: "បញ្ជីត្រួតពិនិត្យ (Checklists)",
-    footer: "© ២០២៤ សុផាត ឌីជីថល។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
-    future: "សេវាកម្មពេលអនាគត៖ សិក្ខាសាលា និង គ្លីនិកឌីជីថល។"
-  },
-  en: {
-    title: "Sophat Digital Space",
-    subtitle: "A space for digital literacy, safety, and awareness.",
-    heroTitle: "Protect Yourself in the Digital World",
-    heroDesc: "Your trusted knowledge base to help you understand technology, avoid scams, and keep your accounts secure.",
-    cta: "Start Learning",
-    sections: {
-      scams: "Online Scams",
-      security: "Account Security",
-      hygiene: "Digital Hygiene",
-      resources: "Resources"
-    },
-    scamTitle: "Beware of Scams",
-    scamDesc: "Learn how to identify and protect yourself from malicious tricks.",
-    securityTitle: "Strengthen Security",
-    securityDesc: "Essential tips to protect your Facebook, Telegram, and Bank accounts.",
-    hygieneTitle: "Digital Hygiene",
-    hygieneDesc: "How to use technology cleanly, healthily, and efficiently.",
-    latestArticles: "Latest Articles",
-    visuals: "Visual Explainers",
-    downloads: "Downloadable Checklists",
-    footer: "© 2024 Sophat Digital Space. All rights reserved.",
-    future: "Coming soon: Workshops and Digital Clinic Roadshows."
-  }
-};
-
-const articles = [
-  {
-    id: 1,
-    category: 'scams',
-    titleKh: 'របៀបសម្គាល់សារបោកបញ្ឆោត (Phishing)',
-    titleEn: 'How to Spot Phishing Messages',
-    descKh: 'កុំចុចលើតំណភ្ជាប់ (Link) ដែលគួរឱ្យសង្ស័យ។ នេះជាវិធីសម្គាល់...',
-    descEn: 'Never click on suspicious links. Here is how to identify them...',
-    icon: <AlertTriangle className="text-orange-500" size={24} />
-  },
-  {
-    id: 2,
-    category: 'security',
-    titleKh: 'ហេតុអ្វីអ្នកត្រូវបើក 2FA ឥឡូវនេះ?',
-    titleEn: 'Why You Must Enable 2FA Now',
-    descKh: 'ការផ្ទៀងផ្ទាត់ពីរជំហាន គឺជាគន្លឹះសំខាន់បំផុតការពារគណនីរបស់អ្នក។',
-    descEn: 'Two-Factor Authentication is the most important key to account safety.',
-    icon: <Lock className="text-blue-500" size={24} />
-  },
-  {
-    id: 3,
-    category: 'hygiene',
-    titleKh: 'សម្អាតទិន្នន័យចាស់ៗក្នុងទូរស័ព្ទ',
-    titleEn: 'Cleaning Old Data on Your Phone',
-    descKh: 'លុបកម្មវិធីមិនប្រើ និងរូបភាពចាស់ៗ ដើម្បីល្បឿននិងសុវត្ថិភាព។',
-    descEn: 'Delete unused apps and old photos for speed and security.',
-    icon: <Smartphone className="text-green-500" size={24} />
-  }
-];
-
-const checklistItems = [
-  { textKh: "បានបើក Two-Factor Authentication (2FA)", textEn: "Enabled Two-Factor Authentication (2FA)" },
-  { textKh: "ប្រើពាក្យសម្ងាត់ដែលពិបាកទាយ", textEn: "Using strong, unpredictable passwords" },
-  { textKh: "មិនដែលចែករំលែកលេខកូដ OTP", textEn: "Never shared OTP codes" },
-  { textKh: "បានត្រួតពិនិត្យឧបករណ៍ដែលកំពុង Log in (Active Sessions)", textEn: "Checked Active Sessions/Devices" }
-];
-
-export default function SophatDigitalSpace() {
-  const [lang, setLang] = useState('kh'); // Default to Khmer
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const t = translations[lang];
-
-  const toggleLang = () => {
-    setLang(lang === 'kh' ? 'en' : 'kh');
-  };
-
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
-      <FontLoader />
-      
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <div className="bg-blue-600 text-white p-2 rounded-lg">
-                <Shield size={24} />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-900 leading-tight">{t.title}</h1>
-                <p className="text-xs text-slate-500 hidden sm:block">Digital Literacy & Safety</p>
-              </div>
-            </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#scams" className="text-slate-600 hover:text-blue-600 font-medium transition">{t.sections.scams}</a>
-              <a href="#security" className="text-slate-600 hover:text-blue-600 font-medium transition">{t.sections.security}</a>
-              <a href="#resources" className="text-slate-600 hover:text-blue-600 font-medium transition">{t.sections.resources}</a>
-              
-              <button 
-                onClick={toggleLang}
-                className="flex items-center gap-2 px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded-full text-sm font-medium transition"
-              >
-                <Globe size={16} />
-                {lang === 'kh' ? 'EN' : 'ខ្មែរ'}
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center gap-4">
-              <button 
-                onClick={toggleLang}
-                className="flex items-center gap-1 px-2 py-1 bg-slate-100 rounded text-sm font-medium"
-              >
-                {lang === 'kh' ? 'EN' : 'KH'}
-              </button>
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600">
-                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-slate-100 px-4 pt-2 pb-4 shadow-lg">
-            <div className="flex flex-col space-y-3 mt-2">
-              <a href="#scams" className="text-slate-600 font-medium py-2 border-b border-slate-50">{t.sections.scams}</a>
-              <a href="#security" className="text-slate-600 font-medium py-2 border-b border-slate-50">{t.sections.security}</a>
-              <a href="#resources" className="text-slate-600 font-medium py-2">{t.sections.resources}</a>
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-blue-900 to-slate-900 text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-10 opacity-10">
-          <Shield size={300} />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-          <div className="md:w-2/3">
-            <div className="inline-block px-3 py-1 bg-blue-500/30 rounded-full text-blue-200 text-sm font-medium mb-4 border border-blue-400/30">
-              {t.subtitle}
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              {t.heroTitle}
-            </h2>
-            <p className="text-lg text-blue-100 mb-8 leading-relaxed max-w-xl">
-              {t.heroDesc}
-            </p>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-1 flex items-center gap-2">
-              {t.cta} <ChevronRight size={20} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Core Pillars / Topics */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1: Scams */}
-          <div id="scams" className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-500 hover:shadow-xl transition">
-            <div className="bg-red-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-red-500">
-              <AlertTriangle size={24} />
-            </div>
-            <h3 className="text-xl font-bold mb-2 text-slate-800">{t.scamTitle}</h3>
-            <p className="text-slate-600">{t.scamDesc}</p>
-          </div>
-
-          {/* Card 2: Security */}
-          <div id="security" className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition">
-            <div className="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-blue-500">
-              <Lock size={24} />
-            </div>
-            <h3 className="text-xl font-bold mb-2 text-slate-800">{t.securityTitle}</h3>
-            <p className="text-slate-600">{t.securityDesc}</p>
-          </div>
-
-          {/* Card 3: Hygiene */}
-          <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 hover:shadow-xl transition">
-            <div className="bg-green-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-green-500">
-              <Smartphone size={24} />
-            </div>
-            <h3 className="text-xl font-bold mb-2 text-slate-800">{t.hygieneTitle}</h3>
-            <p className="text-slate-600">{t.hygieneDesc}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          {/* Left Column: Articles */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                <span className="w-2 h-8 bg-blue-600 rounded-full"></span>
-                {t.latestArticles}
-              </h3>
-            </div>
-
-            <div className="space-y-6">
-              {articles.map((article) => (
-                <div key={article.id} className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition flex gap-4 items-start cursor-pointer group">
-                  <div className="mt-1 bg-slate-50 p-3 rounded-full group-hover:bg-blue-50 transition">
-                    {article.icon}
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition">
-                      {lang === 'kh' ? article.titleKh : article.titleEn}
-                    </h4>
-                    <p className="text-slate-600 text-sm leading-relaxed">
-                      {lang === 'kh' ? article.descKh : article.descEn}
-                    </p>
-                    <span className="text-blue-600 text-sm font-semibold mt-3 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Read More <ChevronRight size={14} />
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Visual Explainers Section */}
-            <div className="mt-12">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2 mb-6">
-                <span className="w-2 h-8 bg-indigo-600 rounded-full"></span>
-                {t.visuals}
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Video Placeholder 1 */}
-                <div className="group relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg cursor-pointer">
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
-                    <PlayCircle className="text-white w-16 h-16 opacity-80 group-hover:scale-110 transition duration-300" />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                    <p className="text-white font-medium">
-                      {lang === 'kh' ? "វីដេអូ៖ របៀបបង្កើត Password ខ្លាំង" : "Video: Creating Strong Passwords"}
-                    </p>
-                  </div>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <i data-lucide="shield" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900 leading-tight" data-i18n="title">សុផាត ឌីជីថល</h1>
+                        <p class="text-xs text-slate-500 hidden sm:block">Digital Literacy & Safety</p>
+                    </div>
                 </div>
 
-                 {/* Video Placeholder 2 */}
-                 <div className="group relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg cursor-pointer">
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
-                    <PlayCircle className="text-white w-16 h-16 opacity-80 group-hover:scale-110 transition duration-300" />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                    <p className="text-white font-medium">
-                      {lang === 'kh' ? "វីដេអូ៖ កុំចុច Link ផ្តេសផ្តាស!" : "Video: Don't Click That Link!"}
-                    </p>
-                  </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#scams" class="text-slate-600 hover:text-blue-600 font-medium transition" data-i18n="sections.scams">ការបោកប្រាស់តាមអនឡាញ</a>
+                    <a href="#security" class="text-slate-600 hover:text-blue-600 font-medium transition" data-i18n="sections.security">សុវត្ថិភាពគណនី</a>
+                    <a href="#resources" class="text-slate-600 hover:text-blue-600 font-medium transition" data-i18n="sections.resources">ឯកសារជំនួយ</a>
+                    
+                    <button onclick="toggleLang()" class="flex items-center gap-2 px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded-full text-sm font-medium transition">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                        <span id="lang-text-desktop">EN</span>
+                    </button>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Right Column: Sidebar / Downloads */}
-          <div id="resources" className="lg:col-span-1 space-y-8">
-            {/* Checklist Box */}
-            <div className="bg-slate-800 text-white rounded-xl p-6 shadow-lg">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-blue-500 p-2 rounded-lg">
-                  <Download size={20} />
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center gap-4">
+                    <button onclick="toggleLang()" class="flex items-center gap-1 px-2 py-1 bg-slate-100 rounded text-sm font-medium">
+                        <span id="lang-text-mobile">EN</span>
+                    </button>
+                    <button onclick="toggleMenu()" class="text-slate-600">
+                        <i data-lucide="menu" id="menu-icon" class="w-7 h-7"></i>
+                    </button>
                 </div>
-                <h3 className="font-bold text-lg">{t.downloads}</h3>
-              </div>
-              
-              <div className="space-y-4 mb-6">
-                <p className="text-slate-300 text-sm italic">
-                  {lang === 'kh' ? "តើអ្នកមានសុវត្ថិភាពហើយឬនៅ?" : "Are you secure?"}
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pt-2 pb-4 shadow-lg">
+            <div class="flex flex-col space-y-3 mt-2">
+                <a href="#scams" onclick="toggleMenu()" class="text-slate-600 font-medium py-2 border-b border-slate-50" data-i18n="sections.scams">ការបោកប្រាស់តាមអនឡាញ</a>
+                <a href="#security" onclick="toggleMenu()" class="text-slate-600 font-medium py-2 border-b border-slate-50" data-i18n="sections.security">សុវត្ថិភាពគណនី</a>
+                <a href="#resources" onclick="toggleMenu()" class="text-slate-600 font-medium py-2" data-i18n="sections.resources">ឯកសារជំនួយ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-blue-900 to-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-10 opacity-10">
+            <i data-lucide="shield" class="w-[300px] h-[300px]"></i>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+            <div class="md:w-2/3">
+                <div class="inline-block px-3 py-1 bg-blue-500/30 rounded-full text-blue-200 text-sm font-medium mb-4 border border-blue-400/30" data-i18n="subtitle">
+                    លំហសម្រាប់ការយល់ដឹង សុវត្ថិភាព និងចំណេះដឹងឌីជីថល
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight" data-i18n="heroTitle">
+                    ការពារខ្លួនអ្នកនៅក្នុងពិភពឌីជីថល
+                </h2>
+                <p class="text-lg text-blue-100 mb-8 leading-relaxed max-w-xl" data-i18n="heroDesc">
+                    ប្រភពចំណេះដឹងដែលអាចទុកចិត្តបាន ដើម្បីជួយអ្នកឱ្យយល់ដឹងពីបច្ចេកវិទ្យា ចៀសវាងការបោកប្រាស់ និងរក្សាសុវត្ថិភាពគណនីរបស់អ្នក។
                 </p>
-                {checklistItems.map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <CheckCircle className="text-green-400 shrink-0 mt-0.5" size={16} />
-                    <span className="text-sm text-slate-200">
-                      {lang === 'kh' ? item.textKh : item.textEn}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <button className="w-full bg-white text-slate-900 py-3 rounded-lg font-bold hover:bg-blue-50 transition flex items-center justify-center gap-2">
-                <Download size={18} />
-                {lang === 'kh' ? "ទាញយក PDF" : "Download PDF"}
-              </button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-1 flex items-center gap-2">
+                    <span data-i18n="cta">ចាប់ផ្តើមរៀន</span> <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
             </div>
-
-            {/* About / Brand Box */}
-            <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
-              <div className="flex items-center gap-2 mb-3">
-                <Users className="text-blue-600" size={20} />
-                <h3 className="font-bold text-slate-800">{lang === 'kh' ? "អំពី សុផាត" : "About Sophat"}</h3>
-              </div>
-              <p className="text-slate-600 text-sm mb-4 leading-relaxed">
-                {lang === 'kh' 
-                  ? "ជាកន្លែងចែករំលែកចំណេះដឹងពិតប្រាកដ ដើម្បីសហគមន៍ឌីជីថលកម្ពុជាដែលមានសុវត្ថិភាព។"
-                  : "A dedicated space for authentic knowledge sharing for a safer Cambodian digital community."}
-              </p>
-              <div className="text-xs font-semibold text-blue-800 bg-blue-100 px-3 py-2 rounded-lg">
-                {t.future}
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-12 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4 text-slate-800">
-            <Shield size={24} className="text-blue-600" />
-            <span className="font-bold text-xl">{t.title}</span>
-          </div>
-          <p className="text-slate-500 mb-6">{t.subtitle}</p>
-          <div className="text-sm text-slate-400">
-            {t.footer}
-          </div>
-        </div>
-      </footer>
     </div>
-  );
-}
+
+    <!-- Core Pillars / Topics -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1: Scams -->
+            <div id="scams" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-500 hover:shadow-xl transition">
+                <div class="bg-red-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-red-500">
+                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-slate-800" data-i18n="scamTitle">ប្រយ័ត្នចំពោះការបោកប្រាស់</h3>
+                <p class="text-slate-600" data-i18n="scamDesc">រៀនពីរបៀបសម្គាល់និងការពារខ្លួនពីល្បិចកលជនខិលខូច។</p>
+            </div>
+
+            <!-- Card 2: Security -->
+            <div id="security" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition">
+                <div class="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-blue-500">
+                    <i data-lucide="lock" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-slate-800" data-i18n="securityTitle">ពង្រឹងសុវត្ថិភាពរបស់អ្នក</h3>
+                <p class="text-slate-600" data-i18n="securityDesc">គន្លឹះសំខាន់ៗដើម្បីការពារគណនី Facebook, Telegram និងធនាគារ។</p>
+            </div>
+
+            <!-- Card 3: Hygiene -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 hover:shadow-xl transition">
+                <div class="bg-green-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-green-500">
+                    <i data-lucide="smartphone" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-slate-800" data-i18n="hygieneTitle">ទម្លាប់ល្អក្នុងការប្រើប្រាស់</h3>
+                <p class="text-slate-600" data-i18n="hygieneDesc">របៀបប្រើប្រាស់បច្ចេកវិទ្យាប្រកបដោយសុខភាពល្អនិងប្រសិទ្ធភាព។</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <!-- Left Column: Articles -->
+            <div class="lg:col-span-2">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <span class="w-2 h-8 bg-blue-600 rounded-full"></span>
+                        <span data-i18n="latestArticles">អត្ថបទថ្មីៗ</span>
+                    </h3>
+                </div>
+
+                <!-- Dynamic Articles Container -->
+                <div id="articles-container" class="space-y-6">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Visual Explainers Section -->
+                <div class="mt-12">
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mb-6">
+                        <span class="w-2 h-8 bg-indigo-600 rounded-full"></span>
+                        <span data-i18n="visuals">វីដេអូពន្យល់</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Video Placeholder 1 -->
+                        <div class="group relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg cursor-pointer">
+                            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
+                                <i data-lucide="play-circle" class="text-white w-16 h-16 opacity-80 group-hover:scale-110 transition duration-300"></i>
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                                <p class="text-white font-medium" id="video-1-title">វីដេអូ៖ របៀបបង្កើត Password ខ្លាំង</p>
+                            </div>
+                        </div>
+
+                         <!-- Video Placeholder 2 -->
+                         <div class="group relative bg-slate-900 rounded-xl overflow-hidden aspect-video shadow-lg cursor-pointer">
+                            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
+                                <i data-lucide="play-circle" class="text-white w-16 h-16 opacity-80 group-hover:scale-110 transition duration-300"></i>
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                                <p class="text-white font-medium" id="video-2-title">វីដេអូ៖ កុំចុច Link ផ្តេសផ្តាស!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar / Downloads -->
+            <div id="resources" class="lg:col-span-1 space-y-8">
+                <!-- Checklist Box -->
+                <div class="bg-slate-800 text-white rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="bg-blue-500 p-2 rounded-lg">
+                            <i data-lucide="download" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-lg" data-i18n="downloads">បញ្ជីត្រួតពិនិត្យ (Checklists)</h3>
+                    </div>
+                    
+                    <div class="space-y-4 mb-6" id="checklist-container">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <button class="w-full bg-white text-slate-900 py-3 rounded-lg font-bold hover:bg-blue-50 transition flex items-center justify-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span id="download-btn-text">ទាញយក PDF</span>
+                    </button>
+                </div>
+
+                <!-- About / Brand Box -->
+                <div class="bg-blue-50 rounded-xl p-6 border border-blue-100">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="users" class="text-blue-600 w-5 h-5"></i>
+                        <h3 class="font-bold text-slate-800" id="about-title">អំពី សុផាត</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-4 leading-relaxed" id="about-desc">
+                        ជាកន្លែងចែករំលែកចំណេះដឹងពិតប្រាកដ ដើម្បីសហគមន៍ឌីជីថលកម្ពុជាដែលមានសុវត្ថិភាព។
+                    </p>
+                    <div class="text-xs font-semibold text-blue-800 bg-blue-100 px-3 py-2 rounded-lg" data-i18n="future">
+                        សេវាកម្មពេលអនាគត៖ សិក្ខាសាលា និង គ្លីនិកឌីជីថល។
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center gap-2 mb-4 text-slate-800">
+                <i data-lucide="shield" class="text-blue-600 w-6 h-6"></i>
+                <span class="font-bold text-xl" data-i18n="title">សុផាត ឌីជីថល</span>
+            </div>
+            <p class="text-slate-500 mb-6" data-i18n="subtitle">លំហសម្រាប់ការយល់ដឹង សុវត្ថិភាព និងចំណេះដឹងឌីជីថល</p>
+            <div class="text-sm text-slate-400" data-i18n="footer">
+                © ២០២៤ សុផាត ឌីជីថល។ រក្សាសិទ្ធិគ្រប់យ៉ាង។
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Objects
+        const translations = {
+            kh: {
+                title: "សុផាត ឌីជីថល",
+                subtitle: "លំហសម្រាប់ការយល់ដឹង សុវត្ថិភាព និងចំណេះដឹងឌីជីថល",
+                heroTitle: "ការពារខ្លួនអ្នកនៅក្នុងពិភពឌីជីថល",
+                heroDesc: "ប្រភពចំណេះដឹងដែលអាចទុកចិត្តបាន ដើម្បីជួយអ្នកឱ្យយល់ដឹងពីបច្ចេកវិទ្យា ចៀសវាងការបោកប្រាស់ និងរក្សាសុវត្ថិភាពគណនីរបស់អ្នក។",
+                cta: "ចាប់ផ្តើមរៀន",
+                sections: {
+                    scams: "ការបោកប្រាស់តាមអនឡាញ",
+                    security: "សុវត្ថិភាពគណនី",
+                    hygiene: "អនាម័យឌីជីថល",
+                    resources: "ឯកសារជំនួយ"
+                },
+                scamTitle: "ប្រយ័ត្នចំពោះការបោកប្រាស់",
+                scamDesc: "រៀនពីរបៀបសម្គាល់និងការពារខ្លួនពីល្បិចកលជនខិលខូច។",
+                securityTitle: "ពង្រឹងសុវត្ថិភាពរបស់អ្នក",
+                securityDesc: "គន្លឹះសំខាន់ៗដើម្បីការពារគណនី Facebook, Telegram និងធនាគារ។",
+                hygieneTitle: "ទម្លាប់ល្អក្នុងការប្រើប្រាស់",
+                hygieneDesc: "របៀបប្រើប្រាស់បច្ចេកវិទ្យាប្រកបដោយសុខភាពល្អនិងប្រសិទ្ធភាព។",
+                latestArticles: "អត្ថបទថ្មីៗ",
+                visuals: "វីដេអូពន្យល់",
+                downloads: "បញ្ជីត្រួតពិនិត្យ (Checklists)",
+                footer: "© ២០២៤ សុផាត ឌីជីថល។ រក្សាសិទ្ធិគ្រប់យ៉ាង។",
+                future: "សេវាកម្មពេលអនាគត៖ សិក្ខាសាលា និង គ្លីនិកឌីជីថល។"
+            },
+            en: {
+                title: "Sophat Digital Space",
+                subtitle: "A space for digital literacy, safety, and awareness.",
+                heroTitle: "Protect Yourself in the Digital World",
+                heroDesc: "Your trusted knowledge base to help you understand technology, avoid scams, and keep your accounts secure.",
+                cta: "Start Learning",
+                sections: {
+                    scams: "Online Scams",
+                    security: "Account Security",
+                    hygiene: "Digital Hygiene",
+                    resources: "Resources"
+                },
+                scamTitle: "Beware of Scams",
+                scamDesc: "Learn how to identify and protect yourself from malicious tricks.",
+                securityTitle: "Strengthen Security",
+                securityDesc: "Essential tips to protect your Facebook, Telegram, and Bank accounts.",
+                hygieneTitle: "Digital Hygiene",
+                hygieneDesc: "How to use technology cleanly, healthily, and efficiently.",
+                latestArticles: "Latest Articles",
+                visuals: "Visual Explainers",
+                downloads: "Downloadable Checklists",
+                footer: "© 2024 Sophat Digital Space. All rights reserved.",
+                future: "Coming soon: Workshops and Digital Clinic Roadshows."
+            }
+        };
+
+        const articles = [
+            {
+                id: 1,
+                titleKh: 'របៀបសម្គាល់សារបោកបញ្ឆោត (Phishing)',
+                titleEn: 'How to Spot Phishing Messages',
+                descKh: 'កុំចុចលើតំណភ្ជាប់ (Link) ដែលគួរឱ្យសង្ស័យ។ នេះជាវិធីសម្គាល់...',
+                descEn: 'Never click on suspicious links. Here is how to identify them...',
+                iconName: 'alert-triangle',
+                colorClass: 'text-orange-500'
+            },
+            {
+                id: 2,
+                titleKh: 'ហេតុអ្វីអ្នកត្រូវបើក 2FA ឥឡូវនេះ?',
+                titleEn: 'Why You Must Enable 2FA Now',
+                descKh: 'ការផ្ទៀងផ្ទាត់ពីរជំហាន គឺជាគន្លឹះសំខាន់បំផុតការពារគណនីរបស់អ្នក។',
+                descEn: 'Two-Factor Authentication is the most important key to account safety.',
+                iconName: 'lock',
+                colorClass: 'text-blue-500'
+            },
+            {
+                id: 3,
+                titleKh: 'សម្អាតទិន្នន័យចាស់ៗក្នុងទូរស័ព្ទ',
+                titleEn: 'Cleaning Old Data on Your Phone',
+                descKh: 'លុបកម្មវិធីមិនប្រើ និងរូបភាពចាស់ៗ ដើម្បីល្បឿននិងសុវត្ថិភាព។',
+                descEn: 'Delete unused apps and old photos for speed and security.',
+                iconName: 'smartphone',
+                colorClass: 'text-green-500'
+            }
+        ];
+
+        const checklistItems = [
+            { textKh: "បានបើក Two-Factor Authentication (2FA)", textEn: "Enabled Two-Factor Authentication (2FA)" },
+            { textKh: "ប្រើពាក្យសម្ងាត់ដែលពិបាកទាយ", textEn: "Using strong, unpredictable passwords" },
+            { textKh: "មិនដែលចែករំលែកលេខកូដ OTP", textEn: "Never shared OTP codes" },
+            { textKh: "បានត្រួតពិនិត្យឧបករណ៍ដែលកំពុង Log in (Active Sessions)", textEn: "Checked Active Sessions/Devices" }
+        ];
+
+        // State
+        let currentLang = 'kh';
+        let isMenuOpen = false;
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+        });
+
+        // Helper to get nested object value
+        function getNestedValue(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        // Logic Functions
+        function toggleLang() {
+            currentLang = currentLang === 'kh' ? 'en' : 'kh';
+            renderApp();
+        }
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            const menu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            
+            if (isMenuOpen) {
+                menu.classList.remove('hidden');
+                // We'll let Lucide handle the icon, but conceptually simpler to just toggle visibility
+                // Ideally, we'd swap the icon to 'x' here, but keeping it simple with just visibility toggle is fine for this scope.
+            } else {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // Render Functions
+        function renderApp() {
+            const t = translations[currentLang];
+
+            // 1. Update static text elements with [data-i18n]
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const text = getNestedValue(t, key);
+                if (text) el.textContent = text;
+            });
+
+            // 2. Update specific elements that need more logic or don't fit the generic loop
+            document.getElementById('lang-text-desktop').textContent = currentLang === 'kh' ? 'EN' : 'ខ្មែរ';
+            document.getElementById('lang-text-mobile').textContent = currentLang === 'kh' ? 'EN' : 'KH';
+
+            // 3. Render Articles
+            const articlesContainer = document.getElementById('articles-container');
+            articlesContainer.innerHTML = articles.map(article => `
+                <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition flex gap-4 items-start cursor-pointer group">
+                    <div class="mt-1 bg-slate-50 p-3 rounded-full group-hover:bg-blue-50 transition">
+                        <i data-lucide="${article.iconName}" class="${article.colorClass} w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition">
+                            ${currentLang === 'kh' ? article.titleKh : article.titleEn}
+                        </h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            ${currentLang === 'kh' ? article.descKh : article.descEn}
+                        </p>
+                        <span class="text-blue-600 text-sm font-semibold mt-3 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Read More <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+
+            // 4. Render Checklist
+            const checklistContainer = document.getElementById('checklist-container');
+            const introText = currentLang === 'kh' ? "តើអ្នកមានសុវត្ថិភាពហើយឬនៅ?" : "Are you secure?";
+            const itemsHtml = checklistItems.map(item => `
+                <div class="flex items-start gap-3">
+                    <i data-lucide="check-circle" class="text-green-400 shrink-0 mt-0.5 w-4 h-4"></i>
+                    <span class="text-sm text-slate-200">
+                        ${currentLang === 'kh' ? item.textKh : item.textEn}
+                    </span>
+                </div>
+            `).join('');
+            
+            checklistContainer.innerHTML = `
+                <p class="text-slate-300 text-sm italic">${introText}</p>
+                ${itemsHtml}
+            `;
+
+            // 5. Update specific IDs
+            document.getElementById('video-1-title').textContent = currentLang === 'kh' ? "វីដេអូ៖ របៀបបង្កើត Password ខ្លាំង" : "Video: Creating Strong Passwords";
+            document.getElementById('video-2-title').textContent = currentLang === 'kh' ? "វីដេអូ៖ កុំចុច Link ផ្តេសផ្តាស!" : "Video: Don't Click That Link!";
+            
+            document.getElementById('download-btn-text').textContent = currentLang === 'kh' ? "ទាញយក PDF" : "Download PDF";
+            document.getElementById('about-title').textContent = currentLang === 'kh' ? "អំពី សុផាត" : "About Sophat";
+            document.getElementById('about-desc').textContent = currentLang === 'kh' 
+                ? "ជាកន្លែងចែករំលែកចំណេះដឹងពិតប្រាកដ ដើម្បីសហគមន៍ឌីជីថលកម្ពុជាដែលមានសុវត្ថិភាព។"
+                : "A dedicated space for authentic knowledge sharing for a safer Cambodian digital community.";
+
+            // 6. Refresh Icons
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
