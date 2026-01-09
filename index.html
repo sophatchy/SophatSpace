@@ -514,10 +514,11 @@
             return sections.filter(s => s.tags.includes(activeFilter));
         }
 
-        function calculateRiskScore() {
+        function calculateRiskScore(useAll = false) {
             let totalScore = 0;
             let maxScore = 0;
-            getFilteredSections().forEach(section => {
+            const source = useAll ? sections : getFilteredSections();
+            source.forEach(section => {
                 section.items.forEach(item => {
                     const weight = item.urgent ? 3 : 1;
                     maxScore += weight;
@@ -683,7 +684,6 @@
 
         async function downloadPDF() {
             const btn = document.getElementById('downloadBtn');
-            // Save original button content if it exists, otherwise provide default
             const originalHTML = btn ? btn.innerHTML : `<i data-lucide="download"></i> Download`;
             
             if (btn) {
@@ -691,100 +691,105 @@
                 lucide.createIcons();
             }
 
-            // 1. Prepare Data
-            const dateStr = new Date().toLocaleDateString('km-KH');
-            const score = calculateRiskScore();
-            const level = getRiskLevel(score);
-            const userName = document.getElementById('user-name').value.trim() || "អ្នកប្រើប្រាស់";
-            
-            document.getElementById('pdf-date').innerText = dateStr;
-            document.getElementById('pdf-user-name').innerText = userName;
-            document.getElementById('pdf-score').innerText = `${score}/100`;
-            document.getElementById('pdf-risk-level').innerText = level.text;
-            
-            const levelColor = score >= 80 ? '#16a34a' : (score >= 50 ? '#ca8a04' : '#dc2626');
-            document.getElementById('pdf-risk-level').style.color = levelColor;
-
-            // 2. Generate Content
-            const container = document.getElementById('pdf-content-container');
-            const activeSections = getFilteredSections();
-            let completedItems = [], missedItems = [];
-
-            activeSections.forEach(section => {
-                section.items.forEach(item => {
-                    if (checkedItems.has(item.id)) completedItems.push(item);
-                    else missedItems.push(item);
-                });
-            });
-            missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
-
-            let html = '';
-            if (missedItems.length > 0) {
-                html += `<div class="mb-4 pb-2 border-b-2 border-red-100 font-bold text-red-700 text-sm uppercase">⚠️ ចំណុចត្រូវកែលម្អ (Action Required)</div>`;
-                html += missedItems.map(item => `
-                    <div class="mb-4 pb-3 border-b border-slate-100 last:border-0">
-                        <div class="font-bold text-slate-800 text-sm flex items-start gap-2">
-                            ${item.urgent ? '<span style="color:#dc2626; font-weight:bold; flex-shrink:0;">[បន្ទាន់]</span>' : '<span style="color:#ca8a04; font-weight:bold; flex-shrink:0;">[ណែនាំ]</span>'} 
-                            <span>${item.text}</span>
-                        </div>
-                        <div class="text-xs text-slate-500 mt-1 pl-2 border-l-2 border-slate-200 ml-1">
-                            <div>ហានិភ័យ: ${item.risk}</div>
-                            <div style="color:#0369a1; font-weight:bold;">👉 ដំណោះស្រាយ: ${item.rec}</div>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                html += `<div class="p-4 text-center text-green-700 font-bold border border-green-200 bg-green-50 rounded mb-6">ល្អប្រសើរ! អ្នកមិនមានចំណុចខ្វះខាតនៅក្នុងផ្នែកនេះទេ។</div>`;
-            }
-
-            if (completedItems.length > 0) {
-                html += `<div class="mt-6 mb-4 pb-2 border-b-2 border-green-100 font-bold text-green-700 text-sm uppercase">✅ ចំណុចបានការពាររួច (Completed)</div>`;
-                html += completedItems.map(item => `
-                    <div class="flex items-start gap-2 text-xs text-slate-600 mb-2">
-                        <span style="color:#16a34a; font-weight:bold;">✓</span> 
-                        <span style="opacity: 0.8;">${item.text}</span>
-                    </div>
-                `).join('');
-            }
-            container.innerHTML = html;
-
-            // 3. Render and Capture
-            // Use absolute positioning to force layout rendering while overlaying content temporarily
-            const wrapper = document.getElementById('pdf-wrapper');
-            wrapper.style.display = 'block';
-            wrapper.style.position = 'absolute';
-            wrapper.style.top = '0';
-            wrapper.style.left = '0';
-            wrapper.style.zIndex = '9999';
-            wrapper.style.width = '800px'; // Desktop width for proper layout
-            wrapper.style.background = 'white';
-
-            // Wait for render
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            const opt = {
-                margin: [10, 10, 10, 10],
-                filename: `Security_Report_${userName}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    letterRendering: true,
-                    scrollY: 0,
-                    windowWidth: 800, // Force desktop viewport
-                    width: 800
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
             try {
-                await html2pdf().from(wrapper).set(opt).save();
+                // 1. Prepare Data
+                const dateStr = new Date().toLocaleDateString('km-KH');
+                const score = calculateRiskScore(true);
+                const level = getRiskLevel(score);
+                const userName = document.getElementById('user-name').value.trim() || "អ្នកប្រើប្រាស់";
+                
+                // Update the hidden template with data
+                document.getElementById('pdf-date').innerText = dateStr;
+                document.getElementById('pdf-user-name').innerText = userName;
+                document.getElementById('pdf-score').innerText = `${score}/100`;
+                document.getElementById('pdf-risk-level').innerText = level.text;
+                document.getElementById('pdf-risk-level').style.color = score >= 80 ? '#16a34a' : (score >= 50 ? '#ca8a04' : '#dc2626');
+
+                // Generate Content List
+                const container = document.getElementById('pdf-content-container');
+                const activeSections = sections; 
+                let completedItems = [], missedItems = [];
+
+                activeSections.forEach(section => {
+                    section.items.forEach(item => {
+                        if (checkedItems.has(item.id)) completedItems.push(item);
+                        else missedItems.push(item);
+                    });
+                });
+                missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+
+                let html = '';
+                if (missedItems.length > 0) {
+                    html += `<div class="mb-4 pb-2 border-b-2 border-red-100 font-bold text-red-700 text-sm uppercase">⚠️ ចំណុចត្រូវកែលម្អ (Action Required)</div>`;
+                    html += missedItems.map(item => `
+                        <div class="mb-4 pb-3 border-b border-slate-100 last:border-0">
+                            <div class="font-bold text-slate-800 text-sm flex items-start gap-2">
+                                ${item.urgent ? '<span style="color:#dc2626; font-weight:bold; flex-shrink:0;">[បន្ទាន់]</span>' : '<span style="color:#ca8a04; font-weight:bold; flex-shrink:0;">[ណែនាំ]</span>'} 
+                                <span>${item.text}</span>
+                            </div>
+                            <div class="text-xs text-slate-500 mt-1 pl-2 border-l-2 border-slate-200 ml-1">
+                                <div>ហានិភ័យ: ${item.risk}</div>
+                                <div style="color:#0369a1; font-weight:bold;">👉 ដំណោះស្រាយ: ${item.rec}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    html += `<div class="p-4 text-center text-green-700 font-bold border border-green-200 bg-green-50 rounded mb-6">ល្អប្រសើរ! អ្នកមិនមានចំណុចខ្វះខាតនៅក្នុងផ្នែកនេះទេ។</div>`;
+                }
+
+                if (completedItems.length > 0) {
+                    html += `<div class="mt-6 mb-4 pb-2 border-b-2 border-green-100 font-bold text-green-700 text-sm uppercase">✅ ចំណុចបានការពាររួច (Completed)</div>`;
+                    html += completedItems.map(item => `
+                        <div class="flex items-start gap-2 text-xs text-slate-600 mb-2">
+                            <span style="color:#16a34a; font-weight:bold;">✓</span> 
+                            <span style="opacity: 0.8;">${item.text}</span>
+                        </div>
+                    `).join('');
+                }
+                container.innerHTML = html;
+
+                // 2. CLONE AND RENDER
+                // Clone the template to ensure we don't mess with the DOM and can position it safely
+                const originalElement = document.getElementById('pdf-template');
+                const clone = originalElement.cloneNode(true);
+                
+                // Create a container for the clone that sits on top of everything
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'fixed';
+                wrapper.style.top = '0';
+                wrapper.style.left = '0';
+                wrapper.style.width = '800px'; // Fixed width for PDF consistency
+                wrapper.style.zIndex = '9999';
+                wrapper.style.background = '#ffffff';
+                wrapper.style.visibility = 'visible'; // Ensure visible
+                wrapper.appendChild(clone);
+                document.body.appendChild(wrapper);
+
+                // Wait a moment for the DOM to settle and fonts to apply
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const opt = {
+                    margin: [10, 10, 10, 10],
+                    filename: `Security_Report_${userName}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        letterRendering: true,
+                        scrollY: 0
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                await html2pdf().from(clone).set(opt).save();
+
+                // Cleanup
+                document.body.removeChild(wrapper);
+
             } catch (err) {
                 console.error(err);
                 alert("មានបញ្ហាក្នុងការបង្កើត PDF។ សូមព្យាយាមម្តងទៀត។");
             } finally {
-                // Reset UI
-                wrapper.style.display = 'none';
                 if (btn) btn.innerHTML = originalHTML;
                 lucide.createIcons();
             }
