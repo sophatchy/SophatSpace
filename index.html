@@ -24,7 +24,17 @@
                             600: '#0284c7',
                             700: '#0369a1',
                             900: '#0c4a6e',
+                        },
+                        danger: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
                         }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -69,10 +79,28 @@
             opacity: 1;
             transform: scale(1);
         }
-        .checkbox-wrapper input:checked + div span {
+        /* Strikethrough for non-urgent items */
+        .checkbox-wrapper input:checked + div span:not(.urgent-text) {
             color: #0284c7;
             text-decoration: line-through;
             opacity: 0.8;
+        }
+        /* Style for urgent items when checked */
+        .checkbox-wrapper input:checked + div span.urgent-text {
+            color: #059669; /* Green */
+            font-weight: normal;
+        }
+
+        /* Detail Box Animation */
+        .detail-box {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+        }
+        .detail-box.open {
+            max-height: 500px; /* Arbitrary large value */
+            opacity: 1;
         }
 
         /* PDF Template Styles */
@@ -106,10 +134,19 @@
             margin-right: 8px;
             margin-top: 3px;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
         }
         .pdf-box.checked {
             background-color: #0284c7;
             border-color: #0284c7;
+            color: white;
+        }
+        .pdf-urgent {
+            color: #dc2626;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -122,7 +159,7 @@
                 <!-- Logo -->
                 <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
                     <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-lg shadow-brand-500/30 transition-transform group-hover:scale-105">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        <i data-lucide="clipboard-check" class="w-6 h-6"></i>
                     </div>
                     <div class="flex flex-col">
                         <h1 class="text-lg font-bold text-slate-900 leading-none tracking-tight" data-i18n="title">សុផាត ឌីជីថល</h1>
@@ -162,28 +199,69 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <!-- Left Column: Checklists (8 cols) -->
-            <div class="lg:col-span-8 space-y-8" id="checklist-grid">
-                <!-- Checklist Cards will be injected here -->
+            <div class="lg:col-span-8 space-y-8">
+                
+                <!-- Legend Guide -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-slate-800 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 text-sm">
+                    <span class="font-bold text-slate-700 whitespace-nowrap" data-i18n="legendTitle">ការសម្គាល់ (Legend):</span>
+                    <div class="flex items-center gap-2">
+                        <div class="w-5 h-5 rounded border bg-brand-50 border-brand-500 flex items-center justify-center">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-brand-600"></i>
+                        </div>
+                        <span class="text-slate-600" data-i18n="legendDone">បានអនុវត្តរួច (Done)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-red-600 font-extrabold text-lg leading-none">✳</span>
+                        <span class="text-red-700 font-medium" data-i18n="legendUrgent">ត្រូវធ្វើឲ្យបានបន្ទាន់ (Urgent / High Risk)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="info" class="w-4 h-4 text-slate-400"></i>
+                        <span class="text-slate-500 text-xs italic" data-i18n="legendClick">ចុចលើអក្សរដើម្បីមើលហានិភ័យ</span>
+                    </div>
+                </div>
+
+                <div id="checklist-grid" class="space-y-8">
+                    <!-- Checklist Cards will be injected here -->
+                </div>
             </div>
 
-            <!-- Right Column: Progress & Actions (4 cols) -->
+            <!-- Right Column: Risk & Progress (4 cols) -->
             <div class="lg:col-span-4 space-y-6">
                 
-                <!-- Progress Widget -->
+                <!-- Risk Assessment Widget -->
                 <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden sticky top-24">
-                    <div class="bg-slate-900 p-6 text-white relative">
-                        <div class="flex justify-between items-end mb-2">
-                            <h3 class="font-bold text-lg" data-i18n="progressTitle">វឌ្ឍនភាពរបស់អ្នក</h3>
-                            <span class="text-2xl font-bold text-brand-400" id="progress-percent">0%</span>
+                    
+                    <!-- Risk Level Header -->
+                    <div id="risk-header" class="p-6 text-white transition-colors duration-500 bg-red-600">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-sm opacity-90 uppercase tracking-wider" data-i18n="riskTitle">កម្រិតហានិភ័យ</h3>
+                                <div class="text-2xl font-extrabold mt-1 flex items-center gap-2" id="risk-status">
+                                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                                    <span>ខ្ពស់ (HIGH)</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="w-full bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                            <div id="progress-bar" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                        <p class="text-slate-400 text-xs mt-3" id="progress-text">0 នៃ 0 បានបញ្ចប់</p>
+                        <p class="text-white/80 text-xs mt-2" id="risk-desc">
+                            មានចំណុចបន្ទាន់ដែលមិនទាន់បានអនុវត្ត។
+                        </p>
                     </div>
                     
+                    <!-- Progress Section -->
+                    <div class="px-6 pt-6 pb-2">
+                         <div class="flex justify-between items-end mb-2">
+                            <span class="text-sm font-bold text-slate-700" data-i18n="progressTitle">វឌ្ឍនភាពរបស់អ្នក</span>
+                            <span class="text-xl font-bold text-brand-600" id="progress-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <p class="text-slate-400 text-xs mt-2 text-right" id="progress-text">0 នៃ 0 បានបញ្ចប់</p>
+                    </div>
+                    
+                    <!-- Actions -->
                     <div class="p-6 bg-white">
-                        <button onclick="downloadPDF()" class="w-full bg-brand-600 text-white py-4 rounded-xl font-bold hover:bg-brand-500 shadow-lg shadow-brand-500/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 group mb-3">
+                        <button onclick="downloadPDF()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 shadow-lg shadow-slate-800/20 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 group mb-3">
                             <i data-lucide="file-down" class="w-5 h-5"></i>
                             <span id="download-btn-text">ទាញយក PDF</span>
                         </button>
@@ -216,12 +294,17 @@
             <div class="border-b-2 border-slate-200 pb-4 mb-6 flex justify-between items-end">
                 <div>
                     <h1 class="text-2xl font-bold text-blue-900 mb-2" id="pdf-header-title">Sophat Digital Space</h1>
-                    <p class="text-slate-500 text-sm">Digital Clinic - Security Checklist</p>
+                    <p class="text-slate-500 text-sm">Digital Clinic - Security Audit</p>
                 </div>
                 <div class="text-right text-xs text-slate-400">
                     <p id="pdf-date">Generated on: </p>
                     <p>sophatdigital.com</p>
                 </div>
+            </div>
+            
+            <div class="bg-slate-50 p-4 mb-6 rounded border border-slate-200">
+                <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px;" id="pdf-risk-level">Risk Level: HIGH</div>
+                <div style="font-size: 12px; color: #64748b;" id="pdf-score">Completion: 0%</div>
             </div>
             
             <div class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm" id="pdf-content-container">
@@ -253,7 +336,20 @@
                 progressTitle: "វឌ្ឍនភាពរបស់អ្នក",
                 resetBtn: "កំណត់ឡើងវិញ",
                 noteTitle: "កំណត់សម្គាល់ Digital Clinic:",
-                noteDesc: "ឧបករណ៍មួយ = ច្រកចូលគណនីទាំងអស់។ សូមការពារវាដូចជាកាបូបលុយរបស់អ្នក។"
+                noteDesc: "ឧបករណ៍មួយ = ច្រកចូលគណនីទាំងអស់។ សូមការពារវាដូចជាកាបូបលុយរបស់អ្នក។",
+                legendTitle: "ការសម្គាល់ (Legend):",
+                legendDone: "បានអនុវត្តរួច (Done)",
+                legendUrgent: "ត្រូវធ្វើឲ្យបានបន្ទាន់ (Urgent / High Risk)",
+                legendClick: "ចុចលើអក្សរដើម្បីមើលហានិភ័យ",
+                riskTitle: "កម្រិតហានិភ័យ",
+                riskHigh: "ខ្ពស់ (HIGH)",
+                riskMed: "មធ្យម (MEDIUM)",
+                riskLow: "ទាប (LOW)",
+                riskDescHigh: "អ្នកមានចំណុចបន្ទាន់ (✳) ដែលមិនទាន់បានការពារ។",
+                riskDescMed: "ចំណុចសំខាន់ៗបានការពារ ប៉ុន្តែនៅខ្វះចន្លោះខ្លះ។",
+                riskDescLow: "អបអរសាទរ! អ្នកមានសុវត្ថិភាពកម្រិតខ្ពស់។",
+                riskLabel: "ហានិភ័យ (Risk):",
+                recLabel: "ការណែនាំ (Recommendation):"
             },
             en: {
                 title: "Sophat Digital Space",
@@ -263,11 +359,33 @@
                 progressTitle: "Your Progress",
                 resetBtn: "Reset Checklist",
                 noteTitle: "Digital Clinic Note:",
-                noteDesc: "One device = Gateway to all accounts. Protect it like your wallet."
+                noteDesc: "One device = Gateway to all accounts. Protect it like your wallet.",
+                legendTitle: "Legend:",
+                legendDone: "Completed",
+                legendUrgent: "Urgent / High Risk",
+                legendClick: "Click text to see Risks",
+                riskTitle: "RISK LEVEL",
+                riskHigh: "HIGH RISK",
+                riskMed: "MEDIUM RISK",
+                riskLow: "LOW RISK / SAFE",
+                riskDescHigh: "You have unaddressed Urgent (✳) security risks.",
+                riskDescMed: "Critical items secured, but gaps remain.",
+                riskDescLow: "Excellent! You have a strong security posture.",
+                riskLabel: "Risk:",
+                recLabel: "Recommendation:"
             }
         };
 
-        // Complete Data Structure
+        // Helper for default risks if not specific
+        const defaultRisk = {
+            kh: "ទិន្នន័យអាចបាត់បង់ ឬត្រូវគេលួចចូលប្រើ។",
+            en: "Data loss or unauthorized access."
+        };
+        const defaultRec = {
+            kh: "សូមអនុវត្តតាមចំណុចនេះជាបន្ទាន់។",
+            en: "Please implement this measure immediately."
+        };
+
         const sections = [
             {
                 id: "devices",
@@ -275,193 +393,108 @@
                 titleEn: "🖥️ DEVICES",
                 color: "border-l-4 border-slate-500",
                 items: [
-                    { kh: "កុំព្យូទ័រ ទូរស័ព្ទ និង POS ទាំងអស់មាន Password / PIN / Biometric", en: "All computers, phones, POS have Password / PIN / Biometric" },
-                    { kh: "Lock Screen ស្វ័យប្រវត្តិ នៅពេលមិនប្រើ (1–5 នាទី)", en: "Auto Lock Screen when unused (1-5 mins)" },
-                    { kh: "Update OS និង App ជាប្រចាំ (Auto-update បើអាច)", en: "Update OS and Apps regularly (Auto-update if possible)" },
-                    { kh: "App / Software ទាញយកពី ប្រភពផ្លូវការ (App Store / Play Store) ប៉ុណ្ណោះ", en: "Download Apps/Software from Official Sources only" },
-                    { kh: "មិនដំឡើង Software Crack / APK មិនស្គាល់ប្រភព", en: "Do not install Cracked Software / Unknown APKs" },
-                    { kh: "ឧបករណ៍មាន Antivirus / Built-in Protection", en: "Device has Antivirus / Built-in Protection" },
-                    { kh: "ឧបករណ៍ដែលបាត់ ឬខូច → Remove access / Remote lock", en: "Lost/Broken device → Remove access / Remote lock" },
-                    { kh: "ឯកសារអាជីវកម្មសំខាន់ Backup ជាប្រចាំ (Cloud + Local)", en: "Backup critical business files regularly (Cloud + Local)" }
+                    { kh: "កុំព្យូទ័រ ទូរស័ព្ទ និង POS ទាំងអស់មាន Password / PIN / Biometric", en: "All computers, phones, POS have Password / PIN / Biometric", urgent: true, 
+                      riskKh: "អ្នកដទៃអាចបើកចូលមើលឯកសារ និងគណនីរបស់អ្នកបានយ៉ាងងាយ។", recKh: "កំណត់លេខកូដសម្ងាត់យ៉ាងតិច ៦ ខ្ទង់ ឬប្រើស្កេនមុខ/ម្រាមដៃ។" },
+                    { kh: "Lock Screen ស្វ័យប្រវត្តិ នៅពេលមិនប្រើ (1–5 នាទី)", en: "Auto Lock Screen when unused (1-5 mins)", urgent: true,
+                      riskKh: "នៅពេលអ្នកដើរចេញពីឧបករណ៍ អ្នកផ្សេងអាចឆ្លៀតឱកាសចូលប្រើ។", recKh: "ចូលទៅ Settings > Display > Screen Timeout កំណត់ត្រឹម ១ ឬ ២ នាទី។" },
+                    { kh: "Update OS និង App ជាប្រចាំ (Auto-update បើអាច)", en: "Update OS and Apps regularly (Auto-update if possible)",
+                      riskKh: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោងដែល Hacker អាចវាយប្រហារបាន។", recKh: "បើកមុខងារ Automatic Updates លើទូរស័ព្ទនិងកុំព្យូទ័រ។" },
+                    { kh: "App / Software ទាញយកពី ប្រភពផ្លូវការ (App Store / Play Store) ប៉ុណ្ណោះ", en: "Download Apps/Software from Official Sources only",
+                      riskKh: "App ពីប្រភពក្រៅអាចមានមេរោគ (Malware/Spyware) លួចទិន្នន័យ។", recKh: "កុំដំឡើង App តាម Link ឬតាម Telegram/Facebook។" },
+                    { kh: "មិនដំឡើង Software Crack / APK មិនស្គាល់ប្រភព", en: "Do not install Cracked Software / Unknown APKs", urgent: true,
+                      riskKh: "Software Crack តែងតែមានបង្កប់មេរោគដែលអ្នកមិនដឹង។", recKh: "ប្រើប្រាស់ Software ស្របច្បាប់ ឬ Open Source ជំនួសវិញ។" },
+                    { kh: "ឧបករណ៍មាន Antivirus / Built-in Protection", en: "Device has Antivirus / Built-in Protection",
+                      riskKh: "គ្មានការការពារនៅពេលមានមេរោគចូល។", recKh: "បើក Windows Defender ឬដំឡើង Antivirus លើ Android។" },
+                    { kh: "ឧបករណ៍ដែលបាត់ ឬខូច → Remove access / Remote lock", en: "Lost/Broken device → Remove access / Remote lock", urgent: true,
+                      riskKh: "ទិន្នន័យក្នុងឧបករណ៍នោះអាចត្រូវគេលួចបាន។", recKh: "ប្រើ Find My iPhone/Device ដើម្បី Lock ឬ Erase ទិន្នន័យ។" },
+                    { kh: "ឯកសារអាជីវកម្មសំខាន់ Backup ជាប្រចាំ (Cloud + Local)", en: "Backup critical business files regularly (Cloud + Local)",
+                      riskKh: "បាត់បង់ទិន្នន័យជាអចិន្ត្រៃយ៍បើឧបករណ៍ខូច ឬបាត់។", recKh: "ប្រើ Google Drive, OneDrive ឬ Hard Disk ដើម្បីចម្លងទុក។" }
                 ]
             },
             {
                 id: "phishing",
-                titleKh: "Checklist 01: សម្គាល់សារបោកបញ្ឆោត (Phishing)",
-                titleEn: "Checklist 01: Spotting Phishing",
+                titleKh: "សម្គាល់សារបោកបញ្ឆោត (Phishing)",
+                titleEn: "Spotting Phishing",
                 color: "border-l-4 border-red-500",
                 items: [
-                    { kh: "ពិនិត្យឈ្មោះអ្នកផ្ញើ (Email / Account)", en: "Check Sender Name (Email / Account)" },
-                    { kh: "ពិនិត្យ Link មុនចុច (domain ចម្លែក, លេខ 0/1 ជំនួសអក្សរ)", en: "Check Link before clicking (strange domain, 0/1 instead of letters)" },
-                    { kh: "កុំចុច Link ពេលសារធ្វើឲ្យភ័យ ឬបន្ទាន់", en: "Don't click links creating panic or urgency" },
-                    { kh: "មិនបញ្ចូល Password / OTP លើ Link", en: "Never enter Password / OTP on a link" },
-                    { kh: "Report → Block → Delete", en: "Report → Block → Delete" },
-                    { kh: "ចងចាំ៖ បើសារសុំ OTP = 100% Scam", en: "Remember: If message asks for OTP = 100% Scam" }
+                    { kh: "ពិនិត្យឈ្មោះអ្នកផ្ញើ (Email / Account)", en: "Check Sender Name (Email / Account)", urgent: true,
+                      riskKh: "អាចចាញ់បោក Hacker ដែលក្លែងបន្លំជាបុគ្គលិកធនាគារ ឬក្រុមហ៊ុន។", recKh: "ចុចមើល Email Address ឲ្យច្បាស់ មិនត្រូវមើលតែឈ្មោះទេ។" },
+                    { kh: "ពិនិត្យ Link មុនចុច (domain ចម្លែក, លេខ 0/1 ជំនួសអក្សរ)", en: "Check Link before clicking", urgent: true,
+                      riskKh: "Link ក្លែងក្លាយអាចលួច Password របស់អ្នកភ្លាមៗ។", recKh: "មើល Domain (ឧ. faceb00k.com មិនមែន facebook.com)។" },
+                    { kh: "កុំចុច Link ពេលសារធ្វើឲ្យភ័យ ឬបន្ទាន់", en: "Don't click links creating panic or urgency", urgent: true,
+                      riskKh: "ភាពភ័យស្លន់ស្លោធ្វើឲ្យអ្នកបាត់បង់ការប្រុងប្រយ័ត្ន។", recKh: "ទាក់ទងទៅក្រុមហ៊ុនផ្ទាល់តាមលេខ Hotline បើមានការសង្ស័យ។" },
+                    { kh: "មិនបញ្ចូល Password / OTP លើ Link", en: "Never enter Password / OTP on a link", urgent: true,
+                      riskKh: "Hacker នឹងទទួលបានលេខសម្ងាត់របស់អ្នកភ្លាមៗ។", recKh: "គ្មានធនាគារណាសុំឱ្យវាយ Password តាម Link ទេ។" },
+                    { kh: "Report → Block → Delete", en: "Report → Block → Delete",
+                      riskKh: "ទុកសារចោលអាចធ្វើឲ្យច្រឡំចុចនៅថ្ងៃក្រោយ។", recKh: "Report Spam រួចលុបចោល។" },
+                    { kh: "ចងចាំ៖ បើសារសុំ OTP = 100% Scam", en: "Remember: If message asks for OTP = 100% Scam", urgent: true,
+                      riskKh: "បាត់បង់លុយ ឬគណនីភ្លាមៗ។", recKh: "ហាមផ្តល់ OTP ឲ្យដាច់ខាត ទោះក្នុងរូបភាពណាក៏ដោយ។" }
                 ]
             },
             {
                 id: "otp",
-                titleKh: "✅ Checklist 02: Rule មាសសម្រាប់ OTP",
-                titleEn: "✅ Checklist 02: Golden Rule for OTP",
+                titleKh: "ច្បាប់មាសសម្រាប់ OTP (Golden Rule)",
+                titleEn: "Golden Rule for OTP",
                 color: "border-l-4 border-yellow-500",
                 items: [
-                    { kh: "OTP មិនចែកជាមួយនរណាទាំងអស់", en: "Share OTP with NO ONE" },
-                    { kh: "ធនាគារ / Facebook / Telegram មិនសុំ OTP តាម Chat ឬ Call", en: "Banks/FB/Telegram NEVER ask OTP via Chat/Call" },
-                    { kh: "បើ有人សុំ OTP → បិទភ្លាម", en: "If someone asks for OTP → Hang up immediately" },
-                    { kh: "បើបានផ្តល់ OTP → ប្តូរ Password ភ្លាម", en: "If OTP shared → Change Password immediately" },
-                    { kh: "Log out all sessions + Enable 2FA", en: "Log out all sessions + Enable 2FA" }
+                    { kh: "OTP មិនចែកជាមួយនរណាទាំងអស់", en: "Share OTP with NO ONE", urgent: true,
+                      riskKh: "OTP ជាសោរចូលផ្ទះចុងក្រោយ បើឲ្យគេ គេនឹងចូលបាន។", recKh: "រក្សាទុកជាសម្ងាត់ បុគ្គលិកធនាគារមិនដែលសុំទេ។" },
+                    { kh: "ធនាគារ / Facebook / Telegram មិនសុំ OTP តាម Chat ឬ Call", en: "Banks/FB/Telegram NEVER ask OTP via Chat/Call", urgent: true,
+                      riskKh: "ជនបោកប្រាស់តែងតែប្រើវិធីនេះដើម្បីលួចគណនី។", recKh: "បិទការសន្ទនាភ្លាមបើគេសុំកូដ។" },
+                    { kh: "បើមានគេសុំ OTP → បិទភ្លាម", en: "If someone asks for OTP → Hang up immediately", urgent: true,
+                      riskKh: "ការបន្តនិយាយអាចធ្វើឲ្យអ្នកជឿតាមការល្បួង។", recKh: "Block លេខនោះចោល។" },
+                    { kh: "បើបានផ្តល់ OTP → ប្តូរ Password ភ្លាម", en: "If OTP shared → Change Password immediately", urgent: true,
+                      riskKh: "Hacker កំពុងព្យាយាមចូលគណនីរបស់អ្នក។", recKh: "Log out all sessions ហើយប្តូរលេខសម្ងាត់បន្ទាន់។" },
+                    { kh: "Log out all sessions + Enable 2FA", en: "Log out all sessions + Enable 2FA", urgent: true,
+                      riskKh: "Hacker អាចនៅជាប់ក្នុងគណនីរបស់អ្នក។", recKh: "ចូល Settings > Security > Log out all devices។" }
                 ]
             },
             {
                 id: "active_sessions",
-                titleKh: "✅ Checklist 03: ពិនិត្យ Active Sessions",
-                titleEn: "✅ Checklist 03: Check Active Sessions",
+                titleKh: "ពិនិត្យ Active Sessions",
+                titleEn: "Check Active Sessions",
                 color: "border-l-4 border-orange-500",
                 items: [
-                    { kh: "ពិនិត្យ Devices ដែលកំពុង Log in", en: "Check currently logged in devices" },
-                    { kh: "Log out unknown device", en: "Log out unknown device" },
-                    { kh: "Change password", en: "Change password" },
-                    { kh: "Enable 2FA", en: "Enable 2FA" },
-                    { kh: "ពិនិត្យ Email / Phone ដែលភ្ជាប់គណនី", en: "Check linked Email / Phone" }
+                    { kh: "ពិនិត្យ Devices ដែលកំពុង Log in", en: "Check currently logged in devices", urgent: true,
+                      riskKh: "អាចមានឧបករណ៍របស់ Hacker កំពុងលួចមើល។", recKh: "ចូលមើល Where you're logged in ក្នុង Facebook/Telegram។" },
+                    { kh: "Log out unknown device", en: "Log out unknown device", urgent: true,
+                      riskKh: "ឧបករណ៍មិនស្គាល់អាចកំពុងលួចទិន្នន័យ។", recKh: "ចុច Log out ឬ Terminate ភ្លាម។" },
+                    { kh: "Change password", en: "Change password",
+                      riskKh: "Password ចាស់អាចបែកធ្លាយ។", recKh: "ប្តូរ Password ថ្មីរៀងរាល់ ៣-៦ ខែ។" },
+                    { kh: "Enable 2FA", en: "Enable 2FA", urgent: true,
+                      riskKh: "គណនីងាយរងគ្រោះបើដឹងតែ Password។", recKh: "បើក 2FA ដើម្បីការពារពីរជាន់។" }
                 ]
             },
             {
                 id: "2fa",
-                titleKh: "✅ Checklist 04: បើក 2FA",
-                titleEn: "✅ Checklist 04: Enable 2FA",
+                titleKh: "បើក Two-Factor Authentication (2FA)",
+                titleEn: "Enable 2FA",
                 color: "border-l-4 border-green-500",
                 items: [
-                    { kh: "Enable 2FA (Authenticator App ជាជម្រើសល្អ)", en: "Enable 2FA (Authenticator App preferred)" },
-                    { kh: "Save Backup / Recovery codes", en: "Save Backup / Recovery codes" },
-                    { kh: "បន្ថែម Recovery email", en: "Add Recovery email" },
-                    { kh: "កុំទុក 2FA ត្រឹម SMS តែប៉ុណ្ណោះ", en: "Don't rely solely on SMS 2FA" },
-                    { kh: "សាកល្បង Login ម្តង", en: "Test Login once" }
-                ]
-            },
-            {
-                id: "telegram",
-                titleKh: "✅ Checklist 05: Telegram Safety",
-                titleEn: "✅ Checklist 05: Telegram Safety",
-                color: "border-l-4 border-sky-500",
-                items: [
-                    { kh: "Enable Two-Step Verification", en: "Enable Two-Step Verification" },
-                    { kh: "Terminate unknown devices", en: "Terminate unknown devices" },
-                    { kh: "កុំចែក Login code / QR login", en: "Never share Login code / QR login" },
-                    { kh: "ប្រយ័ត្ន bot និង channel ក្លែងក្លាយ", en: "Beware of fake bots and channels" },
-                    { kh: "Block + Report Account សង្ស័យ", en: "Block + Report suspicious accounts" }
-                ]
-            },
-            {
-                id: "facebook",
-                titleKh: "✅ Checklist 06: Facebook Safety",
-                titleEn: "✅ Checklist 06: Facebook Safety",
-                color: "border-l-4 border-blue-600",
-                items: [
-                    { kh: "Change password (strong & unique)", en: "Change password (strong & unique)" },
-                    { kh: "Enable 2FA", en: "Enable 2FA" },
-                    { kh: "Review Active Sessions", en: "Review Active Sessions" },
-                    { kh: "Review Connected Apps", en: "Review Connected Apps" },
-                    { kh: "Enable Login alerts", en: "Enable Login alerts" }
-                ]
-            },
-            {
-                id: "phone",
-                titleKh: "✅ Checklist 07: សុវត្ថិភាពទូរស័ព្ទ (Phone)",
-                titleEn: "✅ Checklist 07: Phone Hygiene",
-                color: "border-l-4 border-slate-600",
-                items: [
-                    { kh: "Update iOS / Android", en: "Update iOS / Android" },
-                    { kh: "Update apps", en: "Update apps" },
-                    { kh: "Delete apps មិនប្រើ", en: "Delete unused apps" },
-                    { kh: "Review App Permissions", en: "Review App Permissions" },
-                    { kh: "Enable Screen Lock (PIN / Biometric)", en: "Enable Screen Lock (PIN / Biometric)" },
-                    { kh: "Backup Photos & Contacts", en: "Backup Photos & Contacts" }
+                    { kh: "Enable 2FA (Authenticator App ជាជម្រើសល្អ)", en: "Enable 2FA (Authenticator App preferred)", urgent: true,
+                      riskKh: "បើគ្មាន 2FA គ្រាន់តែដឹង Password គេចូលបានហើយ។", recKh: "ប្រើ Google Authenticator ឬ Microsoft Authenticator។" },
+                    { kh: "Save Backup / Recovery codes", en: "Save Backup / Recovery codes",
+                      riskKh: "អាចបាត់បង់គណនីបើទូរស័ព្ទខូចឬបាត់។", recKh: "កត់ត្រាទុកក្នុងសៀវភៅ ឬកន្លែងសុវត្ថិភាព។" },
+                    { kh: "បន្ថែម Recovery email", en: "Add Recovery email",
+                      riskKh: "គ្មានច្រកចូលពេលភ្លេចលេខសម្ងាត់។", recKh: "ដាក់ Email ដែលអ្នកប្រើប្រាស់ជាប្រចាំ។" },
+                    { kh: "កុំទុក 2FA ត្រឹម SMS តែប៉ុណ្ណោះ", en: "Don't rely solely on SMS 2FA",
+                      riskKh: "SMS អាចត្រូវបានគេលួច (SIM Swap)។", recKh: "ប្តូរមកប្រើ App Authenticator វិញ។" }
                 ]
             },
             {
                 id: "banking",
-                titleKh: "✅ Checklist 08: សុវត្ថិភាពធនាគារ / Wallet",
-                titleEn: "✅ Checklist 08: Banking / Wallet",
+                titleKh: "សុវត្ថិភាពធនាគារ / Wallet",
+                titleEn: "Banking / Wallet",
                 color: "border-l-4 border-emerald-600",
                 items: [
-                    { kh: "មិនចុច Link “update KYC” តាម chat", en: "Don't click 'update KYC' links in chat" },
-                    { kh: "មិនផ្តល់ OTP / PIN", en: "Never share OTP / PIN" },
-                    { kh: "ប្រើ App ផ្លូវការតែប៉ុណ្ណោះ", en: "Use Official Apps only" },
-                    { kh: "Save hotline number", en: "Save hotline number" },
-                    { kh: "បើសង្ស័យ → Lock account ភ្លាម", en: "If suspicious → Lock account immediately" }
-                ]
-            },
-            {
-                id: "accounts",
-                titleKh: "🔐 គណនី និងពាក្យសម្ងាត់",
-                titleEn: "🔐 Accounts & Passwords",
-                color: "border-l-4 border-indigo-500",
-                items: [
-                    { kh: "ប្រើ Password ខ្លាំង និងខុសគ្នា សម្រាប់គណនីអាជីវកម្ម", en: "Use Strong & Unique Passwords for Business" },
-                    { kh: "មិនប្រើ Password ដូចគ្នាជាមួយ Personal account", en: "Don't mix passwords with Personal accounts" },
-                    { kh: "បើក 2FA (Authenticator App) សម្រាប់ Gmail, Facebook, Cloud, POS", en: "Enable 2FA for Gmail, Facebook, Cloud, POS" },
-                    { kh: "មិនផ្ទុក Password ក្នុង Browser សាធារណៈ", en: "Don't save passwords in Public Browsers" },
-                    { kh: "ប្រើ Password Manager (Google, Apple, Bitwarden…)", en: "Use Password Manager (Google, Apple, Bitwarden…)" },
-                    { kh: "ពិនិត្យ Login Activity / Active Sessions ជាប្រចាំ", en: "Check Login Activity / Active Sessions regularly" },
-                    { kh: "ដក Admin / Access ចាស់ៗ (Staff ចាកចេញ, Partner ចាស់)", en: "Revoke old Admin/Access (Ex-staff, Old Partners)" },
-                    { kh: "ពិនិត្យ Google Drive / Cloud permission រៀងរាល់ 3 ខែ", en: "Review Google Drive / Cloud permission every 3 months" }
-                ]
-            },
-            {
-                id: "communication",
-                titleKh: "💬 ការទាក់ទង (COMMUNICATION)",
-                titleEn: "💬 COMMUNICATION",
-                color: "border-l-4 border-violet-500",
-                items: [
-                    { kh: "ប្រើ App មាន End-to-End Encryption (Telegram, Signal)", en: "Use E2E Encrypted Apps (Telegram, Signal)" },
-                    { kh: "គណនីអាជីវកម្ម ≠ គណនីបុគ្គល", en: "Business Account ≠ Personal Account" },
-                    { kh: "Email អាជីវកម្មមាន domain ផ្លូវការ (មិនប្រើ Gmail ផ្ទាល់)", en: "Business Email uses official domain" },
-                    { kh: "មិនបើក Attachment មិនស្គាល់ប្រភព", en: "Don't open Unknown Attachments" },
-                    { kh: "ពិនិត្យ Email sender + domain មុន Download file", en: "Check Sender + Domain before downloading" },
-                    { kh: "មិនចែកព័ត៌មានសំខាន់ក្នុង Group សាធារណៈ", en: "Don't share sensitive info in Public Groups" },
-                    { kh: "មាន Contact បម្រុង (Backup admin / Backup phone)", en: "Have Backup Contact (Admin / Phone)" }
-                ]
-            },
-            {
-                id: "info",
-                titleKh: "🗂️ ការការពារព័ត៌មាន",
-                titleEn: "🗂️ INFORMATION PROTECTION",
-                color: "border-l-4 border-teal-500",
-                items: [
-                    { kh: "ចាត់ថ្នាក់ព័ត៌មាន (Public / Internal / Confidential)", en: "Classify Info (Public / Internal / Confidential)" },
-                    { kh: "កំណត់ Access ត្រឹមតួនាទី (Need-to-know basis)", en: "Limit Access to Need-to-know basis" },
-                    { kh: "មិនចែក Database អតិថិជនតាម Chat", en: "Don't share Customer DB via Chat" },
-                    { kh: "ឯកសារសំខាន់មាន Password / Encryption", en: "Critical files have Password / Encryption" },
-                    { kh: "Share link មាន Expiry date ប្រសិនបើអាច", en: "Share links with Expiry date" },
-                    { kh: "លុបឯកសារមិនប្រើដោយសុវត្ថិភាព", en: "Securely delete unused files" },
-                    { kh: "Backup មិនភ្ជាប់ជាមួយ device តែមួយ", en: "Backup disconnected from primary device" }
-                ]
-            },
-            {
-                id: "staff",
-                titleKh: "👥 ការយល់ដឹងបុគ្គលិក",
-                titleEn: "👥 STAFF AWARENESS",
-                color: "border-l-4 border-pink-500",
-                items: [
-                    { kh: "បុគ្គលិកទាំងអស់ស្គាល់ Scam / Phishing / OTP rule", en: "All staff know Scam / Phishing / OTP rules" },
-                    { kh: "មាន Brief សុវត្ថិភាព (Monthly / Quarterly)", en: "Regular Security Briefs (Monthly / Quarterly)" },
-                    { kh: "មានមនុស្សទទួលខុសត្រូវ IT / Digital Safety", en: "Designated person for IT / Digital Safety" },
-                    { kh: "បុគ្គលិកដឹងថា ត្រូវ report ទៅណា ពេលសង្ស័យ", en: "Staff know where to report suspicions" },
-                    { kh: "មិនស្តីបន្ទោសអ្នករាយការណ៍បញ្ហា (No blame culture)", en: "No blame culture for reporting" },
-                    { kh: "Update policy ពេលមាន Scam ឬគ្រោះថ្នាក់ថ្មី", en: "Update policy on new threats" }
-                ]
-            },
-            {
-                id: "incident",
-                titleKh: "🚨 Incident Response",
-                titleEn: "🚨 Incident Response",
-                color: "border-l-4 border-red-600 bg-red-50",
-                items: [
-                    { kh: "ដឹងថាត្រូវ បិទគណនី / Lock system ភ្លាមៗ", en: "Know how to Lock Account / System immediately" },
-                    { kh: "Save Evidence (Screenshot, logs, numbers)", en: "Save Evidence (Screenshot, logs, numbers)" },
-                    { kh: "Contact Bank / Platform Support", en: "Contact Bank / Platform Support" },
-                    { kh: "Notify Team / Management", en: "Notify Team / Management" },
-                    { kh: "Review root cause បន្ទាប់ពីដោះស្រាយ", en: "Review root cause after resolution" }
+                    { kh: "មិនចុច Link “update KYC” តាម chat", en: "Don't click 'update KYC' links in chat", urgent: true,
+                      riskKh: "ជាល្បិចបោកយកគណនីធនាគារ។", recKh: "ទៅធនាគារផ្ទាល់ ឬប្រើ App ផ្លូវការ។" },
+                    { kh: "មិនផ្តល់ OTP / PIN", en: "Never share OTP / PIN", urgent: true,
+                      riskKh: "បាត់បង់ប្រាក់ក្នុងគណនី។", recKh: "រក្សាទុកជាសម្ងាត់ដាច់ខាត។" },
+                    { kh: "ប្រើ App ផ្លូវការតែប៉ុណ្ណោះ", en: "Use Official Apps only",
+                      riskKh: "App ក្លែងក្លាយអាចលួចព័ត៌មានធនាគារ។", recKh: "Download ពី App Store/Play Store ប៉ុណ្ណោះ។" },
+                    { kh: "បើសង្ស័យ → Lock account ភ្លាម", en: "If suspicious → Lock account immediately", urgent: true,
+                      riskKh: "អាចខាតបង់ប្រាក់កាន់តែច្រើនបើទុកយូរ។", recKh: "តេទៅ Hotline ឬប្រើមុខងារ Block/Freeze ក្នុង App។" }
                 ]
             }
         ];
@@ -470,10 +503,15 @@
         let currentLang = 'kh';
         let checkedItems = new Set();
         let totalItems = 0;
+        let totalUrgentItems = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Calculate total items
-            sections.forEach(s => totalItems += s.items.length);
+            sections.forEach(s => {
+                s.items.forEach(item => {
+                    totalItems++;
+                    if(item.urgent) totalUrgentItems++;
+                });
+            });
             updateProgress();
             renderApp();
         });
@@ -494,23 +532,40 @@
                 checkedItems.add(id);
             }
             updateProgress();
-            // Re-render only checkbox visuals ideally, but simple re-render is fine here
-            // Or just toggle class via DOM for performance if needed, but array is small.
-            // Let's use simple DOM toggle for class to avoid flicker
-            const el = document.getElementById(`check-${id}`);
-            const box = el.querySelector('div');
-            const icon = box.querySelector('.check-icon');
-            const text = el.querySelector('span');
+            // Re-render checklist to update styles
+            renderApp();
+        }
 
-            if (checkedItems.has(id)) {
-                box.classList.add('bg-brand-50', 'border-brand-500');
-                icon.classList.remove('opacity-0', 'scale-0');
-                text.classList.add('text-brand-600', 'line-through', 'opacity-80');
+        function toggleDetail(id) {
+            const detailBox = document.getElementById(`detail-${id}`);
+            const chevron = document.getElementById(`chevron-${id}`);
+            
+            if (detailBox.classList.contains('open')) {
+                detailBox.classList.remove('open');
+                chevron.classList.remove('rotate-180');
             } else {
-                box.classList.remove('bg-brand-50', 'border-brand-500');
-                icon.classList.add('opacity-0', 'scale-0');
-                text.classList.remove('text-brand-600', 'line-through', 'opacity-80');
+                detailBox.classList.add('open');
+                chevron.classList.add('rotate-180');
             }
+        }
+
+        function getRiskLevel() {
+            let checkedUrgent = 0;
+            let checkedTotal = 0;
+            
+            sections.forEach((section, sIdx) => {
+                section.items.forEach((item, iIdx) => {
+                    const id = `${section.id}-${iIdx}`;
+                    if (checkedItems.has(id)) {
+                        checkedTotal++;
+                        if (item.urgent) checkedUrgent++;
+                    }
+                });
+            });
+
+            if (checkedUrgent < totalUrgentItems) return 'HIGH';
+            else if ((checkedTotal / totalItems) < 0.8) return 'MEDIUM';
+            else return 'LOW';
         }
 
         function updateProgress() {
@@ -519,6 +574,27 @@
             document.getElementById('progress-bar').style.width = `${percent}%`;
             document.getElementById('progress-percent').innerText = `${percent}%`;
             document.getElementById('progress-text').innerText = `${count} of ${totalItems} completed`;
+
+            const risk = getRiskLevel();
+            const riskHeader = document.getElementById('risk-header');
+            const riskStatus = document.getElementById('risk-status');
+            const riskDesc = document.getElementById('risk-desc');
+            const t = translations[currentLang];
+
+            if (risk === 'HIGH') {
+                riskHeader.className = "p-6 text-white transition-colors duration-500 bg-red-600";
+                riskStatus.innerHTML = `<i data-lucide="alert-triangle" class="w-6 h-6"></i><span>${t.riskHigh}</span>`;
+                riskDesc.innerText = t.riskDescHigh;
+            } else if (risk === 'MEDIUM') {
+                riskHeader.className = "p-6 text-white transition-colors duration-500 bg-yellow-500";
+                riskStatus.innerHTML = `<i data-lucide="alert-circle" class="w-6 h-6"></i><span>${t.riskMed}</span>`;
+                riskDesc.innerText = t.riskDescMed;
+            } else {
+                riskHeader.className = "p-6 text-white transition-colors duration-500 bg-green-600";
+                riskStatus.innerHTML = `<i data-lucide="shield-check" class="w-6 h-6"></i><span>${t.riskLow}</span>`;
+                riskDesc.innerText = t.riskDescLow;
+            }
+            lucide.createIcons();
         }
 
         function resetChecklist() {
@@ -533,14 +609,18 @@
             const template = document.getElementById('pdf-template');
             const container = document.getElementById('pdf-content-container');
             const dateStr = new Date().toLocaleDateString();
+            const risk = getRiskLevel();
+            const percent = Math.round((checkedItems.size / totalItems) * 100);
             
             document.getElementById('pdf-date').innerText = `Date: ${dateStr}`;
             document.getElementById('pdf-header-title').innerText = currentLang === 'kh' ? "សុផាត ឌីជីថល - បញ្ជីត្រួតពិនិត្យ" : "Sophat Digital Space - Checklist";
+            
+            document.getElementById('pdf-risk-level').innerText = `RISK LEVEL: ${risk}`;
+            document.getElementById('pdf-risk-level').style.color = risk === 'HIGH' ? '#dc2626' : (risk === 'MEDIUM' ? '#d97706' : '#059669');
+            document.getElementById('pdf-score').innerText = `Completion: ${percent}%`;
 
             let html = '';
             
-            // Layout logic for PDF: Grid 2 cols, breaking nicely
-            // We just dump sections sequentially
             sections.forEach(section => {
                 const title = currentLang === 'kh' ? section.titleKh : section.titleEn;
                 let itemsHtml = '';
@@ -549,10 +629,11 @@
                     const isChecked = checkedItems.has(uniqueId);
                     const checkClass = isChecked ? 'checked' : '';
                     const text = currentLang === 'kh' ? item.kh : item.en;
+                    const urgentMark = item.urgent ? '<span class="pdf-urgent">*</span> ' : '';
                     itemsHtml += `
                         <div class="pdf-checkbox-item">
-                            <div class="pdf-box ${checkClass}"></div>
-                            <span>${text}</span>
+                            <div class="pdf-box ${checkClass}">${isChecked ? '✓' : ''}</div>
+                            <span>${urgentMark}${text}</span>
                         </div>
                     `;
                 });
@@ -595,21 +676,73 @@
                     const uniqueId = `${section.id}-${idx}`;
                     const isChecked = checkedItems.has(uniqueId);
                     
-                    // Styles based on state
-                    const divClass = isChecked ? "bg-brand-50 border-brand-500" : "bg-white border-slate-300";
-                    const iconClass = isChecked ? "" : "opacity-0 scale-0";
-                    const textClass = isChecked ? "text-brand-600 line-through opacity-80" : "text-slate-700";
+                    // Risk Data (fallback to default if missing)
+                    const riskText = currentLang === 'kh' ? (item.riskKh || defaultRisk.kh) : (item.riskEn || defaultRisk.en);
+                    const recText = currentLang === 'kh' ? (item.recKh || defaultRec.kh) : (item.recEn || defaultRec.en);
+                    
+                    // Styles
+                    let divClass = "bg-white border-slate-300";
+                    let iconClass = "opacity-0 scale-0";
+                    let textClass = "text-slate-700";
+                    let urgentIndicator = "";
+                    let detailButton = "";
 
+                    if (item.urgent) {
+                        textClass = "text-slate-800 font-medium";
+                        urgentIndicator = `<span class="text-red-600 font-extrabold mr-1 text-lg leading-none mt-1 select-none" title="Urgent">✳</span>`;
+                        if (!isChecked) {
+                             divClass = "bg-white border-red-300 shadow-sm shadow-red-100";
+                        }
+                    }
+
+                    if (isChecked) {
+                        divClass = "bg-brand-50 border-brand-500";
+                        iconClass = "";
+                        if (item.urgent) {
+                             textClass = "text-emerald-700 font-normal urgent-text";
+                        } else {
+                             textClass = "text-brand-600 line-through opacity-80";
+                        }
+                    }
+
+                    // Only show detail toggle if NOT checked (as per user request: remind/warn if NOT done)
+                    // Or we can allow it always for reference. Let's allow always but highlight risk if unchecked.
+                    const riskLabelColor = isChecked ? "text-slate-500" : "text-red-600";
+                    
                     return `
-                        <div id="check-${uniqueId}" 
-                             onclick="toggleCheck('${uniqueId}')"
-                             class="checkbox-wrapper flex items-start gap-3 p-2 rounded-lg hover:bg-slate-50 transition cursor-pointer group">
-                            <div class="w-5 h-5 rounded border ${divClass} flex items-center justify-center transition-all duration-200 shrink-0 mt-0.5 relative group-hover:border-brand-400">
-                                <i data-lucide="check" class="check-icon w-3.5 h-3.5 text-brand-600 transition-all duration-200 ${iconClass}"></i>
+                        <div class="group select-none">
+                            <div class="flex items-start gap-3 p-2 rounded-lg hover:bg-slate-50 transition">
+                                <div id="check-${uniqueId}" onclick="toggleCheck('${uniqueId}')" class="checkbox-wrapper cursor-pointer shrink-0 mt-0.5">
+                                    <div class="w-5 h-5 rounded border ${divClass} flex items-center justify-center transition-all duration-200">
+                                        <i data-lucide="check" class="check-icon w-3.5 h-3.5 text-brand-600 transition-all duration-200 ${iconClass}"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-start cursor-pointer" onclick="toggleDetail('${uniqueId}')">
+                                        <div class="flex-1 flex items-start">
+                                            ${urgentIndicator}
+                                            <span class="${textClass} text-sm leading-snug transition-colors duration-200 pt-0.5">
+                                                ${currentLang === 'kh' ? item.kh : item.en}
+                                            </span>
+                                        </div>
+                                        <i id="chevron-${uniqueId}" data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-300 mt-1 ml-2"></i>
+                                    </div>
+                                    
+                                    <!-- Detail Box -->
+                                    <div id="detail-${uniqueId}" class="detail-box">
+                                        <div class="mt-3 ml-1 pl-3 border-l-2 ${isChecked ? 'border-slate-200' : 'border-red-200'} text-xs space-y-2">
+                                            <div>
+                                                <span class="font-bold ${riskLabelColor}">${t.riskLabel}</span>
+                                                <span class="text-slate-600 block mt-0.5">${riskText}</span>
+                                            </div>
+                                            <div>
+                                                <span class="font-bold text-brand-600">${t.recLabel}</span>
+                                                <span class="text-slate-600 block mt-0.5">${recText}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="${textClass} text-sm font-medium leading-snug transition-colors duration-200">
-                                ${currentLang === 'kh' ? item.kh : item.en}
-                            </span>
                         </div>
                     `;
                 }).join('');
@@ -617,7 +750,7 @@
                 return `
                     <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 ${section.color} relative overflow-hidden">
                         <h3 class="font-bold text-lg text-slate-800 mb-4 border-b border-slate-100 pb-2">${sectionTitle}</h3>
-                        <div class="space-y-2">
+                        <div class="space-y-1">
                             ${itemsHtml}
                         </div>
                     </div>
