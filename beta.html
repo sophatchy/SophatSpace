@@ -8,53 +8,32 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Config: iOS Design System -->
+    <!-- Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Kantumruy Pro"', '-apple-system', 'BlinkMacSystemFont', '"San Francisco"', '"Helvetica Neue"', 'sans-serif'],
+                        sans: ['"Kantumruy Pro"', '-apple-system', 'BlinkMacSystemFont', '"San Francisco"', 'sans-serif'],
                     },
                     colors: {
-                        // iOS System Colors
                         ios: {
-                            bg: '#F2F2F7', // System Gray 6
+                            bg: '#F2F2F7',
                             card: '#FFFFFF',
-                            blue: '#007AFF', // System Blue
-                            green: '#34C759', // System Green
-                            red: '#FF3B30', // System Red
-                            orange: '#FF9500', // System Orange
-                            indigo: '#5856D6', // System Indigo
-                            gray: '#8E8E93', // System Gray
-                            separator: '#C6C6C8',
-                            label: '#000000',
-                            secondaryLabel: '#3C3C4399',
+                            blue: '#007AFF',
+                            green: '#34C759',
+                            red: '#FF3B30',
+                            orange: '#FF9500',
+                            gray: '#8E8E93',
                         }
                     },
                     borderRadius: {
-                        'ios': '20px',
-                        'ios-lg': '32px',
-                        'pill': '9999px',
+                        'ios': '24px',
+                        'app': '22px',
                     },
                     boxShadow: {
-                        'ios-card': '0 4px 12px rgba(0, 0, 0, 0.03)',
-                        'ios-float': '0 8px 32px rgba(0, 0, 0, 0.08)',
-                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
-                        'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        scaleUp: {
-                            '0%': { transform: 'scale(0.95)', opacity: '0' },
-                            '100%': { transform: 'scale(1)', opacity: '1' },
-                        }
+                        'ios-card': '0 4px 20px rgba(0, 0, 0, 0.04)',
+                        'icon': '0 4px 12px rgba(0, 0, 0, 0.08)',
                     }
                 }
             }
@@ -74,196 +53,164 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
-        body { 
-            background-color: #F2F2F7;
-            color: #1C1C1E;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Glassmorphism Classes */
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 0.5px solid rgba(0, 0, 0, 0.05);
-        }
-
-        /* Hide scrollbar */
+        body { background-color: #F2F2F7; color: #1C1C1E; -webkit-tap-highlight-color: transparent; }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 0.5px solid rgba(0,0,0,0.05); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Smooth Accordion */
-        .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease-out; }
         .accordion-content.open { grid-template-rows: 1fr; }
         .accordion-inner { overflow: hidden; }
-
-        /* Ring Animation */
-        .ring-circle { transition: stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
-
-        /* PDF Layout */
-        #pdf-wrapper { position: absolute; top: -9999px; left: -9999px; width: 794px; }
+        .ring-circle { transition: stroke-dashoffset 1s ease-out, stroke 0.5s ease; transform: rotate(-90deg); transform-origin: 50% 50%; }
+        #pdf-wrapper { position: absolute; top: -9999px; left: -9999px; width: 794px; z-index: -1; }
+        .tap-scale:active { transform: scale(0.95); transition: transform 0.1s; }
         
-        /* Custom Interactions */
-        .tap-effect:active { transform: scale(0.96); opacity: 0.8; }
-        .tap-effect { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s; }
+        /* Custom Checkbox */
+        .custom-check { transition: all 0.2s; }
+        .checked .custom-check { background-color: #34C759; border-color: #34C759; }
     </style>
 </head>
 <body class="selection:bg-ios-blue selection:text-white pb-32">
 
-    <!-- App UI Wrapper -->
     <div id="app-ui">
         
-        <!-- Floating "Island" Navbar (iOS Style) -->
-        <div class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-            <nav class="glass-nav rounded-full px-5 py-2.5 flex items-center gap-4 shadow-ios-float animate-fade-in">
-                <div class="flex items-center gap-3 cursor-pointer tap-effect" onclick="window.location.reload()">
-                    <div class="w-9 h-9 bg-ios-blue rounded-full flex items-center justify-center text-white shadow-md shadow-ios-blue/30">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-bold text-sm tracking-tight text-black leading-none">សុផាត ឌីជីថល</span>
-                        <span class="text-[10px] font-bold text-ios-blue uppercase tracking-wide mt-0.5">Security</span>
-                    </div>
-                </div>
-                <div class="w-px h-5 bg-ios-separator mx-1"></div>
-                <button class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition tap-effect">
-                    <i data-lucide="user" class="w-4 h-4"></i>
-                </button>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-28">
-
-            <!-- Header Section -->
-            <div class="mb-8 animate-fade-in" style="animation-delay: 0.1s;">
-                <div class="flex justify-between items-end mb-4">
-                    <div>
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-black tracking-tight mb-1">សុខភាពឌីជីថល</h1>
-                        <p class="text-ios-secondaryLabel font-medium text-sm">ត្រួតពិនិត្យប្រចាំថ្ងៃ • <span id="current-date" class="text-ios-blue font-bold">ថ្ងៃនេះ</span></p>
-                    </div>
-                </div>
-
-                <!-- Widget Carousel (iOS Stack Layout) -->
-                <div class="relative w-full overflow-hidden rounded-ios-lg shadow-ios-card bg-white">
-                    <div id="carousel-track" class="flex transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
-                        <!-- Card 1 -->
-                        <div class="min-w-full p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-blue-500 to-blue-600 text-white relative">
-                            <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-[60px] -mr-20 -mt-20"></div>
-                            <div class="z-10 text-center md:text-left flex-1">
-                                <span class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-3 block opacity-80">គន្លឹះសុវត្ថិភាពទី ១</span>
-                                <h2 class="text-2xl md:text-3xl font-bold mb-3">ការពារពីរជាន់ (2FA)</h2>
-                                <p class="text-blue-50 text-base leading-relaxed opacity-90 max-w-lg font-medium">
-                                    លេខសម្ងាត់តែមួយមិនគ្រប់គ្រាន់ទេ។ បើក 2FA លើ Facebook និង Telegram ដើម្បីការពារគណនីរបស់អ្នក។
-                                </p>
-                            </div>
-                            <div class="z-10 w-20 h-20 bg-white/20 rounded-[24px] backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center shrink-0">
-                                <i data-lucide="lock" class="w-9 h-9 text-white"></i>
-                            </div>
+        <!-- Navbar -->
+        <div class="fixed top-0 left-0 right-0 z-50 glass-nav">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="flex justify-between h-14 items-center">
+                    <div class="flex items-center gap-2 cursor-pointer tap-scale" onclick="window.location.reload()">
+                        <div class="w-8 h-8 bg-black rounded-xl flex items-center justify-center text-white">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
                         </div>
-                        <!-- Card 2 -->
-                        <div class="min-w-full p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-orange-400 to-pink-500 text-white relative">
-                            <div class="z-10 text-center md:text-left flex-1">
-                                <span class="text-orange-100 text-xs font-bold uppercase tracking-widest mb-3 block opacity-80">គន្លឹះសុវត្ថិភាពទី ២</span>
-                                <h2 class="text-2xl md:text-3xl font-bold mb-3">ប្រយ័ត្ន Phishing</h2>
-                                <p class="text-orange-50 text-base leading-relaxed opacity-90 max-w-lg font-medium">
-                                    ធនាគារមិនដែលសុំលេខសម្ងាត់តាមទូរស័ព្ទទេ។ កុំចុច Link ដែលមិនស្គាល់ប្រភពច្បាស់លាស់។
-                                </p>
-                            </div>
-                            <div class="z-10 w-20 h-20 bg-white/20 rounded-[24px] backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center shrink-0">
-                                <i data-lucide="shield-alert" class="w-9 h-9 text-white"></i>
-                            </div>
-                        </div>
-                         <!-- Card 3 -->
-                        <div class="min-w-full p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white relative">
-                            <div class="z-10 text-center md:text-left flex-1">
-                                <span class="text-indigo-100 text-xs font-bold uppercase tracking-widest mb-3 block opacity-80">AI Powered</span>
-                                <h2 class="text-2xl md:text-3xl font-bold mb-3">ជំនួយការឆ្លាតវៃ</h2>
-                                <p class="text-indigo-50 text-base leading-relaxed opacity-90 max-w-lg font-medium">
-                                    ប្រព័ន្ធ AI នឹងវិភាគហានិភ័យរបស់អ្នក និងផ្តល់ដំបូន្មានសុវត្ថិភាពផ្ទាល់ខ្លួនភ្លាមៗ។
-                                </p>
-                            </div>
-                            <div class="z-10 w-20 h-20 bg-white/20 rounded-[24px] backdrop-blur-md shadow-lg border border-white/20 flex items-center justify-center shrink-0">
-                                <i data-lucide="sparkles" class="w-9 h-9 text-white"></i>
-                            </div>
-                        </div>
+                        <span class="font-bold text-lg tracking-tight">សុផាត ឌីជីថល</span>
                     </div>
-                    <!-- Indicators -->
-                    <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-2">
-                        <button onclick="goToSlide(0)" class="w-2 h-2 rounded-full bg-white transition-all carousel-dot shadow-sm hover:scale-125"></button>
-                        <button onclick="goToSlide(1)" class="w-2 h-2 rounded-full bg-white/50 transition-all hover:bg-white carousel-dot shadow-sm hover:scale-125"></button>
-                        <button onclick="goToSlide(2)" class="w-2 h-2 rounded-full bg-white/50 transition-all hover:bg-white carousel-dot shadow-sm hover:scale-125"></button>
+                    <div class="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 tap-scale">
+                        <i data-lucide="user" class="w-5 h-5"></i>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in" style="animation-delay: 0.2s;">
+        <!-- Main Content -->
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-20">
+
+            <!-- Hero Cards -->
+            <div class="relative w-full overflow-hidden rounded-[28px] shadow-ios-card bg-white mb-8">
+                <div id="carousel-track" class="flex transition-transform duration-500 ease-out">
+                    <div class="min-w-full h-48 bg-gradient-to-r from-blue-600 to-indigo-600 text-white relative flex items-center px-8">
+                        <div class="z-10 w-3/4">
+                            <div class="flex items-center gap-2 mb-2 opacity-80">
+                                <i data-lucide="lock" class="w-4 h-4"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest">ការពារគណនី</span>
+                            </div>
+                            <h2 class="text-2xl font-black mb-2">លេខកូដ ២ តង់ (2FA)</h2>
+                            <p class="text-sm opacity-90 font-medium leading-relaxed">ការពារដូចចាក់សោរផ្ទះ ២ ជាន់។ Hacker ស្គាល់លេខសម្ងាត់ក៏ចូលមិនបាន។</p>
+                        </div>
+                        <div class="absolute right-[-30px] top-1/2 -translate-y-1/2 opacity-20 rotate-12">
+                            <i data-lucide="shield" class="w-48 h-48"></i>
+                        </div>
+                    </div>
+                    <div class="min-w-full h-48 bg-gradient-to-r from-orange-500 to-red-500 text-white relative flex items-center px-8">
+                        <div class="z-10 w-3/4">
+                            <div class="flex items-center gap-2 mb-2 opacity-80">
+                                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest">ប្រយ័ត្នបោក</span>
+                            </div>
+                            <h2 class="text-2xl font-black mb-2">កុំចុច Link ផ្តេសផ្តាស!</h2>
+                            <p class="text-sm opacity-90 font-medium leading-relaxed">ប្រយ័ត្នគេលួចយកគណនីតាមរយៈ SMS ឬ Chat។</p>
+                        </div>
+                        <div class="absolute right-[-30px] top-1/2 -translate-y-1/2 opacity-20 rotate-12">
+                            <i data-lucide="alert-octagon" class="w-48 h-48"></i>
+                        </div>
+                    </div>
+                    <div class="min-w-full h-48 bg-gradient-to-r from-purple-600 to-pink-500 text-white relative flex items-center px-8">
+                        <div class="z-10 w-3/4">
+                            <div class="flex items-center gap-2 mb-2 opacity-80">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest">Gemini AI</span>
+                            </div>
+                            <h2 class="text-2xl font-black mb-2">ជំនួយការឆ្លាតវៃ</h2>
+                            <p class="text-sm opacity-90 font-medium leading-relaxed">វិភាគនិងផ្តល់ដំបូន្មានសុវត្ថិភាពសម្រាប់អ្នក។</p>
+                        </div>
+                        <div class="absolute right-[-30px] top-1/2 -translate-y-1/2 opacity-20 rotate-12">
+                            <i data-lucide="bot" class="w-48 h-48"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                    <button onclick="goToSlide(0)" class="w-2 h-2 rounded-full bg-white/90"></button>
+                    <button onclick="goToSlide(1)" class="w-2 h-2 rounded-full bg-white/40"></button>
+                    <button onclick="goToSlide(2)" class="w-2 h-2 rounded-full bg-white/40"></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- Right Panel: Score & Actions (Sticky) -->
+                <!-- Sidebar (Score) -->
                 <div class="lg:col-span-4 lg:order-2">
-                    <div class="sticky top-28 space-y-6">
-                        <!-- Score Widget (Apple Health Style) -->
-                        <div class="bg-white p-6 rounded-ios-lg shadow-ios-card relative overflow-hidden">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-bold text-lg text-black">ពិន្ទុសរុប</h3>
-                                <button onclick="window.location.reload()" class="px-3 py-1 bg-ios-bg text-ios-blue text-xs font-bold rounded-full hover:bg-slate-200 transition">Reset</button>
-                            </div>
+                    <div class="bg-white p-6 rounded-ios shadow-ios-card sticky top-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-gray-900" id="score-label">ពិន្ទុសុវត្ថិភាព</h3>
+                            <span id="score-text" class="text-2xl font-black text-ios-blue">0</span>
+                        </div>
+                        
+                        <!-- Ring Chart -->
+                        <div class="relative w-full h-4 bg-gray-100 rounded-full overflow-hidden mb-6">
+                            <div id="score-bar" class="absolute top-0 left-0 h-full bg-ios-blue rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
 
-                            <div class="flex flex-col items-center mb-6 relative">
-                                <!-- Ring SVG -->
-                                <svg class="w-56 h-56 drop-shadow-md">
-                                    <circle cx="112" cy="112" r="90" stroke="#F2F2F7" stroke-width="18" fill="none" stroke-linecap="round" />
-                                    <circle id="score-circle" cx="112" cy="112" r="90" stroke="#007AFF" stroke-width="18" fill="none" stroke-dasharray="565" stroke-dashoffset="565" stroke-linecap="round" class="ring-circle" />
-                                </svg>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span id="score-number" class="text-6xl font-black tracking-tight text-black">0</span>
-                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">លើ 100</span>
-                                </div>
-                            </div>
-
-                            <!-- Name Field -->
-                            <div class="bg-ios-bg rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-400 shadow-sm">
-                                    <i data-lucide="smile" class="w-5 h-5"></i>
-                                </div>
-                                <input type="text" id="user-name" placeholder="ឈ្មោះរបស់អ្នក..." oninput="updateNameGreeting()" class="w-full bg-transparent border-none p-0 text-sm font-semibold text-black focus:outline-none placeholder:text-slate-400">
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="grid grid-cols-1 gap-3">
-                                <button onclick="analyzeSafety()" class="w-full py-3.5 bg-black text-white rounded-full font-bold shadow-lg shadow-black/10 tap-effect flex items-center justify-center gap-2">
-                                    <i data-lucide="sparkles" class="w-4 h-4 text-ios-blue"></i>
-                                    <span>វិភាគដោយ AI</span>
-                                </button>
-                                <button id="downloadBtn" onclick="downloadPDF()" class="w-full py-3.5 bg-ios-bg text-black rounded-full font-bold tap-effect flex items-center justify-center gap-2 hover:bg-slate-200 transition">
-                                    <i data-lucide="download" class="w-4 h-4"></i>
-                                    <span>ទាញយក PDF</span>
-                                </button>
-                            </div>
+                        <div class="space-y-3">
+                            <input type="text" id="user-name" placeholder="ឈ្មោះរបស់អ្នក..." class="w-full bg-gray-100 border-none rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-ios-blue/20">
+                            
+                            <button onclick="analyzeSafety()" class="w-full py-3 bg-black text-white rounded-xl font-bold shadow-lg tap-scale flex justify-center items-center gap-2">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i> វិភាគសុខភាព និងណែនាំ
+                            </button>
+                            <button id="downloadBtn" onclick="downloadPDF()" class="w-full py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-bold tap-scale flex justify-center items-center gap-2">
+                                <i data-lucide="download" class="w-4 h-4"></i> ទាញយក PDF
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Checklist Area -->
+                <!-- Main Content -->
                 <div class="lg:col-span-8 lg:order-1">
                     
-                    <!-- Filter Tabs (Segmented Control Style) -->
-                    <div class="flex overflow-x-auto no-scrollbar gap-2 mb-6 snap-x py-1 px-1 bg-white/50 backdrop-blur-sm p-1 rounded-2xl w-fit">
-                        <button onclick="setFilter('social')" id="filter-social" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-black text-white shadow-md transition-all tap-effect">បណ្តាញសង្គម</button>
-                        <button onclick="setFilter('finance')" id="filter-finance" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">ហិរញ្ញវត្ថុ</button>
-                        <button onclick="setFilter('devices')" id="filter-devices" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">ឧបករណ៍</button>
-                        <button onclick="setFilter('business')" id="filter-business" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">អាជីវកម្ម</button>
-                        <button onclick="setFilter('data')" id="filter-data" class="snap-start shrink-0 px-4 py-2 rounded-full text-sm font-bold bg-transparent text-slate-500 hover:bg-white hover:shadow-sm transition-all tap-effect">ទិន្នន័យ</button>
+                    <!-- Icon Navigation (Centered & Aligned) -->
+                    <div class="flex overflow-x-auto no-scrollbar gap-2 mb-8 pb-2 snap-x px-1 justify-between md:justify-start md:gap-4">
+                        <div onclick="setFilter('social')" id="filter-social" class="flex-1 md:flex-none md:w-20 flex flex-col items-center gap-2 cursor-pointer tap-scale group min-w-[70px]">
+                            <div class="w-14 h-14 bg-blue-500 rounded-app flex items-center justify-center text-white shadow-icon transition group-hover:scale-105">
+                                <i data-lucide="facebook" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-gray-600 text-center">សង្គម</span>
+                        </div>
+                        <div onclick="setFilter('finance')" id="filter-finance" class="flex-1 md:flex-none md:w-20 flex flex-col items-center gap-2 cursor-pointer tap-scale group min-w-[70px]">
+                            <div class="w-14 h-14 bg-gray-100 rounded-app flex items-center justify-center text-gray-400 shadow-sm transition group-hover:bg-green-500 group-hover:text-white">
+                                <i data-lucide="credit-card" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-gray-400 text-center">លុយកាក់</span>
+                        </div>
+                        <div onclick="setFilter('devices')" id="filter-devices" class="flex-1 md:flex-none md:w-20 flex flex-col items-center gap-2 cursor-pointer tap-scale group min-w-[70px]">
+                            <div class="w-14 h-14 bg-gray-100 rounded-app flex items-center justify-center text-gray-400 shadow-sm transition group-hover:bg-orange-500 group-hover:text-white">
+                                <i data-lucide="smartphone" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-gray-400 text-center">ឧបករណ៍</span>
+                        </div>
+                        <div onclick="setFilter('data')" id="filter-data" class="flex-1 md:flex-none md:w-20 flex flex-col items-center gap-2 cursor-pointer tap-scale group min-w-[70px]">
+                            <div class="w-14 h-14 bg-gray-100 rounded-app flex items-center justify-center text-gray-400 shadow-sm transition group-hover:bg-indigo-500 group-hover:text-white">
+                                <i data-lucide="database" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-gray-400 text-center">ទិន្នន័យ</span>
+                        </div>
+                        <div onclick="setFilter('business')" id="filter-business" class="flex-1 md:flex-none md:w-20 flex flex-col items-center gap-2 cursor-pointer tap-scale group min-w-[70px]">
+                            <div class="w-14 h-14 bg-gray-100 rounded-app flex items-center justify-center text-gray-400 shadow-sm transition group-hover:bg-slate-700 group-hover:text-white">
+                                <i data-lucide="briefcase" class="w-7 h-7"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-gray-400 text-center">ការងារ</span>
+                        </div>
                     </div>
 
-                    <!-- Checklist Items Container -->
-                    <div id="checklist-container" class="space-y-4">
-                        <!-- JS Injection -->
-                    </div>
-                    
-                    <div class="text-center mt-12 mb-8">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sophat Security Clinic 2026</p>
+                    <!-- Clean List Container -->
+                    <div id="checklist-container" class="space-y-4 pb-20">
+                        <!-- JS Injected -->
                     </div>
 
                 </div>
@@ -272,134 +219,194 @@
     </div>
 
     <!-- Modals -->
-    
-    <!-- AI Modal (iOS Sheet Style) -->
-    <div id="rec-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onclick="closeRecModal()"></div>
-        <div class="fixed inset-0 flex items-end md:items-center justify-center p-0 md:p-6 pointer-events-none">
-            <div class="bg-ios-bg w-full md:max-w-2xl rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] pointer-events-auto transform transition-transform duration-300">
-                
-                <!-- Mobile Drag Handle -->
-                <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-ios-bg">
-                    <div class="w-12 h-1.5 bg-slate-300 rounded-full"></div>
-                </div>
-
-                <!-- Header -->
-                <div class="px-6 pt-5 pb-5 border-b border-slate-200 bg-ios-bg flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-ios-blue/10 rounded-full flex items-center justify-center text-ios-blue">
-                            <i id="modal-icon" data-lucide="sparkles" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-black" id="modal-title">AI Insights</h3>
-                            <p class="text-xs text-slate-500 font-medium" id="modal-subtitle">Initializing...</p>
-                        </div>
+    <!-- AI Result Modal -->
+    <div id="rec-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity" onclick="closeRecModal()"></div>
+        <div class="fixed inset-x-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center p-4 pointer-events-none">
+            <div class="bg-white w-full md:max-w-lg rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto transform transition-transform duration-300 flex flex-col max-h-[80vh]">
+                <div class="p-6 overflow-y-auto no-scrollbar">
+                    <div class="flex justify-center mb-4"><div class="w-12 h-1.5 bg-gray-200 rounded-full"></div></div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+                        <h3 class="text-xl font-bold" id="modal-title">ដំបូន្មានពី AI</h3>
                     </div>
-                    <button onclick="closeRecModal()" class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-300 transition tap-effect">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </button>
+                    <div id="modal-body" class="prose prose-sm w-full font-sans text-gray-600 leading-relaxed"></div>
                 </div>
-
-                <!-- Body -->
-                <div id="modal-body" class="p-6 overflow-y-auto no-scrollbar bg-white space-y-4 text-slate-800 leading-relaxed font-sans min-h-[300px]">
-                    <!-- Content -->
-                </div>
-
-                <!-- Footer -->
-                <div class="p-4 bg-ios-bg border-t border-slate-200 flex gap-3">
-                    <button onclick="closeRecModal()" class="flex-1 py-3.5 rounded-full font-bold text-slate-600 bg-white shadow-sm border border-slate-200 tap-effect hover:bg-slate-50 transition">បិទ</button>
-                    <button onclick="downloadPDF()" class="flex-1 py-3.5 rounded-full font-bold text-white bg-ios-blue shadow-lg shadow-blue-500/20 tap-effect hover:bg-blue-600 transition flex justify-center items-center gap-2">
-                        <i data-lucide="download" class="w-5 h-5"></i> Save PDF
-                    </button>
+                <div class="p-4 border-t border-gray-100 bg-gray-50 flex gap-3">
+                    <button onclick="closeRecModal()" class="flex-1 py-3 font-bold text-gray-500 bg-white border border-gray-200 rounded-xl tap-scale">បិទ</button>
+                    <button onclick="downloadPDF()" class="flex-1 py-3 font-bold text-white bg-ios-blue rounded-xl shadow-lg tap-scale">Save PDF</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Hidden PDF Template -->
+    <!-- Hidden PDF -->
     <div id="pdf-wrapper">
-        <div id="pdf-template" class="pdf-container font-sans bg-white p-12 text-slate-800">
-            <div class="flex justify-between items-end border-b pb-6 mb-8 border-slate-200">
+        <div id="pdf-template" class="p-12 bg-white font-sans text-slate-800">
+            <div class="flex justify-between border-b-2 border-black pb-6 mb-8">
                 <div>
-                    <h1 class="text-3xl font-black text-black tracking-tight mb-2">របាយការណ៍សុខភាពឌីជីថល</h1>
-                    <p class="text-slate-500 font-medium">Sophat Digital Clinic • <span id="pdf-date"></span></p>
+                    <h1 class="text-3xl font-black">របាយការណ៍សុវត្ថិភាព</h1>
+                    <p class="text-sm text-gray-500 mt-1" id="pdf-date"></p>
                 </div>
                 <div class="text-right">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">ឈ្មោះអ្នកប្រើប្រាស់</div>
-                    <div class="text-xl font-bold text-black" id="pdf-user-name">Guest</div>
+                    <p class="text-sm text-gray-500">អ្នកប្រើប្រាស់</p>
+                    <p class="text-xl font-bold" id="pdf-user-name">Guest</p>
                 </div>
             </div>
-            
-            <div class="grid grid-cols-2 gap-8 mb-10">
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                    <div class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">ពិន្ទុសរុប</div>
-                    <div class="text-6xl font-black text-ios-blue" id="pdf-score">0</div>
+            <div class="flex gap-4 mb-8">
+                <div class="flex-1 bg-gray-50 p-6 rounded-2xl">
+                    <span class="text-xs font-bold text-gray-400 uppercase">ពិន្ទុ</span>
+                    <p class="text-5xl font-black text-ios-blue" id="pdf-score">0</p>
                 </div>
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                    <div class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">កម្រិតហានិភ័យ</div>
-                    <div class="text-2xl font-bold text-black" id="pdf-risk-level">...</div>
+                <div class="flex-1 bg-gray-50 p-6 rounded-2xl">
+                    <span class="text-xs font-bold text-gray-400 uppercase">ហានិភ័យ</span>
+                    <p class="text-2xl font-bold" id="pdf-risk-level">Checking...</p>
                 </div>
             </div>
-
-            <div id="pdf-content-container" class="space-y-6"></div>
-
-            <div class="mt-12 pt-8 border-t border-slate-100 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">
-                Generated by Sophat Digital AI • 2026
-            </div>
+            <div id="pdf-content-container" class="space-y-4"></div>
+            <div class="mt-12 text-center text-xs text-gray-400 font-bold uppercase">Sophat Digital 2026</div>
         </div>
     </div>
 
     <script>
-        const apiKey = ""; // Injected
-
-        // Date
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('km-KH');
-
+        const apiKey = ""; 
+        
+        // Full Content Restored (5 Lists) with detailed subtitles
         const sections = [
             {
                 id: "sec_fb",
-                title: "ហ្វេសប៊ុក (Facebook Safety)",
                 tags: ["social"],
+                title: "ហ្វេសប៊ុក (Facebook)",
                 items: [
-                    { id: "fb1", text: "Password ខ្លាំង (១២+ តួ) និងមិនដូចគណនីផ្សេង", urgent: true, risk: "Password ខ្សោយ ឬប្រើដូចគ្នា ធ្វើឱ្យ Hacker ងាយ 'ឆ្លងចូល' គ្រប់គណនី (Credential Stuffing)។", rec: "ប្រើអក្សរធំ/តូច+លេខ+សញ្ញា។ ហាមប្រើថ្ងៃកំណើត/លេខទូរស័ព្ទ។" },
-                    { id: "fb2", text: "បើក 2FA ដោយប្រើ Authenticator App", urgent: true, risk: "បើប្រើតែ SMS 2FA អាចរងគ្រោះដោយការលួចស៊ីម (SIM Swap)។", rec: "ចូល Password and security > Two-factor authentication > ប្រើ Google Authenticator។" },
-                    { id: "fb3", text: "ពិនិត្យ Active Sessions & Log out", urgent: true, risk: "Hacker អាចនៅជាប់ក្នុងគណនី (Logged in) ទោះបីជាអ្នកប្តូរ Password ហើយក៏ដោយ។", rec: "ចូល Password and security > Where you're logged in > Log out all។" },
-                    { id: "fb4", text: "បើក Login Alerts", risk: "មិនដឹងខ្លួនពេលមាន Hacker លួចចូល ធ្វើឱ្យពួកគេមានពេលធ្វើសកម្មភាពបានយូរ។", rec: "ចូល Password and security > Login alerts > បើកទាំង In-app notifications និង Email។" },
-                    { id: "fb5", text: "កំណត់ Privacy ជា “Only Me”", risk: "Scammer ងាយប្រមូលព័ត៌មានដើម្បីបោកប្រាស់ និងធ្វើ Social Engineering។", rec: "ចូល Settings > Audience and visibility > How people find and contact you។" },
-                    { id: "fb6", text: "ពិនិត្យ Connected Apps (លុបចោល)", risk: "App ចាស់ៗដែលឈប់ប្រើ អាចនៅមានសិទ្ធិចូលយកទិន្នន័យ ឬ Post ជំនួសអ្នក។", rec: "ចូល Settings > Your activity > Apps and websites > Remove កម្មវិធីដែលមិនស្គាល់។" }
+                    { id: "fb1", title: "លេខសម្ងាត់ពិបាកទាយ", sub: "ដាក់ឲ្យបាន ១២ តួអក្សរឡើង ហើយហាមដាក់ដូចគណនីផ្សេង។", urgent: true, risk: "ងាយស្រួលទាយ គេចូលបានភ្លាម។", rec: "ដាក់អក្សរតូចធំ លេខ និងសញ្ញា។" },
+                    { id: "fb2", title: "លេខកូដ ២ តង់ (2FA)", sub: "ការពារគណនីមួយជាន់ទៀត ដោយប្រើកម្មវិធី Authenticator។", urgent: true, risk: "អត់មាន 2FA ដូចបើកទ្វារចោល។", rec: "ដាក់ Two-factor authentication។" },
+                    { id: "fb3", title: "មើលកន្លែងចូល (Logins)", sub: "ពិនិត្យមើល និង Log out ឧបករណ៍ណាដែលអ្នកមិនស្គាល់ចោលភ្លាម។", urgent: true, risk: "មានអ្នកលួចចូលពីមុន យើងអត់ដឹង។", rec: "Log out ឧបករណ៍មិនស្គាល់។" },
+                    { id: "fb4", title: "សារជូនដំណឹង", sub: "បើកឲ្យ Facebook ជូនដំណឹងភ្លាមៗ ពេលមានគេលួចចូលគណនី។", risk: "គេចូលលួច យើងអត់ដឹង។", rec: "បើកឲ្យវាលោតសារប្រាប់ ពេលមានអ្នកចូល។" },
+                    { id: "fb5", title: "បិទព័ត៌មានផ្ទាល់ខ្លួន", sub: "កំណត់លេខទូរស័ព្ទ និង Email ដាក់ Only Me កុំឲ្យគេឃើញ។", risk: "គេអាចយកលេខទូរស័ព្ទយើង ទៅបោក។", rec: "បិទមិនឲ្យគេឃើញលេខទូរស័ព្ទ។" }
                 ]
             },
-            { id: "sec_tg", title: "តេឡេក្រាម (Telegram Security)", tags: ["social"], items: [
-                { id: "tg1", text: "ដាក់ Two-Step Verification (Cloud Password)", urgent: true, risk: "គេអាចលួចគណនីបានងាយៗតាមរយៈ SMS ។", rec: "ចូល Settings > Privacy > Two-Step Verification > កំណត់លេខកូដ។" },
-                { id: "tg2", text: "កំណត់ Privacy លេខទូរស័ព្ទ", risk: "ជនបោកប្រាស់អាចឆាតមកបោកលុយ។", rec: "ចូល Settings > Privacy > Phone Number > ដាក់ Nobody។" },
-                { id: "tg3", text: "ពិនិត្យ Active Sessions", urgent: true, risk: "អាចមានកុំព្យូទ័រអ្នកដទៃកំពុងភ្ជាប់។", rec: "ចូល Settings > Devices > Terminate All Other Sessions។" },
-                { id: "tg4", text: "បិទមិនឱ្យគេ Add ចូល Group", risk: "ត្រូវគេអូសចូលក្រុមបោកប្រាស់/ល្បែង។", rec: "ចូល Settings > Privacy > Groups & Channels > ដាក់ My Contacts។" },
-                { id: "tg5", text: "ដាក់ Passcode Lock", risk: "អ្នកផ្សេងអាចបើកមើលឆាតពេលអ្នកឱ្យទូរស័ព្ទគេខ្ចី។", rec: "ចូល Settings > Privacy > Passcode Lock > បើកដំណើរការ។" }
-            ]},
-            { id: "sec_bank", title: "ធនាគារ (Banking Basic)", tags: ["finance"], items: [
-                { id: "bk1", text: "ហាមប្រាប់ OTP/PIN ដល់អ្នកដទៃ", urgent: true, risk: "បាត់បង់ប្រាក់ពីគណនីភ្លាមៗ។", rec: "រក្សាទុកជាសម្ងាត់។ បុគ្គលិកធនាគារមិនដែលសុំកូដនេះទេ។" },
-                { id: "bk2", text: "មិនចុច Link តាម SMS/Chat", urgent: true, risk: "ជាល្បិច Phishing ដើម្បីលួចយកគណនី។", rec: "កុំចុច! ទាក់ទងទៅធនាគារតាមលេខ Hotline ផ្ទាល់។" },
-                { id: "bk3", text: "ប្រើប្រាស់តែកម្មវិធីផ្លូវការ", risk: "App ក្លែងក្លាយអាចលួចទិន្នន័យ។", rec: "Download តែពី App Store ឬ Play Store ប៉ុណ្ណោះ។" }
-            ]},
-            { id: "sec_phone", title: "ឧបករណ៍ (Devices)", tags: ["devices"], items: [
-                { id: "ph1", text: "ដាក់លេខកូដសម្ងាត់អេក្រង់", urgent: true, risk: "អ្នកដទៃអាចចូលមើលរូបភាពនិងទិន្នន័យ។", rec: "កំណត់ Passcode យ៉ាងតិច ៦ ខ្ទង់។" },
-                { id: "ph2", text: "Update OS ជាប្រចាំ", urgent: true, risk: "កម្មវិធីចាស់ៗមានចន្លោះប្រហោងសុវត្ថិភាព។", rec: "ចូល Settings > Software Update។" },
-                { id: "ph3", text: "បើកមុខងារ Find My", urgent: true, risk: "មិនអាចលុបទិន្នន័យពីចម្ងាយពេលបាត់។", rec: "បើក Find My Device។" }
-            ]},
-            { id: "sec_data", title: "ទិន្នន័យ (Data)", tags: ["data", "business"], items: [
-                { id: "dt1", text: "មិនផ្ញើកាត/ID តាមឆាត", urgent: true, risk: "បែកធ្លាយទិន្នន័យសំខាន់ៗ។", rec: "ហាមផ្ញើរូបកាត។" },
-                { id: "dt2", text: "Backup ឯកសារសំខាន់ៗ", risk: "បាត់បង់ឯកសាររហូត។", rec: "ប្រើ Google Drive ឬ iCloud។" }
-            ]},
-            { id: "sec_business", title: "អាជីវកម្ម (Business)", tags: ["business"], items: [
-                { id: "bz1", text: "ប្រើលេខសម្ងាត់ Wi-Fi ខ្លាំង", urgent: true, risk: "Hacker អាចចូលប្រើបណ្តាញក្រុមហ៊ុន។", rec: "កំណត់លេខសម្ងាត់វែង។" },
-                { id: "bz2", text: "បណ្តុះបណ្តាលបុគ្គលិក", urgent: true, risk: "បុគ្គលិកគឺជាចំណុចខ្សោយបំផុត។", rec: "ធ្វើការប្រជុំអំពីសុវត្ថិភាព។" }
-            ]}
+            {
+                id: "sec_tg",
+                tags: ["social"],
+                title: "តេឡេក្រាម (Telegram)",
+                items: [
+                    { id: "tg1", title: "លេខកូដ ២ ជាន់ (Cloud PW)", sub: "ដាក់លេខសម្ងាត់បន្ថែម ដើម្បីការពារពេលមានគេលួចស៊ីម។", urgent: true, risk: "គេអាចលួចស៊ីម ហើយចូល Telegram។", rec: "ចូល Privacy > 2-Step Verification។" },
+                    { id: "tg2", title: "លាក់លេខទូរស័ព្ទ", sub: "កំណត់មិនឲ្យអ្នកដទៃមើលឃើញលេខទូរស័ព្ទរបស់យើង។", risk: "គេយកលេខយើងទៅបោក។", rec: "ដាក់ Phone Number = Nobody។" },
+                    { id: "tg3", title: "លុបឧបករណ៍គេ (Devices)", sub: "ចូលពិនិត្យមើល និងលុបកុំព្យូទ័រ ឬទូរស័ព្ទរបស់អ្នកដទៃដែលជាប់។", urgent: true, risk: "កុំព្យូទ័រអ្នកដទៃ អាចនៅជាប់គណនីយើង។", rec: "ចូល Devices ហើយ Terminate ទាំងអស់។" },
+                    { id: "tg4", title: "បិទគេ Add ចូលក្រុម", sub: "កុំឲ្យគេអូសចូលក្រុមល្បែង ឬក្រុមបោកប្រាស់ផ្តេសផ្តាស។", risk: "គេអូសចូលក្រុមល្បែង ឬបោកប្រាស់។", rec: "ចូល Groups > ដាក់ My Contacts។" },
+                    { id: "tg5", title: "ដាក់សោរកម្មវិធី", sub: "ដាក់លេខកូដមុនចូលកម្មវិធី ដើម្បីការពារពេលគេខ្ចីទូរស័ព្ទ។", risk: "គេខ្ចីទូរស័ព្ទ គេអាចលួចមើលឆាត។", rec: "ដាក់លេខកូដសម្ងាត់ មុនចូលកម្មវិធី។" }
+                ]
+            },
+            {
+                id: "sec_tiktok",
+                tags: ["social"],
+                title: "TikTok & Email",
+                items: [
+                    { id: "tt1", title: "TikTok 2-Step", sub: "បើកលេខកូដ ២ តង់ ដើម្បីការពារកុំឲ្យគេលួចគណនី។", urgent: true, risk: "គេលួចគណនី TikTok យកទៅប្រើខុស។", rec: "បើក 2-Step Verification។" },
+                    { id: "tt2", title: "គ្រប់គ្រងឧបករណ៍", sub: "ចូលមើលថាតើមានទូរស័ព្ទអ្នកផ្សេងកំពុងលួចប្រើដែរឬទេ។", risk: "មានគេលួចលេង។", rec: "ចូល Security > Manage Devices។" },
+                    { id: "em1", title: "Gmail 2FA", sub: "ការពារ Gmail របស់អ្នក ព្រោះវាភ្ជាប់ទៅគ្រប់គណនីទាំងអស់។", urgent: true, risk: "Gmail ជាប់ទិន្នន័យគ្រប់យ៉ាង។", rec: "ដាក់ 2-Step Verification លើ Google។" },
+                    { id: "em2", title: "Email សង្គ្រោះ", sub: "ដាក់លេខទូរស័ព្ទ ឬ Email ផ្សេង ដើម្បីយកគណនីមកវិញពេលភ្លេច។", risk: "ភ្លេច Password យកមកវិញអត់បាន។", rec: "ដាក់លេខទូរស័ព្ទសង្គ្រោះ។" }
+                ]
+            },
+            {
+                id: "sec_fin",
+                tags: ["finance"],
+                title: "លុយកាក់ & ធនាគារ",
+                items: [
+                    { id: "bk1", title: "ហាមប្រាប់ OTP", sub: "ហាមប្រាប់លេខកូដដែលផ្ញើចូលទូរស័ព្ទទៅអ្នកដទៃជាដាច់ខាត។", urgent: true, risk: "ប្រាប់គេ គឺអស់លុយពីកុង។", rec: "ធនាគារមិនដែលសុំលេខនេះទេ។" },
+                    { id: "bk2", title: "កុំចុច Link តាម SMS", sub: "ធនាគារមិនដែលផ្ញើ Link ឲ្យចុចតាម SMS ទេ។ ប្រយ័ត្នចាញ់បោក!", urgent: true, risk: "Link បោកយក Password។", rec: "កុំចុច! ទាក់ទងធនាគារផ្ទាល់។" },
+                    { id: "bk3", title: "ប្រើ App ផ្លូវការ", sub: "Download កម្មវិធីធនាគារតែពី App Store ឬ Play Store ប៉ុណ្ណោះ។", risk: "App ក្លែងក្លាយលួចលេខកូដ។", rec: "Download តែពី Store ផ្លូវការ។" },
+                    { id: "shp1", title: "ទិញអីវ៉ាន់អនឡាញ", sub: "ប្រើកាត Virtual Card ជំនួសកាតដើម ដើម្បីការពារការលួចលុយ។", risk: "គេលួចលេខកាត។", rec: "ប្រើកាតនិម្មិត (Virtual Card)។" },
+                    { id: "bk4", title: "កំណត់ចំនួនលុយ", sub: "កំណត់ចំនួនទឹកប្រាក់ដែលអាចផ្ទេរបានប្រចាំថ្ងៃឲ្យទាប។", risk: "ក្រែងមានគេលួចដកអស់។", rec: "កំណត់ក្នុង App ធនាគារ។" },
+                    { id: "bk5", title: "មើលប្រវត្តិដកលុយ", sub: "ឧស្សាហ៍ចូលមើលតារាងចំណាយ ក្រែងមានគេលួចកាត់លុយ។", risk: "ក្រែងមានគេលួចកាត់លុយ។", rec: "ឆែកមើលរាល់ថ្ងៃ ឬរាល់សប្តាហ៍។" }
+                ]
+            },
+            // --- DEVICES SECTION: SPLIT INTO 3 ---
+            {
+                id: "sec_phone",
+                tags: ["devices"],
+                title: "ទូរស័ព្ទ (Smartphone)",
+                items: [
+                    { id: "ph1", title: "ដាក់លេខកូដអេក្រង់", sub: "ដាក់លេខកូដ ៦ ខ្ទង់ ឬស្កេនមុខ ដើម្បីការពារទិន្នន័យក្នុងម៉ាស៊ីន។", urgent: true, risk: "បាត់ទូរស័ព្ទ គេឃើញរូបភាពអស់។", rec: "ដាក់លេខកូដ ៦ ខ្ទង់ ឬ FaceID។" },
+                    { id: "ph2", title: "អាប់ដេតកម្មវិធី", sub: "ធ្វើបច្ចុប្បន្នភាព iOS/Android ជាប្រចាំ ដើម្បីបិទចន្លោះប្រហោង។", urgent: true, risk: "មេរោគចូលតាមចន្លោះប្រហោង។", rec: "Update Software ឲ្យបានទៀងទាត់។" },
+                    { id: "ph3", title: "បើក Find My", sub: "បើកមុខងារនេះ ដើម្បីអាចរកទូរស័ព្ទឃើញពេលបាត់ ឬចោរលួច។", urgent: true, risk: "បាត់ទូរស័ព្ទ រកអត់ឃើញ។", rec: "បើក Find My iPhone / Google Find My។" },
+                    { id: "ph4", title: "បិទកាមេរ៉ា/ទីតាំង", sub: "បិទសិទ្ធិ (Permission) កម្មវិធីណាដែលមិនចាំបាច់។", risk: "App លួចមើល ឬតាមដាន។", rec: "បិទ Permission ណាដែលមិនចាំបាច់។" },
+                    { id: "ph5", title: "ដាក់លេខកូដស៊ីម", sub: "ដាក់ PIN លើស៊ីម ដើម្បីកុំឲ្យគេដកស៊ីមយកទៅប្រើបាន។", risk: "គេដកស៊ីមដាក់ទូរស័ព្ទគេ។", rec: "ដាក់ PIN លើ SIM Card។" }
+                ]
+            },
+            {
+                id: "sec_pc",
+                tags: ["devices"],
+                title: "កុំព្យូទ័រ (Computer/Laptop)",
+                items: [
+                    { id: "pc1", title: "ប្រើ Antivirus", sub: "ប្រើ Windows Defender ឬកម្មវិធីកម្ចាត់មេរោគដើម្បីការពារ។", urgent: true, risk: "មេរោគបំផ្លាញឯកសារ។", rec: "បើក Windows Defender ជានិច្ច។" },
+                    { id: "pc2", title: "កុំប្រើកម្មវិធី Crack", sub: "កម្មវិធី Crack ភាគច្រើនមានបង្កប់មេរោគលួចទិន្នន័យ។", risk: "វាមានមេរោគមកជាមួយ។", rec: "ប្រើកម្មវិធីស្របច្បាប់។" },
+                    { id: "pc3", title: "បិទកាមេរ៉ា", sub: "យកស្គុតបិទកាមេរ៉ា Laptop ពេលមិនប្រើ ដើម្បីកុំឲ្យគេលួចមើល។", risk: "គេអាចលួចមើលយើង។", rec: "យកស្គុតបិទ ឬប្រដាប់បិទ។" },
+                    { id: "pc4", title: "ដាក់លេខកូដចូល", sub: "ដាក់ Password ពេលបើកកុំព្យូទ័រ ដើម្បីកុំឲ្យគេចូលឆែក។", urgent: true, risk: "គេបើកយកទិន្នន័យ។", rec: "ដាក់ Password ពេលបើកកុំព្យូទ័រ។" },
+                    { id: "pc5", title: "អាប់ដេត Windows", sub: "Update Windows ឲ្យបានទៀងទាត់ ដើម្បីសុវត្ថិភាព។", risk: "ចន្លោះប្រហោងសុវត្ថិភាព។", rec: "Update Windows ឲ្យបានទៀងទាត់។" }
+                ]
+            },
+            {
+                id: "sec_smart",
+                tags: ["devices"],
+                title: "គ្រឿងអេឡិចត្រូនិកទូទៅ",
+                items: [
+                    { id: "sm1", title: "ប្តូរលេខកូដ WiFi", sub: "កុំប្រើលេខកូដដើមដែលមកជាមួយដុំ Router ត្រូវប្តូរចេញភ្លាម។", urgent: true, risk: "អ្នកជិតខាងលួចប្រើ ឬ Hacker ចូល។", rec: "កុំប្រើលេខកូដដែលមានស្រាប់ (Default)។" },
+                    { id: "sm2", title: "កាមេរ៉ាសុវត្ថិភាព", sub: "ប្តូរលេខសម្ងាត់កាមេរ៉ា CCTV កុំឲ្យគេលួចមើលក្នុងផ្ទះបាន។", risk: "គេលួចមើលក្នុងផ្ទះ។", rec: "ប្តូរ Password កាមេរ៉ាភ្លាម។" },
+                    { id: "sm3", title: "បិទ Bluetooth", sub: "បិទ Bluetooth ពេលឈប់ប្រើ ដើម្បីកុំឲ្យគេភ្ជាប់ចូល។", risk: "គេអាចភ្ជាប់ចូលបាន។", rec: "បិទ Bluetooth ពេលដើរហើរនៅក្រៅ។" },
+                    { id: "sm4", title: "កុំសាកថ្មផ្តេសផ្តាស", sub: "ប្រើ Power Bank ផ្ទាល់ខ្លួន ជៀសវាងការសាកតាមរន្ធ USB សាធារណៈ។", risk: "គេអាចលួចទិន្នន័យតាមរន្ធ USB។", rec: "ប្រើ Power Bank ផ្ទាល់ខ្លួន។" }
+                ]
+            },
+            // ---------------------------------------------
+            {
+                id: "sec_data",
+                tags: ["data"],
+                title: "ទិន្នន័យ & ឯកសារ",
+                items: [
+                    { id: "dt1", title: "កុំផ្ញើកាត/ID", sub: "ហាមថតរូបអត្តសញ្ញាណប័ណ្ណ ឬកាតធនាគារផ្ញើតាម Chat។", urgent: true, risk: "Chat អាចបែកធ្លាយ។", rec: "ហាមផ្ញើឯកសារសំខាន់តាម Chat។" },
+                    { id: "dt2", title: "គ្រប់គ្រង Password", sub: "ប្រើកម្មវិធី Password Manager ដើម្បីរក្សាទុកលេខសម្ងាត់។", risk: "ភ្លេច Password ឬ ប្រើជាន់គ្នា។", rec: "ប្រើ Google Password Manager។" },
+                    { id: "dt3", title: "Backup រូបភាព", sub: "រក្សាទុកក្នុង Google Photos ឬ iCloud ក្រែងបាត់ទូរស័ព្ទ។", risk: "ទូរស័ព្ទខូច បាត់រូបអស់។", rec: "ប្រើ Google Photos ឬ iCloud។" },
+                    { id: "dt4", title: "ដាក់លេខ ផ្លាស (Flash)", sub: "ដាក់លេខកូដលើ ផ្លាស (USB) ដើម្បីការពារទិន្នន័យ។", risk: "បាត់ទៅ គេបើកមើលអត់កើត។", rec: "ប្រើ BitLocker ឬកម្មវិធី។" },
+                    { id: "dt5", title: "លុបឯកសារចាស់ៗ", sub: "លុបឯកសារណាដែលលែងប្រើចោល ដើម្បីកុំឲ្យបែកធ្លាយ។", risk: "ទុកយូរ នាំតែគ្រោះថ្នាក់។", rec: "លុបចោលបើលែងប្រើ។" }
+                ]
+            },
+            {
+                id: "sec_work",
+                tags: ["business"],
+                title: "ការិយាល័យ (Office)",
+                items: [
+                    { id: "bz1", title: "Wi-Fi ការិយាល័យ", sub: "ដាក់លេខកូដ Wi-Fi ឲ្យវែងៗ និងប្តូរឲ្យបានញឹកញាប់។", urgent: true, risk: "អ្នកក្រៅចូលលួចទិន្នន័យ។", rec: "ដាក់លេខកូដវែង និងប្តូរញឹកញាប់។" },
+                    { id: "bz2", title: "ប្រយ័ត្ន Email", sub: "ពិនិត្យមើល Email ឲ្យច្បាស់មុននឹងចុច Link ឬបើកឯកសារ។", urgent: true, risk: "បុគ្គលិកច្រឡំចុច Link។", rec: "បណ្តុះបណ្តាលបុគ្គលិក។" },
+                    { id: "bz3", title: "Lock កុំព្យូទ័រ", sub: "ចុច Windows+L ដើម្បី Lock អេក្រង់រាល់ពេលដើរចេញពីតុ។", risk: "កុំឲ្យអ្នកផ្សេងលួចមើល។", rec: "ចុច Windows+L ឬ Sleep។" },
+                    { id: "bz4", title: "កុំទុកឯកសារលើតុ", sub: "ឯកសារសំខាន់ៗត្រូវទុកក្នុងទូមានសោរ មិនត្រូវទុកចោលទេ។", risk: "អ្នកសម្អាត ឬភ្ញៀវអាចឃើញ។", rec: "ទុកក្នុងទូមានសោរ។" },
+                    { id: "bz5", title: "បែងចែកការងារ", sub: "កុំយក Email ក្រុមហ៊ុនទៅចុះឈ្មោះលេងបណ្តាញសង្គម។", risk: "កុំលាយរឿងផ្ទាល់ខ្លួន។", rec: "កុំប្រើ Email ក្រុមហ៊ុនចុះឈ្មោះលេង។" }
+                ]
+            },
+            {
+                id: "sec_remote",
+                tags: ["business"],
+                title: "ការងារពីចម្ងាយ (Remote Work)",
+                items: [
+                    { id: "rw1", title: "ប្រើ VPN", sub: "ប្រើ VPN ជានិច្ចពេលប្រើ Wi-Fi នៅហាងកាហ្វេ ឬទីសាធារណៈ។", urgent: true, risk: "Hacker អាចលួចទិន្នន័យតាម WiFi។", rec: "បើក VPN ក្រុមហ៊ុនជានិច្ច។" },
+                    { id: "rw2", title: "បិទអេក្រង់", sub: "បិទស្គ្រីនការពារ (Privacy Filter) កុំឲ្យអ្នកអង្គុយជិតលួចមើល។", risk: "គេអង្គុយក្រោយអាចលួចមើល។", rec: "បិទស្គ្រីនការពារការមើលពីចំហៀង។" },
+                    { id: "rw3", title: "កុំប្រើកុំព្យូទ័រផ្ទះ", sub: "ប្រើកុំព្យូទ័រក្រុមហ៊ុនសម្រាប់ធ្វើការ ព្រោះវាមានសុវត្ថិភាពជាង។", urgent: true, risk: "កុំព្យូទ័រផ្ទះអាចមានមេរោគ។", rec: "ប្រើតែកុំព្យូទ័រក្រុមហ៊ុន។" }
+                ]
+            },
+            {
+                id: "sec_meet",
+                tags: ["business"],
+                title: "ការប្រជុំ & ចែករំលែក",
+                items: [
+                    { id: "mt1", title: "ដាក់លេខកូដប្រជុំ", sub: "ប្រើ Meeting ID និង Passcode ដើម្បីកុំឲ្យជន lạ ចូល។", risk: "ជន lạ អាចចូលស្ដាប់។", rec: "ប្រើ Meeting ID និង Passcode។" },
+                    { id: "mt2", title: "ប្រយ័ត្ន Share Screen", sub: "បិទកម្មវិធីផ្ទាល់ខ្លួនសិន មុននឹង Share Screen ពេលប្រជុំ។", risk: "គេឃើញសារផ្ទាល់ខ្លួន។", rec: "Share តែផ្ទាំងកម្មវិធីដែលត្រូវបង្ហាញ។" },
+                    { id: "mt3", title: "ពិនិត្យសិទ្ធិឯកសារ", sub: "លុបសិទ្ធិបុគ្គលិកចាស់ៗ ចេញពី Google Drive របស់ក្រុមហ៊ុន។", urgent: true, risk: "បុគ្គលិកចាស់នៅតែអាចចូលមើល។", rec: "លុបសិទ្ធិពេលឈប់សហការ។" }
+                ]
+            }
         ];
 
         let checkedItems = new Set();
         let activeFilter = 'social';
         let currentSlide = 0;
-        const totalSlides = 3;
         let slideInterval;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -411,134 +418,123 @@
         // Carousel
         function showSlide(index) {
             const track = document.getElementById('carousel-track');
-            const dots = document.querySelectorAll('.carousel-dot');
-            if (index >= totalSlides) index = 0;
-            if (index < 0) index = totalSlides - 1;
+            const dots = document.querySelectorAll('#carousel-track + div button');
+            if (index >= 3) index = 0; if (index < 0) index = 2;
             currentSlide = index;
             track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, i) => {
-                if (i === currentSlide) {
-                    dot.classList.remove('bg-white/50');
-                    dot.classList.add('bg-white', 'scale-125');
-                } else {
-                    dot.classList.add('bg-white/50');
-                    dot.classList.remove('bg-white', 'scale-125');
-                }
-            });
+            dots.forEach((d, i) => { d.className = i === index ? "w-2 h-2 rounded-full bg-white/90 transition-all scale-125" : "w-2 h-2 rounded-full bg-white/40 transition-all"; });
         }
-        function nextSlide() { showSlide(currentSlide + 1); resetTimer(); }
-        function goToSlide(index) { showSlide(index); resetTimer(); }
-        function startCarousel() { slideInterval = setInterval(() => { showSlide(currentSlide + 1); }, 6000); }
-        function resetTimer() { clearInterval(slideInterval); startCarousel(); }
+        function goToSlide(i) { showSlide(i); clearInterval(slideInterval); startCarousel(); }
+        function startCarousel() { slideInterval = setInterval(() => showSlide(currentSlide + 1), 5000); }
 
-        // Logic
-        function updateNameGreeting() {
-            // Optional: Live update logic
-        }
-
+        // Filter Logic
         function setFilter(filter) {
             activeFilter = filter;
-            const targetBtn = document.getElementById('filter-' + filter);
+            const buttons = document.querySelectorAll('#filter-social, #filter-finance, #filter-devices, #filter-business, #filter-data');
             
-            if(!targetBtn) {
-                console.error("Filter button not found:", filter);
-                return;
-            }
+            // Map filter text for Score Label
+            const titles = { 'social': 'ពិន្ទុបណ្តាញសង្គម', 'finance': 'ពិន្ទុសុវត្ថិភាពលុយ', 'devices': 'ពិន្ទុឧបករណ៍', 'business': 'ពិន្ទុការងារ', 'data': 'ពិន្ទុទិន្នន័យ' };
+            document.getElementById('score-label').innerText = titles[filter] || 'ពិន្ទុសរុប';
 
-            const buttons = targetBtn.parentNode.children;
-            for(let btn of buttons) {
-                if (btn.id === 'filter-' + filter) {
-                    btn.classList.remove('bg-transparent', 'text-slate-500', 'hover:bg-white', 'hover:shadow-sm');
-                    btn.classList.add('bg-black', 'text-white', 'shadow-md');
+            buttons.forEach(btn => {
+                const iconBox = btn.firstElementChild;
+                const label = btn.lastElementChild;
+                const isActive = btn.id === 'filter-' + filter;
+                
+                if (isActive) {
+                    iconBox.className = `w-14 h-14 rounded-app flex items-center justify-center text-white shadow-icon transition scale-105 ${getActiveColor(filter)}`;
+                    label.className = `text-[11px] font-bold text-black text-center`;
                 } else {
-                    btn.classList.add('bg-transparent', 'text-slate-500', 'hover:bg-white', 'hover:shadow-sm');
-                    btn.classList.remove('bg-black', 'text-white', 'shadow-md');
+                    iconBox.className = `w-14 h-14 rounded-app flex items-center justify-center bg-gray-100 text-gray-400 shadow-sm transition`;
+                    label.className = `text-[11px] font-bold text-gray-400 text-center`;
                 }
-            }
+            });
+            renderList();
+            updateStats(); // Update score immediately based on session
+        }
+
+        function getActiveColor(filter) {
+            const map = { 'social': 'bg-blue-500', 'finance': 'bg-green-500', 'devices': 'bg-orange-500', 'business': 'bg-slate-700', 'data': 'bg-indigo-500' };
+            return map[filter] || 'bg-black';
+        }
+
+        function toggleCheck(id) {
+            if(checkedItems.has(id)) checkedItems.delete(id); else checkedItems.add(id);
             renderList();
             updateStats();
         }
 
         function toggleInfo(id) {
-            const panel = document.getElementById(`info-${id}`);
-            panel.parentElement.classList.toggle('open');
+            document.getElementById('info-'+id).parentElement.classList.toggle('open');
         }
 
-        function toggleCheck(id) {
-            if (checkedItems.has(id)) {
-                checkedItems.delete(id);
-            } else {
-                checkedItems.add(id);
-            }
-            renderList(); // Re-render to update UI state
-            updateStats();
+        // SCORING: Calculate based on ACTIVE FILTER only (Tick by Session)
+        function calculateScore() {
+            let total = 0, max = 0;
+            const activeSec = sections.filter(s => s.tags.includes(activeFilter));
+            
+            activeSec.forEach(s => s.items.forEach(i => {
+                let w = i.urgent ? 3 : 1;
+                max += w;
+                if(checkedItems.has(i.id)) total += w;
+            }));
+            
+            return max === 0 ? 0 : Math.round((total/max)*100);
         }
 
-        function getFilteredSections() {
-            return sections.filter(s => s.tags.includes(activeFilter));
-        }
-
-        function calculateRiskScore(useAll = false) {
-            let totalScore = 0;
-            let maxScore = 0;
-            const source = useAll ? sections : getFilteredSections();
-            source.forEach(section => {
-                section.items.forEach(item => {
-                    const weight = item.urgent ? 3 : 1;
-                    maxScore += weight;
-                    if (checkedItems.has(item.id)) totalScore += weight;
-                });
-            });
-            return maxScore === 0 ? 0 : Math.round((totalScore / maxScore) * 100);
+        function updateStats() {
+            const score = calculateScore();
+            document.getElementById('score-text').innerText = score;
+            document.getElementById('score-bar').style.width = score + '%';
+            
+            // Dynamic Color
+            let color = 'bg-red-500';
+            if(score >= 80) color = 'bg-green-500';
+            else if(score >= 50) color = 'bg-orange-500';
+            
+            document.getElementById('score-bar').className = `absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ${color}`;
         }
 
         function renderList() {
             const container = document.getElementById('checklist-container');
-            const activeSections = getFilteredSections();
+            const activeSec = sections.filter(s => s.tags.includes(activeFilter));
+            
+            if(activeSec.length === 0) { container.innerHTML = `<div class="p-8 text-center text-gray-400">ទិន្នន័យទទេ</div>`; return; }
 
-            if (activeSections.length === 0) {
-                container.innerHTML = `<div class="text-center p-12 text-slate-400">គ្មានទិន្នន័យទេ។</div>`;
-                return;
-            }
-
-            container.innerHTML = activeSections.map((section, index) => {
-                const itemsHtml = section.items.map((item, idx) => {
+            container.innerHTML = activeSec.map(sec => {
+                const itemsHtml = sec.items.map(item => {
                     const isChecked = checkedItems.has(item.id);
-                    
-                    const iconCheck = isChecked 
-                        ? `<div class="w-6 h-6 rounded-full bg-ios-blue flex items-center justify-center text-white transition-all scale-100"><i data-lucide="check" class="w-4 h-4 stroke-[3]"></i></div>`
-                        : `<div class="w-6 h-6 rounded-full border-2 border-slate-300 transition-all bg-white group-hover:border-slate-400"></div>`;
-
-                    const textStyle = isChecked ? "text-slate-400 line-through transition-all" : "text-black font-semibold transition-all";
-                    const urgentDot = item.urgent && !isChecked ? `<span class="w-2 h-2 rounded-full bg-ios-red animate-pulse"></span>` : "";
-                    const cardBg = "bg-white border border-slate-100 shadow-ios-card";
+                    const checkClass = isChecked ? "bg-green-500 border-green-500 text-white" : "border-gray-300 bg-white";
+                    const titleClass = isChecked ? "text-gray-400 line-through" : "text-gray-900";
+                    const urgentIndicator = item.urgent && !isChecked ? `<div class="w-2 h-2 rounded-full bg-red-500 ml-2 animate-pulse"></div>` : "";
 
                     return `
-                        <div class="group relative overflow-hidden p-4 mb-3 rounded-ios transition-all duration-300 cursor-pointer ${cardBg} active:scale-[0.99] active:bg-slate-50" onclick="toggleCheck('${item.id}')">
-                            <div class="flex items-center gap-4 relative z-10">
-                                <div class="shrink-0">${iconCheck}</div>
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-0.5">
-                                        <span class="${textStyle} text-sm md:text-base">${item.text}</span>
-                                        ${urgentDot}
-                                    </div>
+                        <div class="bg-white p-4 rounded-[20px] flex flex-col shadow-sm mb-3">
+                            <div class="flex items-center gap-4 cursor-pointer" onclick="toggleCheck('${item.id}')">
+                                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors custom-check shrink-0 ${checkClass}">
+                                    <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3] ${isChecked ? 'opacity-100' : 'opacity-0'}"></i>
                                 </div>
-                                <button onclick="event.stopPropagation(); toggleInfo('${item.id}')" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 text-ios-blue hover:bg-blue-50 transition shrink-0">
-                                    <i data-lucide="info" class="w-5 h-5"></i>
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <span class="font-bold text-base ${titleClass}">${item.title}</span>
+                                        ${urgentIndicator}
+                                    </div>
+                                    <span class="text-xs text-gray-500 font-medium leading-relaxed block mt-1">${item.sub}</span>
+                                </div>
+                                <button onclick="event.stopPropagation(); toggleInfo('${item.id}')" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-400 hover:bg-gray-200 transition shrink-0 self-start mt-1">
+                                    <i data-lucide="info" class="w-4 h-4"></i>
                                 </button>
                             </div>
-                            
-                            <!-- Expandable Info -->
                             <div class="accordion-content">
-                                <div class="accordion-inner pt-0">
-                                    <div class="mt-3 ml-10 p-3 bg-slate-50 rounded-xl text-sm grid gap-2">
-                                        <div class="flex gap-2 text-ios-red">
+                                <div id="info-${item.id}" class="accordion-inner">
+                                    <div class="mt-3 pt-3 border-t border-gray-100 grid grid-cols-1 gap-2 text-sm">
+                                        <div class="flex gap-2 text-red-500 bg-red-50 p-3 rounded-xl">
                                             <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
-                                            <p class="leading-snug font-medium">${item.risk}</p>
+                                            <span class="leading-snug text-xs">${item.risk}</span>
                                         </div>
-                                        <div class="flex gap-2 text-ios-blue">
+                                        <div class="flex gap-2 text-blue-600 bg-blue-50 p-3 rounded-xl">
                                             <i data-lucide="lightbulb" class="w-4 h-4 shrink-0 mt-0.5"></i>
-                                            <p class="leading-snug font-medium">${item.rec}</p>
+                                            <span class="leading-snug text-xs">${item.rec}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -546,202 +542,182 @@
                         </div>
                     `;
                 }).join('');
-
-                return `
-                    <div class="animate-fade-in" style="animation-delay: ${index * 50}ms">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wide ml-4 mb-2">${section.title}</h3>
-                        <div>
-                            ${itemsHtml}
-                        </div>
-                    </div>
-                `;
+                return `<div class="mb-6"><h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-2 mb-2">${sec.title}</h3>${itemsHtml}</div>`;
             }).join('');
-            
             lucide.createIcons();
         }
 
-        function updateStats() {
-            const score = calculateRiskScore();
-            document.getElementById('score-number').innerText = score;
-            
-            const circle = document.getElementById('score-circle');
-            // Full circle is roughly 565px for r=90
-            const circumference = 565;
-            const offset = circumference - (score / 100) * circumference;
-            circle.style.strokeDashoffset = offset;
-
-            // Color ring based on score
-            if (score >= 80) circle.style.stroke = "#34C759"; // Green
-            else if (score >= 50) circle.style.stroke = "#FF9500"; // Orange
-            else circle.style.stroke = "#FF3B30"; // Red
-        }
-
-        // --- AI & PDF ---
+        // AI & PDF
         async function analyzeSafety() {
-            const score = calculateRiskScore();
-            const modal = document.getElementById('rec-modal');
-            const modalBody = document.getElementById('modal-body');
-            const modalTitle = document.getElementById('modal-title');
-            const modalSubtitle = document.getElementById('modal-subtitle');
+            const score = calculateScore(); 
+            document.getElementById('rec-modal').classList.remove('hidden');
+            document.getElementById('modal-body').innerHTML = `<div class="flex flex-col items-center py-8"><div class="w-8 h-8 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4"></div><p class="text-gray-500">កំពុងវិភាគទិន្នន័យ...</p></div>`;
             
-            modal.classList.remove('hidden');
-            modalTitle.innerText = "កំពុងដំណើរការ...";
-            modalSubtitle.innerText = "កំពុងភ្ជាប់ទៅ Gemini AI...";
-            modalBody.innerHTML = `
-                <div class="flex flex-col items-center py-12">
-                    <div class="w-12 h-12 border-4 border-slate-100 rounded-full border-t-ios-blue animate-spin mb-4"></div>
-                    <p class="text-slate-400 font-medium">កំពុងវិភាគសុវត្ថិភាពរបស់អ្នក...</p>
-                </div>
-            `;
-            lucide.createIcons();
-
-            // Prepare missed items
+            // 1. ស្វែងរកចំណុចដែលខ្វះខាត (ដែលមិនបាន Tick)
             let missedItems = [];
-            getFilteredSections().forEach(section => {
-                section.items.forEach(item => {
-                    if (!checkedItems.has(item.id)) missedItems.push(item.text);
-                });
-            });
+            sections.forEach(s => s.items.forEach(i => { 
+                if(!checkedItems.has(i.id)) {
+                    missedItems.push(i);
+                } 
+            }));
+
+            // 2. តម្រៀបចំណុចសំខាន់ៗ (Urgent) ឱ្យនៅលើគេ
+            missedItems.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+            
+            // យកឈ្មោះចំណុចដើម្បីផ្ញើទៅ AI
+            const missedTitles = missedItems.map(i => i.title + (i.urgent ? " (សំខាន់)" : "")).join(', ');
 
             try {
-                if (!apiKey) throw new Error("API Key Missing");
-                if (missedItems.length === 0 && score === 100) throw new Error("Perfect Score");
-
-                const prompt = `
-                    You are a cybersecurity expert speaking Khmer.
-                    User Score: ${score}/100.
-                    Missing Items: ${missedItems.join(', ')}.
-                    
-                    Please provide:
-                    1. A short header summary (1 sentence).
-                    2. Top 3 priority fixes with a "Why" and "How".
-                    
-                    Use Markdown. Respond ONLY in Khmer.
-                `;
-
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
+                if(!apiKey && missedItems.length > 0) throw new Error("No API");
                 
-                const data = await response.json();
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "មិនមានចម្លើយ។";
-
-                modalTitle.innerText = "របាយការណ៍សុវត្ថិភាព";
-                modalSubtitle.innerText = "ការណែនាំពី AI";
-                modalBody.innerHTML = `<div class="prose prose-sm prose-slate max-w-none text-slate-800 font-sans leading-relaxed">${marked.parse(text)}</div>`;
-
-            } catch (err) {
-                if(score === 100) {
-                     modalTitle.innerText = "អស្ចារ្យណាស់!";
-                     modalSubtitle.innerText = "សុវត្ថិភាព 100%";
-                     modalBody.innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-500 shadow-sm border border-green-100">
-                                <i data-lucide="shield-check" class="w-8 h-8"></i>
+                const prompt = `
+                    You are a cybersecurity expert teacher in Cambodia.
+                    The user has NOT done these security steps (sorted by importance): ${missedTitles}.
+                    
+                    Please provide a detailed explanation in simple Khmer for the top missing items.
+                    Prioritize the items marked "(សំខាន់)".
+                    
+                    Structure for each item:
+                    ### [Item Title]
+                    1. **ហានិភ័យ (Risk):** Explain what bad thing will happen if they don't do this.
+                    2. **ដំណោះស្រាយ (Solution):** Clear instructions on how to fix it.
+                    3. **អត្ថប្រយោជន៍ (Benefit):** Why is it good for them?
+                `;
+                
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})
+                });
+                const data = await res.json();
+                document.getElementById('modal-body').innerHTML = marked.parse(data.candidates[0].content.parts[0].text);
+            } catch(e) {
+                // Fallback: បង្ហាញចំណុចដែលខ្វះខាតដោយផ្ទាល់ (តម្រៀបរួចស្រេច)
+                if (missedItems.length === 0) {
+                    document.getElementById('modal-body').innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-8 text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <i data-lucide="shield-check" class="w-8 h-8 text-green-600"></i>
                             </div>
-                            <h3 class="text-lg font-bold text-black">អ្នកមានសុវត្ថិភាពពេញលេញ!</h3>
-                            <p class="text-slate-500 mt-2">សូមបន្តរក្សាទម្លាប់ល្អនេះ។</p>
+                            <h3 class="text-xl font-bold text-gray-800">អបអរសាទរ!</h3>
+                            <p class="text-gray-500 mt-2">លោកអ្នកបានបំពេញគ្រប់ចំណុចសុវត្ថិភាពទាំងអស់។</p>
                         </div>
                     `;
-                     lucide.createIcons();
                 } else {
-                     // Fallback
-                     modalTitle.innerText = "ចំណុចត្រូវកែលម្អ";
-                     modalSubtitle.innerText = `នៅខ្វះ ${missedItems.length} ចំណុចទៀត`;
-                     let html = `<ul class="space-y-3">`;
-                     missedItems.slice(0, 3).forEach(m => {
-                         html += `
-                            <li class="flex gap-3 items-start bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                <div class="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-500 shrink-0 mt-0.5">
-                                    <i data-lucide="x" class="w-3 h-3 stroke-[3]"></i>
+                    document.getElementById('modal-body').innerHTML = `
+                        <div class="space-y-6">
+                            <div class="bg-orange-50 border border-orange-200 rounded-2xl p-4 flex items-start gap-3">
+                                <i data-lucide="info" class="w-5 h-5 text-orange-500 mt-0.5 shrink-0"></i>
+                                <div>
+                                    <h4 class="font-bold text-orange-800">លទ្ធផលពិនិត្យ</h4>
+                                    <p class="text-sm text-orange-700 mt-1">លោកអ្នកនៅខ្វះ <strong>${missedItems.length}</strong> ចំណុចទៀត។ ខាងក្រោមនេះជាចំណុចដែលត្រូវកែលម្អជាបន្ទាន់៖</p>
                                 </div>
-                                <span class="text-slate-700 font-bold leading-relaxed pt-0.5 text-sm">${m}</span>
-                            </li>`;
-                     });
-                     html += `</ul>`;
-                     modalBody.innerHTML = html;
-                     lucide.createIcons();
+                            </div>
+
+                            <div class="space-y-4">
+                                ${missedItems.map(item => `
+                                    <div class="bg-white p-5 rounded-2xl border ${item.urgent ? 'border-red-100 shadow-sm' : 'border-gray-100'}">
+                                        <div class="flex items-start gap-3 mb-3">
+                                            <div class="w-10 h-10 rounded-full ${item.urgent ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'} flex items-center justify-center shrink-0">
+                                                <i data-lucide="${item.urgent ? 'alert-triangle' : 'lightbulb'}" class="w-5 h-5"></i>
+                                            </div>
+                                            <div>
+                                                <div class="flex items-center gap-2 flex-wrap">
+                                                    <h4 class="font-bold text-gray-800 text-lg">${item.title}</h4>
+                                                    ${item.urgent ? `<span class="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded-full font-bold">បន្ទាន់</span>` : ``}
+                                                </div>
+                                                <p class="text-sm text-gray-500 mt-1">${item.sub}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="pl-13 space-y-3 border-t border-gray-50 pt-3">
+                                            <div class="flex gap-3">
+                                                <span class="text-xs font-bold text-red-500 uppercase w-16 shrink-0 pt-0.5">ហានិភ័យ</span>
+                                                <p class="text-sm text-gray-700 leading-relaxed">${item.risk}</p>
+                                            </div>
+                                            <div class="flex gap-3">
+                                                <span class="text-xs font-bold text-blue-500 uppercase w-16 shrink-0 pt-0.5">ដំណោះស្រាយ</span>
+                                                <p class="text-sm text-gray-700 leading-relaxed font-medium">${item.rec}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="text-center pt-4">
+                                <p class="text-xs text-gray-400">ព្យាយាមបំពេញចំណុចដែលមានសញ្ញា <span class="text-red-500 font-bold">បន្ទាន់</span> មុនគេ។</p>
+                            </div>
+                        </div>
+                    `;
                 }
+                lucide.createIcons();
             }
         }
 
-        function closeRecModal() {
-            document.getElementById('rec-modal').classList.add('hidden');
-        }
+        function closeRecModal() { document.getElementById('rec-modal').classList.add('hidden'); }
 
         async function downloadPDF() {
-            const btn = document.getElementById('downloadBtn');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> កំពុងបង្កើត...`;
-            lucide.createIcons();
+            const btn = event.currentTarget || document.getElementById('downloadBtn'); 
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Processing...";
             
-            // Fill Data
-            const userName = document.getElementById('user-name').value || "ភ្ញៀវ";
-            const score = calculateRiskScore(true);
-            document.getElementById('pdf-user-name').innerText = userName;
-            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('km-KH');
-            document.getElementById('pdf-score').innerText = score;
-            const riskLevel = score >= 80 ? "ហានិភ័យទាប" : (score >= 50 ? "ហានិភ័យមធ្យម" : "ហានិភ័យខ្ពស់");
-            document.getElementById('pdf-risk-level').innerText = riskLevel;
-            document.getElementById('pdf-risk-level').style.color = score >= 80 ? "#34C759" : (score >= 50 ? "#FF9500" : "#FF3B30");
+            try {
+                // Fill PDF
+                const userNameInput = document.getElementById('user-name');
+                const pdfUserName = document.getElementById('pdf-user-name');
+                if(pdfUserName) pdfUserName.innerText = (userNameInput && userNameInput.value) ? userNameInput.value : "Guest";
+                
+                const pdfDate = document.getElementById('pdf-date');
+                if(pdfDate) pdfDate.innerText = new Date().toLocaleDateString('km-KH');
+                
+                // Calculate Global Score for PDF
+                let total = 0, max = 0;
+                sections.forEach(s => s.items.forEach(i => {
+                    let w = i.urgent ? 3 : 1;
+                    max += w;
+                    if(checkedItems.has(i.id)) total += w;
+                }));
+                const globalScore = max === 0 ? 0 : Math.round((total/max)*100);
 
-            // Fill Content
-            let html = '';
-            // Urgent
-            const urgent = [];
-            sections.forEach(s => s.items.forEach(i => { if(!checkedItems.has(i.id) && i.urgent) urgent.push(i); }));
-            
-            if(urgent.length > 0) {
-                html += `<h3 class="font-bold text-red-600 border-b border-red-200 pb-2 mb-4 text-sm uppercase tracking-wide">សកម្មភាពបន្ទាន់ (Urgent)</h3>`;
-                urgent.forEach(u => {
-                    html += `<div class="mb-4 bg-red-50 p-4 rounded-xl text-sm border border-red-100"><div class="font-bold text-slate-800">${u.text}</div><div class="text-slate-500 mt-1">${u.rec}</div></div>`;
+                const pdfScore = document.getElementById('pdf-score');
+                if(pdfScore) pdfScore.innerText = globalScore;
+                
+                const pdfRisk = document.getElementById('pdf-risk-level');
+                if(pdfRisk) pdfRisk.innerText = globalScore > 80 ? "ហានិភ័យទាប" : "ហានិភ័យខ្ពស់";
+                
+                // Content
+                let html = "";
+                sections.forEach(sec => {
+                    const m = sec.items.filter(i => !checkedItems.has(i.id));
+                    if(m.length) {
+                        html += `<h4 class="font-bold mt-4 mb-2 text-red-600 border-b border-gray-200 pb-1">${sec.title}</h4>`;
+                        m.forEach(i => html += `<div class="flex justify-between text-sm mb-1 bg-gray-50 p-2 rounded"><span>${i.title}</span><span class="text-gray-500 text-xs">${i.rec}</span></div>`);
+                    }
                 });
+                const contentContainer = document.getElementById('pdf-content-container');
+                if(contentContainer) contentContainer.innerHTML = html || "<p class='text-green-500 font-bold'>ល្អណាស់! បានការពារទាំងអស់។</p>";
+
+                // Capture
+                const pdfEl = document.getElementById('pdf-wrapper');
+                const app = document.getElementById('app-ui');
+                
+                if(pdfEl && app) {
+                    app.style.display = 'none';
+                    pdfEl.style.display = 'block';
+                    pdfEl.style.position = 'static';
+                    
+                    await html2pdf().from(pdfEl).save();
+                    
+                    pdfEl.style.position = 'absolute';
+                    pdfEl.style.display = 'none';
+                    app.style.display = 'block';
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Error creating PDF");
+            } finally {
+                btn.innerHTML = originalText;
+                lucide.createIcons();
             }
-            
-            // Completed
-            const completed = [];
-            sections.forEach(s => s.items.forEach(i => { if(checkedItems.has(i.id)) completed.push(i); }));
-            
-            if(completed.length > 0) {
-                 html += `<h3 class="font-bold text-green-600 border-b border-green-200 pb-2 mb-4 mt-8 text-sm uppercase tracking-wide">បានការពារ (Completed)</h3>`;
-                 html += `<div class="grid grid-cols-2 gap-2">`
-                 completed.forEach(c => {
-                     html += `<div class="text-sm text-slate-500 flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> ${c.text}</div>`;
-                 });
-                 html += `</div>`
-            }
-
-            document.getElementById('pdf-content-container').innerHTML = html;
-
-            const pdfWrapper = document.getElementById('pdf-wrapper');
-            const appUI = document.getElementById('app-ui'); 
-            
-            // Hide App UI cleanly
-            appUI.style.display = 'none';
-
-            // Position PDF Wrapper for capture
-            pdfWrapper.style.position = 'static';
-            pdfWrapper.style.zIndex = 9999;
-            document.body.style.overflow = 'hidden';
-
-            const opt = {
-                margin: 10,
-                filename: `Security_Report_${userName}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            await html2pdf().from(pdfWrapper).set(opt).save();
-
-            // Restore App UI
-            pdfWrapper.style.position = 'absolute';
-            appUI.style.display = 'block';
-            document.body.style.overflow = 'auto';
-            btn.innerHTML = originalHTML;
-            lucide.createIcons();
         }
     </script>
 </body>
