@@ -1,4 +1,5 @@
 const apiKey = '';
+const storageKey = 'sophatspace_checked_v1';
 let sections = [];
 let checkedItems = new Set();
 let activeFilter = 'social';
@@ -17,8 +18,30 @@ async function loadSections() {
   }
 }
 
+function loadCheckedItems() {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      checkedItems = new Set(parsed);
+    }
+  } catch (err) {
+    console.warn('Failed to load saved checklist state.', err);
+  }
+}
+
+function saveCheckedItems() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify([...checkedItems]));
+  } catch (err) {
+    console.warn('Failed to save checklist state.', err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   await loadSections();
+  loadCheckedItems();
   setFilter('social');
   startCarousel();
   lucide.createIcons();
@@ -94,6 +117,7 @@ function getActiveColor(filter) {
 function toggleCheck(id) {
   if (checkedItems.has(id)) checkedItems.delete(id);
   else checkedItems.add(id);
+  saveCheckedItems();
   renderList();
   updateStats();
 }
@@ -102,6 +126,15 @@ function toggleInfo(id) {
   const info = document.getElementById('info-' + id);
   if (!info) return;
   info.parentElement.classList.toggle('open');
+}
+
+function restartChecklist() {
+  const ok = confirm('តើអ្នកចង់កំណត់ឡើងវិញទាំងអស់មែនទេ?');
+  if (!ok) return;
+  checkedItems.clear();
+  saveCheckedItems();
+  renderList();
+  updateStats();
 }
 
 // SCORING: Calculate based on ACTIVE FILTER only (Tick by Session)
